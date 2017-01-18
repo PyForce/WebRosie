@@ -9,7 +9,7 @@ describe('WebRosie component', function () {
   before(() => {
     let shallowRenderer = ReactShallowRenderer.createRenderer();
     shallowRenderer.render(
-      <Flaskreact />
+      <WebRosie />
     );
     this.result = shallowRenderer.getRenderOutput();
   });

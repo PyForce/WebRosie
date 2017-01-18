@@ -7,7 +7,7 @@
     "compile": "gulp compile",
     "lint": "eslint src/js",
     "prod": "gulp prod",
-    "test": "mocha --compilers js:babel-register --recursive test/*",
+    "test": "mocha --compilers js:babel-register --recursive test/**/*.js*",
     "watch": "gulp watch"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",
