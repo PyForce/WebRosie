@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default React.createClass({
-  render: function () {
+export default class WebRosie extends React.Component {
+  render () {
     return (
       <div>
         Hey! This is just an auto-generated component.
@@ -9,4 +9,4 @@ export default React.createClass({
       </div>
     );
   }
-});
+};
