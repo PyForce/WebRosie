@@ -45,7 +45,7 @@ gulp.task('js:prod', (done) => {
 			}
 		}),
 		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin()
+		new webpack.optimize.UglifyJsPlugin({ comments: false })
 	);
   webpack(prodConfig, onBuild('js', done));
 });
@@ -64,7 +64,10 @@ gulp.task('css:prod', () => gulp.src(LESS_SRC)
     .pipe(LESS)
     .pipe(postcss([
         autoprefixer(), 
-        cssnano({ safe: true }) 
+        cssnano({
+          safe: true,
+          discardComments: { removeAll: true }
+        })
     ]))
     .pipe(gulp.dest('./static/css'))
 );
