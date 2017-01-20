@@ -1,6 +1,7 @@
 import $ from 'jquery'
 
 import { addMapOverlay, moveRobot, selectRobot } from './actions'
+import store from './store'
 
 
 // robot class with rosie API
@@ -16,7 +17,7 @@ export default class Robot {
 
       switch(data[0]) {
         case 'position':
-          moveRobot(this, data[1]);
+          store.dispatch(moveRobot(this, data[1]));
       }
     };
 
@@ -26,16 +27,16 @@ export default class Robot {
 
       this.overlay = new RobotOverlay(image, [0, 0], ...data.size);
       // put the leaflet overlay into the map
-      addMapOverlay(this.overlay);
+      store.dispatch(addMapOverlay(this.overlay));
       $(this.overlay._image).click(() => {
         // set this robot as selected on overlay click
-        selectRobot(id);
+        store.dispatch(selectRobot(id));
         // don't propagate event
         return false;
       });
 
       // move to the initial position
-      this.odometry().done((pos) => moveRobot(id, pos));
+      this.odometry().done((pos) => store.dispatch(moveRobot(id, pos)));
     });
   }
 

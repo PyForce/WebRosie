@@ -2,17 +2,12 @@ import $ from 'jquery'
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers } from 'redux'
 
 import WebRosie from './components/webrosie'
-import * as reducers from './reducers'
-
-
-const reducer = combineReducers(reducers);
+import store from './store'
 
 
 function init () {
-  let store = createStore(reducer);
   let app = $('[data-section="app"]').get(0);
 
   render(
