@@ -1,6 +1,6 @@
 // state reducers for the store
-import * as actions from '../actions'
-import Robot from '../robot'
+import * as actions from './actions'
+import Robot from './robot'
 
 
 // handles the displayed robots
