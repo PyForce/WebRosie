@@ -19,11 +19,11 @@ export const ADD_ROBOT = 1,
 export function addRobot(host = document.domain, port = location.port, video = 8080) {
   return {
     type: ADD_ROBOT,
-    params: {
-      host: host,
-      port: port,
-      video: video
-    }
+    params: [
+      host,
+      port,
+      video
+    ]
   };
 }
 
