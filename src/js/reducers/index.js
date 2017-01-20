@@ -92,7 +92,7 @@ export function mode(state = { order: false, path: false, user: false }, action)
 // handles the pressed keys
 export function keys(state = [], action) {
   switch (action.type) {
-    case actions.PRESSED_KEY:
+    case actions.PRESS_KEY:
       return [ ...new Set(state.concat(action.key)) ];
     case actions.RELEASE_KEY:
       return state.filter((value) => value !== action.key);
