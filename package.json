@@ -1,13 +1,13 @@
 {
   "name": "webrosie",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Front-end for rosie web module",
   "main": "src/js/main.js",
   "scripts": {
     "compile": "gulp compile",
     "lint": "eslint src/js",
     "prod": "gulp prod",
-    "test": "mocha --compilers js:babel-register --recursive test/*",
+    "test": "mocha --compilers js:babel-register --recursive 'test/**/*.js*'",
     "watch": "gulp watch"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",
@@ -22,26 +22,36 @@
     "cssnano": "^3.10.0",
     "eslint": "^1.6.0",
     "gulp": "^3.9.0",
-    "gulp-filter": "^5.0.0",
     "gulp-less": "^3.0.3",
     "gulp-postcss": "^6.3.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.5",
     "mocha": "^2.3.3",
     "pixrem": "^3.0.2",
-    "react-addons-test-utils": "^0.14.0",
+    "react-test-renderer": "^15.4.2",
+    "react-test-utils": "0.0.1",
     "sinon": "^1.17.1"
   },
   "dependencies": {
     "babel-core": "^6.9.0",
     "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "babel-polyfill": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
+    "jquery": "^3.1.1",
+    "leaflet": "^1.0.0-rc.3",
+    "material-ui": "^0.16.7",
     "normalize.less": "^1.0.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "react-redux": "^4.4.5",
+    "react-responsive": "^1.1.5",
+    "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.6.0",
     "webpack": "^1.13.1"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%"
+  ]
 }
