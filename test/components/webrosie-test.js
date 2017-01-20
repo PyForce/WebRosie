@@ -1,17 +1,15 @@
 import { expect } from 'chai';
 
 import React from 'react';
-import ReactShallowRenderer from 'react-addons-test-utils';
+import ReactTestRenderer from 'react-test-renderer';
 
 import WebRosie from '../../src/js/components/webrosie.jsx';
 
 describe('WebRosie component', function () {
   before(() => {
-    let shallowRenderer = ReactShallowRenderer.createRenderer();
-    shallowRenderer.render(
+    this.result = ReactTestRenderer.create(
       <WebRosie />
-    );
-    this.result = shallowRenderer.getRenderOutput();
+    ).toJSON();
   });
 
   it('renders a <div>', () => {
