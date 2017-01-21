@@ -14,7 +14,7 @@ export function robots(state = [], action) {
         ...state,
         {
           id: id,
-          robot: new Robot(...action.params, id)
+          robot: new Robot(...action.params)
         }
       ];
     // remove a robot
