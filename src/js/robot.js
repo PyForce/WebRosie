@@ -1,43 +1,12 @@
 import $ from 'jquery'
 
-import { addMapOverlay, moveRobot, selectRobot } from './actions'
-import store from './store'
-
 
 // robot class with rosie API
 export default class Robot {
-  constructor(host = document.domain, port = location.port, video = 8080, id) {
+  constructor(host = document.domain, port = location.port, video = 8080) {
     this.host = host;
     this.port = port;
     this.video = video;
-
-    this.sio = new WebSocket(`ws://${this.host}:${this.port}/websocket`);
-    this.sio.onmessage = (msg) => {
-      let data = JSON.parse(msg.data);
-
-      switch(data[0]) {
-        case 'position':
-          store.dispatch(moveRobot(this, data[1]));
-      }
-    };
-
-    this.metadata().done((data) => {
-      // construct the image URL
-      let image = `http://${this.host}:${this.port}${data.vector}`;
-
-      this.overlay = new RobotOverlay(image, [0, 0], ...data.size);
-      // put the leaflet overlay into the map
-      store.dispatch(addMapOverlay(this.overlay));
-      $(this.overlay._image).click(() => {
-        // set this robot as selected on overlay click
-        store.dispatch(selectRobot(id));
-        // don't propagate event
-        return false;
-      });
-
-      // move to the initial position
-      this.odometry().done((pos) => store.dispatch(moveRobot(id, pos)));
-    });
   }
 
   // API
