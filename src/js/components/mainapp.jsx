@@ -20,6 +20,20 @@ export default class MainApp extends React.Component {
     this.closeDialog = this.closeDialog.bind(this);
   }
 
+  componentDidMount() {
+    let store = this._reactInternalInstance._context.store;
+
+    store.subscribe(() => {
+      let { move, robots } = store.getState();
+      if (!move)
+        return;
+
+      let overlay = robots[move.id].robot.overlay;
+      overlay.latlng = [move.x, move.y];
+      overlay.angle = move.angle;
+    });
+  }
+
   componentWillMount() {
     window.addEventListener('load', () => this.setState({ loading: false }));
   }
