@@ -27,7 +27,7 @@ export function robots(state = [], action) {
 
 
 // handles the selected robot
-export function robot(state = null, action) {
+export function robot(state = -1, action) {
   switch (action.type) {
     // update selected robot index
     case actions.SELECT_ROBOT:
@@ -113,6 +113,6 @@ export function move(state = null, action) {
         angle: action.position.theta
       };
     default:
-      return state;
+      return null;
   }
 }
