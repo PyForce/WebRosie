@@ -4,7 +4,7 @@ import L from 'leaflet'
 import { addMapOverlay, moveRobot, selectRobot } from '../actions'
 
 
-export default class Map extends React.Component {
+export default class LMap extends React.Component {
   componentDidMount() {
     let app = L.map('map', {
       crs: L.CRS.Simple,

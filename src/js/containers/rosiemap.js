@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import Map from '../components/map'
+import LMap from '../components/map'
 
 var last = 0;
 function mapStateToProps(state) {
@@ -12,6 +12,6 @@ function mapStateToProps(state) {
 
 const RosieMap = connect(
   mapStateToProps
-)(Map);
+)(LMap);
 
 export default RosieMap;
