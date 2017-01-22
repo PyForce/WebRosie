@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { selectRobot } from '../actions'
+import { selectRobot, moveRobot } from '../actions'
 import LMap from '../components/map'
 
 
@@ -19,18 +19,21 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
-    onDeselectRobot: () => {
+    deselectRobot: () => {
       // select an invalid robot id to
       // deselect the currently selected
       dispatch(selectRobot(-1));
-    }
+    },
+    selectRobot: (id) => dispatch(selectRobot(id)),
+    moveRobot: (id, pos) => dispatch(moveRobot(id, pos))
   }
 }
 
 const RosieMap = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(LMap);
 
 export default RosieMap;
