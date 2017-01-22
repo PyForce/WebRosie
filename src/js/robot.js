@@ -69,7 +69,7 @@ export default class Robot {
 
   get(route, param) {
     return $.ajax({
-      url: `http://${this.host}:${this.port}/${route}/${param ? param : ''}`,
+      url: `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`,
       method: 'GET',
       crossDomain: true
     });
