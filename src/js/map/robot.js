@@ -1,6 +1,30 @@
 import L from 'leaflet'
 
 
+L.DomUtil.setTransform = (el, offset, scale, angle) => {
+  let pos = offset || new L.Point(0, 0);
+
+  let translate = L.Browser.ie3d ?
+    `translate(${pos.x}px, ${pos.y}px)` : `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+  let rotate = angle ? `rotate(${angle}rad)` : '';
+  let scl = scale ? then `scale(#{scale})` : '';
+
+  el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`
+};
+
+
+L.DomUtil.setPosition = (el, point, angle) => {
+  el._leaflet_pos = point;
+
+  if(L.Browser.any3d)
+    L.DomUtil.setTransform(el, point, undefined, angle);
+  else {
+    el.style.left = `${point.x}px`;
+    el.style.top = `${point.y}px`;
+  }
+};
+
+
 export default class RobotOverlay extends L.ImageOverlay {
   constructor(_url, latlng, _width, _height, options) {
     super();
@@ -44,16 +68,16 @@ export default class RobotOverlay extends L.ImageOverlay {
     image.style.zIndex = '1000';
   }
 
-  setAngle(angle) {
+  set angle(angle) {
     this._angle = angle;
     this._reset();
   }
 
-  getAngle() {
+  get angle() {
     return this._angle
   }
 
-  setLatLng(latlng) {
+  set latlng(latlng) {
     let oldLatLng = this._latlng;
     this._latlng = L.latLng(latlng);
 
@@ -72,7 +96,7 @@ export default class RobotOverlay extends L.ImageOverlay {
     });
   }
 
-  getLatLng() {
+  get latlng() {
     return this._latlng
   }
 };

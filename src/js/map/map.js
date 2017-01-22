@@ -1,30 +1,6 @@
 import L from 'leaflet'
 
 
-L.DomUtil.setTransform = (el, offset, scale, angle) => {
-  let pos = offset || new L.Point(0, 0);
-
-  let translate = L.Browser.ie3d ?
-    `translate(${pos.x}px, ${pos.y}px)` : `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-  let rotate = angle ? `rotate(${angle}rad)` : '';
-  let scl = scale ? then `scale(#{scale})` : '';
-
-  el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`
-};
-
-
-L.DomUtil.setPosition = (el, point, angle) => {
-  el._leaflet_pos = point;
-
-  if(L.Browser.any3d)
-    L.DomUtil.setTransform(el, point, undefined, angle);
-  else {
-    el.style.left = `${point.x}px`;
-    el.style.top = `${point.y}px`;
-  }
-};
-
-
 // draws a geoJSON map on the provided leaflet map
 export default function draw(json_map, leaflet_map) {
   // style for the map
