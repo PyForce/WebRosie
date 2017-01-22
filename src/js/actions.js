@@ -12,8 +12,7 @@ export const ADD_ROBOT = 1,
   COMMAND_ROBOT = 10,
   PRESS_KEY = 11,
   RELEASE_KEY = 12,
-  PATH_ROBOT = 13,
-  ADD_MAP = 14;
+  PATH_ROBOT = 13;
 
 
 export function addRobot(host = document.domain, port = location.port, video = 8080) {
@@ -43,8 +42,8 @@ export function updateMap(map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto(pos) {
-  return { type: GOTO_ROBOT, position: pos };
+export function robotGoto(id, pos) {
+  return { type: GOTO_ROBOT, id: id, position: pos };
 }
 
 export function setOrder(value) {
@@ -82,8 +81,4 @@ export function robotPath(path, smooth = false, interpolation = 'linear', k = 0.
       time: time
     }
   };
-}
-
-export function addMapOverlay(overlay) {
-  return { type: ADD_MAP, overlay: overlay };
 }
