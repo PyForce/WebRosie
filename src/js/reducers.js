@@ -100,3 +100,19 @@ export function keys(state = [], action) {
       return state;
   }
 }
+
+
+// handles the movement of a robot
+export function move(state = null, action) {
+  switch (action.type) {
+    case actions.MOVE_ROBOT:
+      return {
+        id: action.id,
+        x: action.position.x,
+        y: action.position.y,
+        angle: action.position.theta
+      };
+    default:
+      return state;
+  }
+}
