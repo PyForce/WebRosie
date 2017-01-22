@@ -5,16 +5,16 @@ import { addRobot } from '../actions'
 
 
 function mapDispatchToProps(dispatch) {
-    return {
-        onAddRobot: (...params) => {
-            dispatch(addRobot(...params));
-        }
+  return {
+    onAddRobot: (...params) => {
+      dispatch(addRobot(...params));
     }
+  }
 }
 
 const RosieApp = connect(
-    null,
-    mapDispatchToProps
+  null,
+  mapDispatchToProps
 )(MainApp)
 
 export default RosieApp;
