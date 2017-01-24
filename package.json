@@ -8,7 +8,8 @@
     "lint": "eslint src/js",
     "prod": "gulp prod",
     "test": "mocha --compilers js:babel-register --recursive 'test/**/*.js*'",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "package": "npm run prod && tar -cafrelease.tar.gz static/ index.html"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",
   "repository": {
