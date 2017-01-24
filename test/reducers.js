@@ -40,6 +40,15 @@ describe('mode reducer', function () {
   });
 });
 
+describe('move reducer', () => {
+  it('does not repeat moves', () => {
+    expect(
+      reducers.move({id: 3, x: 2.3, y: 4, angle: 32}, actions.pressKey(32))
+    )
+    .to.not.exist;
+  });
+});
+
 describe('keys reducer', () => {
   it('adds pressed keys', () => {
     expect(

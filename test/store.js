@@ -1,29 +1,36 @@
 import { expect } from 'chai'
+import { createStore, combineReducers } from 'redux'
 
 import * as actions from '../src/js/actions'
-import store from '../src/js/store'
+import * as reducers from '../src/js/reducers'
 
 
 describe('WebRosie store', function () {
+  before(() => {
+    let reducer = combineReducers(reducers);
+    this.store = createStore(reducer);
+  });
+
   it('creates the full initial state', () => {
-    store.dispatch({ type: -1 });
+    this.store.dispatch({ type: -1 });
 
     expect(
-      store.getState()
+      this.store.getState()
     ).to.have.all.keys(
       'robots',
       'robot',
       'map',
       'mode',
-      'keys'
+      'keys',
+      'move'
     );
   });
 
   it('dispatches an user mode action', () => {
-    store.dispatch(actions.setUser(true));
+    this.store.dispatch(actions.setUser(true));
 
     expect(
-      store.getState()
+      this.store.getState()
     )
     .to.have.property('mode')
     .that.has.property('user')
