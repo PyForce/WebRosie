@@ -15,7 +15,7 @@ export const ADD_ROBOT = 1,
   PATH_ROBOT = 13;
 
 
-export function addRobot(host = document.domain, port = location.port, video = 8080) {
+export function addRobot (host = document.domain, port = location.port, video = 8080) {
   return {
     type: ADD_ROBOT,
     params: [
@@ -26,51 +26,51 @@ export function addRobot(host = document.domain, port = location.port, video = 8
   };
 }
 
-export function removeRobot(id) {
+export function removeRobot (id) {
   return { type: RM_ROBOT, id: id };
 }
 
-export function moveRobot(id, pos) {
+export function moveRobot (id, pos) {
   return { type: MOVE_ROBOT, id: id, position: pos };
 }
 
-export function selectRobot(id) {
+export function selectRobot (id) {
   return { type: SELECT_ROBOT, id: id };
 }
 
-export function updateMap(map) {
+export function updateMap (map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto(id, pos) {
+export function robotGoto (id, pos) {
   return { type: GOTO_ROBOT, id: id, position: pos };
 }
 
-export function setOrder(value) {
+export function setOrder (value) {
   return { type: ORDER_MODE, value: value };
 }
 
-export function setPath(value) {
+export function setPath (value) {
   return { type: PATH_MODE, value: value };
 }
 
-export function setUser(value) {
+export function setUser (value) {
   return { type: USER_MODE, value: value };
 }
 
-export function robotCommand(command) {
+export function robotCommand (command) {
   return { type: COMMAND_ROBOT, command: command };
 }
 
-export function pressKey(key) {
+export function pressKey (key) {
   return { type: PRESS_KEY, key: key };
 }
 
-export function releaseKey(key) {
+export function releaseKey (key) {
   return { type: RELEASE_KEY, key: key };
 }
 
-export function robotPath(path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
+export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
   return {
     type: PATH_ROBOT,
     path: {
