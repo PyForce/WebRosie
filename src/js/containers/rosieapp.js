@@ -1,20 +1,20 @@
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import MainApp from '../components/mainapp'
-import { addRobot } from '../actions'
+import MainApp from '../components/mainapp';
+import { addRobot } from '../actions';
 
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     onAddRobot: (...params) => {
       dispatch(addRobot(...params));
     }
-  }
+  };
 }
 
 const RosieApp = connect(
   null,
   mapDispatchToProps
-)(MainApp)
+)(MainApp);
 
 export default RosieApp;

@@ -1,16 +1,16 @@
-import React from 'react'
-import AppBar from 'material-ui/AppBar'
-import Drawer from 'material-ui/Drawer'
-import MenuItem from 'material-ui/MenuItem'
-import ContentAddIcon from 'material-ui/svg-icons/content/add'
-import CircularProgress from 'material-ui/CircularProgress'
+import React from 'react';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import ContentAddIcon from 'material-ui/svg-icons/content/add';
+import CircularProgress from 'material-ui/CircularProgress';
 
-import RosieMap from '../containers/rosiemap'
-import AddRobotDialog from './robotdialog'
+import RosieMap from '../containers/rosiemap';
+import AddRobotDialog from './robotdialog';
 
 
 export default class MainApp extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = { drawer: false, loading: true, dialog: false };
@@ -20,13 +20,14 @@ export default class MainApp extends React.Component {
     this.closeDialog = this.closeDialog.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     let store = this._reactInternalInstance._context.store;
 
     store.subscribe(() => {
       let { move, robots } = store.getState();
-      if (!move)
+      if (!move) {
         return;
+      }
 
       let overlay = robots[move.id].robot.overlay;
       overlay.latlng = [move.x, move.y];
@@ -34,21 +35,22 @@ export default class MainApp extends React.Component {
     });
   }
 
-  componentWillMount() {
+  componentWillMount () {
     window.addEventListener('load', () => this.setState({ loading: false }));
   }
 
-  toggleDrawer() {
+  toggleDrawer () {
     this.setState({ drawer: !this.state.drawer });
   }
 
-  openDialog() {
+  openDialog () {
     this.setState({ dialog: true, drawer: false });
   }
 
-  closeDialog(accepted, ...data) {
-    if (accepted)
+  closeDialog (accepted, ...data) {
+    if (accepted) {
       this.props.onAddRobot(...data);
+    }
 
     // hide the dialog
     this.setState({ dialog: false });
@@ -56,10 +58,12 @@ export default class MainApp extends React.Component {
 
   render () {
     let pageContent;
-    if (this.state.loading)
+    if (this.state.loading) {
       pageContent = <CircularProgress />;
-    else
+    }
+    else {
       pageContent = <RosieMap />;
+    }
 
     return (
       <div>

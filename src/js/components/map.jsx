@@ -1,26 +1,27 @@
-import React from 'react'
-import L from 'leaflet'
+import React from 'react';
+import L from 'leaflet';
 
-import draw from '../map/map'
-import RobotOverlay from '../map/robot'
+import draw from '../map/map';
+import RobotOverlay from '../map/robot';
 
 
 export default class LMap extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     this.map = L.map('map', {
       crs: L.CRS.Simple,
       zoomAnimation: false
     }).setView([0, 0], 9);
 
     this.map.on('click', () => {
-      if (!this.props.mode.path)
+      if (!this.props.mode.path) {
         this.props.deselectRobot();
+      }
       // TODO: if the path mode is active,
       // create a new path point
     });
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate (nextProps) {
     let { robot, map } = nextProps;
     let { robot: obj, id } = robot;
 
@@ -30,8 +31,8 @@ export default class LMap extends React.Component {
         let data = JSON.parse(msg.data);
 
         switch(data[0]) {
-          case 'position':
-            this.props.moveRobot(id, data[1]);
+        case 'position':
+          this.props.moveRobot(id, data[1]);
         }
       };
 
@@ -41,8 +42,8 @@ export default class LMap extends React.Component {
 
         obj.overlay = new RobotOverlay(image, [0, 0],
           data.size[1], data.size[0], {
-          interactive: true
-        });
+            interactive: true
+          });
         // put the leaflet overlay into the map
         obj.overlay.addTo(this.map);
         obj.overlay.on('click', (event) => {
@@ -57,14 +58,15 @@ export default class LMap extends React.Component {
       });
     }
 
-    if (map)
+    if (map) {
       draw(map, this.map);
+    }
 
     // prevent component from re-rendering
     return false;
   }
 
-  render() {
+  render () {
     return (
       <div id='map' className='grow' />
     );

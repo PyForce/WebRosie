@@ -1,18 +1,18 @@
 // actions generators to use with store.dispatch(...)
 
-export const ADD_ROBOT = 1,
-  RM_ROBOT = 2,
-  MOVE_ROBOT = 3,
-  SELECT_ROBOT = 4,
-  UPDATE_MAP = 5,
-  GOTO_ROBOT = 6,
-  ORDER_MODE = 7,
-  PATH_MODE = 8,
-  USER_MODE = 9,
-  COMMAND_ROBOT = 10,
-  PRESS_KEY = 11,
-  RELEASE_KEY = 12,
-  PATH_ROBOT = 13;
+export const ADD_ROBOT = 1;
+export const RM_ROBOT = 2;
+export const MOVE_ROBOT = 3;
+export const SELECT_ROBOT = 4;
+export const UPDATE_MAP = 5;
+export const GOTO_ROBOT = 6;
+export const ORDER_MODE = 7;
+export const PATH_MODE = 8;
+export const USER_MODE = 9;
+export const COMMAND_ROBOT = 10;
+export const PRESS_KEY = 11;
+export const RELEASE_KEY = 12;
+export const PATH_ROBOT = 13;
 
 
 export function addRobot (host = document.domain, port = location.port, video = 8080) {

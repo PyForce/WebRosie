@@ -38,7 +38,7 @@ export default class Robot {
   //    theta: `theta angle`
   // }
   set pos (pos) {
-    return this.put('position', value);
+    return this.put('position', pos);
   }
 
   // PUT: /path

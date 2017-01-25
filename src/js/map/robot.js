@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import L from 'leaflet';
 
 
 L.DomUtil.setTransform = (el, offset, scale, angle) => {
@@ -7,17 +7,18 @@ L.DomUtil.setTransform = (el, offset, scale, angle) => {
   let translate = L.Browser.ie3d ?
     `translate(${pos.x}px, ${pos.y}px)` : `translate3d(${pos.x}px, ${pos.y}px, 0)`;
   let rotate = angle ? `rotate(${angle}rad)` : '';
-  let scl = scale ? then `scale(#{scale})` : '';
+  let scl = scale ? `scale(#{scale})` : '';
 
-  el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`
+  el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`;
 };
 
 
 L.DomUtil.setPosition = (el, point, angle) => {
   el._leaflet_pos = point;
 
-  if(L.Browser.any3d)
+  if(L.Browser.any3d) {
     L.DomUtil.setTransform(el, point, undefined, angle);
+  }
   else {
     el.style.left = `${point.x}px`;
     el.style.top = `${point.y}px`;
@@ -26,7 +27,7 @@ L.DomUtil.setPosition = (el, point, angle) => {
 
 
 export default class RobotOverlay extends L.ImageOverlay {
-  constructor(_url, latlng, _width, _height, options) {
+  constructor (_url, latlng, _width, _height, options) {
     super();
     this._url = _url;
     this._width = _width;
@@ -38,20 +39,20 @@ export default class RobotOverlay extends L.ImageOverlay {
     L.setOptions(this, options);
   }
 
-  _recalcBounds() {
+  _recalcBounds () {
     let sw = [
-        this._latlng.lat + this._height / 2,
-        this._latlng.lng - this._width / 2
-      ],
-      ne = [
-        this._latlng.lat - this._height / 2,
-        this._latlng.lng + this._width / 2
-      ];
+      this._latlng.lat + this._height / 2,
+      this._latlng.lng - this._width / 2
+    ];
+    let ne = [
+      this._latlng.lat - this._height / 2,
+      this._latlng.lng + this._width / 2
+    ];
 
     this._bounds = L.latLngBounds(sw, ne);
   }
 
-  _reset() {
+  _reset () {
     let image = this._image;
     let bounds = new L.Bounds(this._map.latLngToLayerPoint(this._bounds.getNorthWest()),
         this._map.latLngToLayerPoint(this._bounds.getSouthEast()));
@@ -68,27 +69,29 @@ export default class RobotOverlay extends L.ImageOverlay {
     image.style.zIndex = '1000';
   }
 
-  set angle(angle) {
+  set angle (angle) {
     this._angle = angle;
     this._reset();
   }
 
-  get angle() {
-    return this._angle
+  get angle () {
+    return this._angle;
   }
 
-  set latlng(latlng) {
+  set latlng (latlng) {
     let oldLatLng = this._latlng;
     this._latlng = L.latLng(latlng);
 
     this._recalcBounds();
 
-    if (this._map)
+    if (this._map) {
       this._reset();
+    }
 
-    if (L.DomUtil.TRANSFORM)
+    if (L.DomUtil.TRANSFORM) {
       // use the CSS transform rule if available
       this._image.style[L.DomUtil.TRANSFORM] += ` rotate(${this.options.angle}rad)`;
+    }
 
     this.fire('move', {
       oldLatLng: oldLatLng,
@@ -96,7 +99,7 @@ export default class RobotOverlay extends L.ImageOverlay {
     });
   }
 
-  get latlng() {
-    return this._latlng
+  get latlng () {
+    return this._latlng;
   }
 };

@@ -1,8 +1,8 @@
-import L from 'leaflet'
+import L from 'leaflet';
 
 
 // draws a geoJSON map on the provided leaflet map
-export default function draw(json_map, leaflet_map) {
+export default function draw (jsonMap, leafletMap) {
   // style for the map
   let style = {
     borders: {
@@ -27,28 +27,33 @@ export default function draw(json_map, leaflet_map) {
   // drawing color
   let color = .25;
 
-  for (room of json_map.rooms)
-    for (elements of json_map.rooms[room]) {
+  for (let room of jsonMap.rooms) {
+    for (let elements of jsonMap.rooms[room]) {
       if (elements === 'borders') {
-        let border_style = {
+        let borderStyle = {
           color: `rgba(0, 0, 255, ${color})`,
           weight: 0
         };
 
-        L.geoJson(json_map.rooms[room][elements], {style: border_style})
-          .addTo(leaflet_map);
+        L.geoJson(jsonMap.rooms[room][elements], {style: borderStyle})
+          .addTo(leafletMap);
         color += 0.25;
-        if (color > .8)
-          color = .25
+        if (color > .8) {
+          color = .25;
+        }
       }
-      else if (elements === 'items')
-        for (item of json_map.rooms[room][elements])
-          L.geoJson(json_map.rooms[room][elements][item], {
+      else if (elements === 'items') {
+        for (let item of jsonMap.rooms[room][elements]) {
+          L.geoJson(jsonMap.rooms[room][elements][item], {
             style: style[elements]
-          }).addTo(leaflet_map);
-      else
-        L.geoJson(json_map.rooms[room][elements], {
+          }).addTo(leafletMap);
+        }
+      }
+      else {
+        L.geoJson(jsonMap.rooms[room][elements], {
           style: style[elements]
-        }).addTo(leaflet_map);
+        }).addTo(leafletMap);
+      }
     }
+  }
 };
