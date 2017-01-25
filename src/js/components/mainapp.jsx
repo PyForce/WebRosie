@@ -13,26 +13,15 @@ export default class MainApp extends React.Component {
   constructor (props) {
     super(props);
 
-    this.state = { drawer: false, loading: true, dialog: false };
+    this.state = {
+      drawer: false,
+      loading: true,
+      dialog: false
+    };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
-  }
-
-  componentDidMount () {
-    let store = this._reactInternalInstance._context.store;
-
-    store.subscribe(() => {
-      let { move, robots } = store.getState();
-      if (!move) {
-        return;
-      }
-
-      let overlay = robots[move.id].robot.overlay;
-      overlay.latlng = [move.x, move.y];
-      overlay.angle = move.angle;
-    });
   }
 
   componentWillMount () {

@@ -19,6 +19,19 @@ export default class LMap extends React.Component {
       // TODO: if the path mode is active,
       // create a new path point
     });
+
+    let store = this._reactInternalInstance._context.store;
+
+    store.subscribe(() => {
+      let { move, robots } = store.getState();
+      if (!move) {
+        return;
+      }
+
+      let overlay = robots[move.id].robot.overlay;
+      overlay.latlng = [move.x, move.y];
+      overlay.angle = move.angle;
+    });
   }
 
   shouldComponentUpdate (nextProps) {
