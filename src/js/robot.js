@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import fetch from 'isomorphic-fetch';
 
 
 // robot class with rosie API
@@ -68,20 +68,20 @@ export default class Robot {
   }
 
   get (route, param) {
-    return $.ajax({
-      url: `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`,
-      method: 'GET',
-      crossDomain: true
-    });
+    let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
+
+    return fetch(url)
+      .then((response) => response.json());
   }
 
   put (route, param) {
-    return $.ajax({
-      url: `http://${this.host}:${this.port}/${route}`,
+    return fetch(`http://${this.host}:${this.port}/${route}`, {
       method: 'PUT',
-      crossDomain: true,
-      contentType: 'application/json',
-      data: JSON.stringify(param)
+      headers: {
+        crossDomain: true,
+        contentType: 'application/json'
+      },
+      body: JSON.stringify(param)
     });
   }
 }

@@ -9,7 +9,8 @@ export default class LMap extends React.Component {
   componentDidMount () {
     this.map = L.map('map', {
       crs: L.CRS.Simple,
-      zoomAnimation: false
+      zoomAnimation: false,
+      zoomControl: false
     }).setView([0, 0], 9);
 
     this.map.on('click', () => {
@@ -49,7 +50,7 @@ export default class LMap extends React.Component {
         }
       };
 
-      obj.metadata().done((data) => {
+      obj.metadata().then((data) => {
         // construct the image URL
         let image = `http://${obj.host}:${obj.port}${data.vector}`;
 
@@ -67,7 +68,7 @@ export default class LMap extends React.Component {
         });
 
         // move to the initial position
-        obj.odometry().done((pos) => this.props.moveRobot(id, pos));
+        obj.odometry().then((pos) => this.props.moveRobot(id, pos));
       });
     }
 
