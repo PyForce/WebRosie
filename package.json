@@ -21,7 +21,9 @@
     "autoprefixer": "^6.6.1",
     "babel-eslint": "^7.1.1",
     "chai": "^3.3.0",
+    "chai-enzyme": "^0.6.1",
     "cssnano": "^3.10.0",
+    "enzyme": "^2.7.1",
     "eslint": "^1.6.0",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
@@ -29,6 +31,7 @@
     "gulp-watch": "^4.3.5",
     "mocha": "^2.3.3",
     "pixrem": "^3.0.2",
+    "react-addons-test-utils": "^15.4.2",
     "react-test-renderer": "^15.4.2",
     "react-test-utils": "0.0.1",
     "sinon": "^1.17.1"
