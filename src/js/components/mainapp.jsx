@@ -4,6 +4,9 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import CircularProgress from 'material-ui/CircularProgress';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ZoomIn from 'material-ui/svg-icons/action/zoom-in';
+import ZoomOut from 'material-ui/svg-icons/action/zoom-out';
 
 import RosieMap from '../containers/rosiemap';
 import AddRobotDialog from './robotdialog';
@@ -16,16 +19,31 @@ export default class MainApp extends React.Component {
     this.state = {
       drawer: false,
       loading: true,
-      dialog: false
+      dialog: false,
+      zoomin: true,
+      zoomout: true
     };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this._zoomIn = this._zoomIn.bind(this);
+    this._zoomOut = this._zoomOut.bind(this);
   }
 
   componentWillMount () {
-    window.addEventListener('load', () => this.setState({ loading: false }));
+    let load = () => {
+      this.setState({ loading: false }, () => {
+        let map = this.refs.rosiemap.getWrappedInstance().map;
+        map.on('zoomend zoomlevelschange', () => {
+          let disabledOut = map._zoom <= map.getMinZoom();
+          let disabledIn = map._zoom >= map.getMaxZoom();
+
+          this.setState({zoomin: !disabledIn, zoomout: !disabledOut});
+        });
+      });
+    };
+    window.addEventListener('load', load);
   }
 
   toggleDrawer () {
@@ -45,13 +63,50 @@ export default class MainApp extends React.Component {
     this.setState({ dialog: false });
   }
 
+  _zoomIn (e) {
+    let map = this.refs.rosiemap.getWrappedInstance().map;
+    if (map._zoom >= map.getMaxZoom()) {
+      return;
+    }
+    map.zoomIn(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
+  }
+
+  _zoomOut (e) {
+    let map = this.refs.rosiemap.getWrappedInstance().map;
+    if (map._zoom <= map.getMinZoom()) {
+      return;
+    }
+    map.zoomOut(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
+  }
+
   render () {
     let pageContent;
     if (this.state.loading) {
-      pageContent = <CircularProgress />;
+      pageContent = <CircularProgress className='grow' />;
     }
     else {
-      pageContent = <RosieMap />;
+      let zoombtns = {
+        position: 'absolute',
+        bottom: 0,
+        margin: '0 0 1% 1%'
+      };
+      let zoombtn = {
+        display: 'block'
+      };
+
+      pageContent = <div className="grow">
+      <RosieMap ref='rosiemap' />
+      <div style={zoombtns}>
+        <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}} onTouchTap={this._zoomIn}
+          disabled={!this.state.zoomin}>
+          <ZoomIn />
+        </FloatingActionButton>
+        <FloatingActionButton style={zoombtn} onTouchTap={this._zoomOut}
+          disabled={!this.state.zoomout}>
+          <ZoomOut />
+        </FloatingActionButton>
+      </div>
+      </div>;
     }
 
     return (
@@ -64,7 +119,7 @@ export default class MainApp extends React.Component {
             onTouchTap={this.openDialog}/>
         </Drawer>
 
-        <div style={{height: '100%'}} className='flex column wrap start'>
+        <div style={{height: '100%'}} className='flex column wrap'>
           <AppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           {pageContent}
         </div>

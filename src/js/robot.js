@@ -78,8 +78,8 @@ export default class Robot {
     return fetch(`http://${this.host}:${this.port}/${route}`, {
       method: 'PUT',
       headers: {
-        crossDomain: true,
-        contentType: 'application/json'
+        'Cross-Domain': true,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(param)
     });

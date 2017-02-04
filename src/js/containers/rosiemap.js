@@ -35,7 +35,9 @@ function mapDispatchToProps (dispatch) {
 
 const RosieMap = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps, null, {
+    withRef: true
+  }
 )(LMap);
 
 export default RosieMap;
