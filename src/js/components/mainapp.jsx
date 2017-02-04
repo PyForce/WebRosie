@@ -97,21 +97,19 @@ export default class MainApp extends React.Component {
             onTouchTap={this.openDialog}/>
         </Drawer>
 
-        <div style={{height: '100%'}} className='flex column wrap'>
+        <div style={{height: '100%'}} className='flex column wrap start'>
           <AppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
-          <div className="grow">
-            <RosieMap ref='rosiemap' />
-            <div style={zoombtns}>
-              <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
-                                    onTouchTap={this._zoomIn}
-                                    disabled={!this.state.zoomin}>
-                <ZoomIn />
-              </FloatingActionButton>
-              <FloatingActionButton style={zoombtn} onTouchTap={this._zoomOut}
-                                    disabled={!this.state.zoomout}>
-                <ZoomOut />
-              </FloatingActionButton>
-            </div>
+          <RosieMap ref='rosiemap' />
+          <div style={zoombtns}>
+            <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
+                                  onTouchTap={this._zoomIn}
+                                  disabled={!this.state.zoomin}>
+              <ZoomIn />
+            </FloatingActionButton>
+            <FloatingActionButton style={zoombtn} onTouchTap={this._zoomOut}
+                                  disabled={!this.state.zoomout}>
+              <ZoomOut />
+            </FloatingActionButton>
           </div>
         </div>
       </div>

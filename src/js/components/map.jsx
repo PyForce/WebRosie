@@ -82,7 +82,7 @@ export default class LMap extends React.Component {
 
   render () {
     return (
-      <div id='map' style={{height: '100%'}} />
+      <div id='map' className="grow" />
     );
   }
 };
