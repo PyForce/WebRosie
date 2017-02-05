@@ -35,7 +35,7 @@ export function moveRobot (id, pos) {
   return { type: MOVE_ROBOT, id: id, position: pos };
 }
 
-export function selectRobot (id) {
+export function selectRobot (id = -1) {
   return { type: SELECT_ROBOT, id: id };
 }
 

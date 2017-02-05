@@ -15,7 +15,7 @@ export default class LMap extends React.Component {
 
     this.map.on('click', () => {
       if (!this.props.mode.path) {
-        this.props.deselectRobot();
+        this.props.selectRobot();
       }
       // TODO: if the path mode is active,
       // create a new path point
@@ -73,6 +73,7 @@ export default class LMap extends React.Component {
       }, (error) => {
         // notify of connection error
         this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);
+        this.props.removeRobot(id);
       });
     }
 

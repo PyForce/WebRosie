@@ -130,3 +130,9 @@ export function message (state = null, action) {
     return null;
   }
 }
+
+
+// handles the last action type
+export function lastaction (state = null, action) {
+  return action.type;
+}

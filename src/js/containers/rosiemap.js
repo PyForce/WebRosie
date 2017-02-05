@@ -14,7 +14,7 @@ function mapStateToProps (state, ownProps) {
   }
 
   return {
-    robot: state.robots.length > last ?
+    robot: state.lastaction === ADD_ROBOT && state.robots.length > last ?
       state.robots[last] : null,
     map: state.map !== ownProps.map ? state.map : null,
     mode: state.mode
@@ -29,7 +29,9 @@ function mapDispatchToProps (dispatch) {
       dispatch(selectRobot(-1));
     },
     selectRobot: (id) => dispatch(selectRobot(id)),
-    moveRobot: (id, pos) => dispatch(moveRobot(id, pos))
+    moveRobot: (id, pos) => dispatch(moveRobot(id, pos)),
+    notify: (text) => dispatch(notifyMessage(text)),
+    removeRobot: (id) => dispatch(removeRobot(id))
   };
 }
 
