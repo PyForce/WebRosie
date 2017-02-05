@@ -119,3 +119,14 @@ export function move (state = null, action) {
     return null;
   }
 }
+
+
+// handles application messages
+export function message (state = null, action) {
+  switch (action.type) {
+  case actions.NOTIFY_MSG:
+    return action.text;
+  default:
+    return null;
+  }
+}

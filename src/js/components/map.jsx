@@ -37,9 +37,10 @@ export default class LMap extends React.Component {
 
   shouldComponentUpdate (nextProps) {
     let { robot, map } = nextProps;
-    let { robot: obj, id } = robot;
 
-    if (obj) {
+    if (robot) {
+      let { robot: obj, id } = robot;
+
       obj.sio = new WebSocket(`ws://${obj.host}:${obj.port}/websocket`);
       obj.sio.onmessage = (msg) => {
         let data = JSON.parse(msg.data);
@@ -69,6 +70,9 @@ export default class LMap extends React.Component {
 
         // move to the initial position
         obj.odometry().then((pos) => this.props.moveRobot(id, pos));
+      }, (error) => {
+        // notify of connection error
+        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);
       });
     }
 

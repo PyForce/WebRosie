@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { selectRobot, moveRobot } from '../actions';
+import { selectRobot, moveRobot, notifyMessage, removeRobot, ADD_ROBOT } from '../actions';
 import LMap from '../components/map';
 
 

@@ -2,8 +2,9 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Snackbar from 'material-ui/Snackbar';
+import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import ZoomIn from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOut from 'material-ui/svg-icons/action/zoom-out';
 
@@ -20,12 +21,15 @@ export default class MainApp extends React.Component {
       loading: true,
       dialog: false,
       zoomin: true,
-      zoomout: true
+      zoomout: true,
+      notification: false,
+      message: ''
     };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this.closeSnack = this.closeSnack.bind(this);
     // map zoom control
     this._zoomIn = this._zoomIn.bind(this);
     this._zoomOut = this._zoomOut.bind(this);
@@ -44,6 +48,16 @@ export default class MainApp extends React.Component {
     });
   }
 
+  componentDidMount () {
+    let store = this._reactInternalInstance._context.store;
+    store.subscribe(() => {
+      let { message, robot } = store.getState();
+      if (message) {
+        this.setState({ message, notification: true });
+      }
+    });
+  }
+
   toggleDrawer () {
     this.setState({ drawer: !this.state.drawer });
   }
@@ -59,6 +73,10 @@ export default class MainApp extends React.Component {
 
     // hide the dialog
     this.setState({ dialog: false });
+  }
+
+  closeSnack () {
+    this.setState({ notification: false });
   }
 
   _zoomIn (e) {
@@ -111,6 +129,8 @@ export default class MainApp extends React.Component {
               <ZoomOut />
             </FloatingActionButton>
           </div>
+          <Snackbar open={this.state.notification} message={this.state.message}
+                    autoHideDuration={2000} onRequestClose={this.closeSnack} />
         </div>
       </div>
     );
