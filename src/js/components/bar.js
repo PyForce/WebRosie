@@ -7,28 +7,36 @@ import CommandIcon from 'material-ui/svg-icons/action/input';
 
 
 export default class Bar extends React.Component {
-  shouldComponentUpdate (nextProps) {
-    return nextProps.selected !== this.props.selected;
-  }
-
   render () {
     let muiTheme = this._reactInternalInstance._context.muiTheme;
 
-    let { selected, dispatch, ...rest } = this.props;
-    let icons = <div>
-        <IconButton tooltip="Path Mode">
-          <PathIcon color={muiTheme.appBar.textColor} />
-        </IconButton>
-        <IconButton tooltip="User Mode">
-          <UserIcon color={muiTheme.appBar.textColor} />
-        </IconButton>
-        <IconButton tooltip="Command Mode">
-          <CommandIcon color={muiTheme.appBar.textColor} />
-        </IconButton>
-      </div>;
+    let { selected, dispatch, user, path, order,
+          setPathMode, setUserMode, setOrderMode, ...other } = this.props;
+
+    let icons;
+    if (selected >= 0) {
+      icons =
+        <div>
+          <IconButton tooltip="Path Mode"
+                      onTouchTap={() => setPathMode(!path)}>
+            <PathIcon color={path ? muiTheme.baseTheme.palette.accent1Color :
+                                    muiTheme.appBar.textColor} />
+          </IconButton>
+          <IconButton tooltip="User Mode"
+                      onTouchTap={() => setUserMode(!user)}>
+            <UserIcon color={user ? muiTheme.baseTheme.palette.accent1Color :
+                                    muiTheme.appBar.textColor} />
+          </IconButton>
+          <IconButton tooltip="Command Mode"
+                      onTouchTap={() => setOrderMode(!order)}>
+            <CommandIcon color={order ? muiTheme.baseTheme.palette.accent1Color :
+                                        muiTheme.appBar.textColor} />
+          </IconButton>
+        </div>;
+    }
 
     return (
-      <AppBar {...rest} iconElementRight={icons}
+      <AppBar {...other} iconElementRight={icons}
                         iconStyleRight={{marginRight: 0}}/>
     );
   }
