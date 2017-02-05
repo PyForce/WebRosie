@@ -18,6 +18,8 @@ describe('WebRosie store', function () {
       this.store.getState()
     ).to.have.all.keys(
       'robots',
+      'lastaction',
+      'message',
       'robot',
       'map',
       'mode',
