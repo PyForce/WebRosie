@@ -113,7 +113,7 @@ export function move (state = null, action) {
       id: action.id,
       x: action.position.x,
       y: action.position.y,
-      angle: action.position.theta
+      theta: action.position.theta
     };
   default:
     return null;

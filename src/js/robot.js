@@ -7,6 +7,7 @@ export default class Robot {
     this.host = host;
     this.port = port;
     this.video = video;
+    this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
   }
 
   // API
@@ -34,17 +35,17 @@ export default class Robot {
     return this.odometry();
   }
 
-  // PUT: /pos
+  // POST: /pos
   // {
   //    x: `x position`,
   //    y: `y position`,
   //    theta: `theta angle`
   // }
   set pos (pos) {
-    return this.put('position', pos);
+    return this.post('position', pos);
   }
 
-  // PUT: /path
+  // POST: /path
   // {
   //    path: `coordinate list`,
   //    smooth: `wether or not to smooth the path`,
@@ -53,21 +54,21 @@ export default class Robot {
   //    time: `finish time`
   // }
   path (path) {
-    return this.put('path', path);
+    return this.post('path', path);
   }
 
   command (command) {
-    return this.put('text', command);
+    return this.post('text', command);
   }
 
-  // PUT: /manual_mode
+  // POST: /manual_mode
   manual () {
-    return this.put('manual_mode');
+    return this.post('manual_mode');
   }
 
-  // PUT: /auto_mode
+  // POST: /auto_mode
   auto () {
-    return this.put('auto_mode');
+    return this.post('auto_mode');
   }
 
   get (route, param) {
@@ -77,14 +78,14 @@ export default class Robot {
       .then((response) => response.json());
   }
 
-  put (route, param) {
+  post (route, param) {
     return fetch(`http://${this.host}:${this.port}/${route}`, {
-      method: 'PUT',
+      method: 'POST',
       headers: {
-        'Cross-Domain': true,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(param)
+      body: JSON.stringify(param),
+      mode: 'no-cors'
     });
   }
 }

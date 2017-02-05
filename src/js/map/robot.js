@@ -14,7 +14,7 @@ L.DomUtil.setTransform = (el, offset, scale, angle) => {
 
 
 L.DomUtil.setPosition = (el, point, angle) => {
-  el._leaflet_pos = point;
+  el['_leaflet_pos'] = point;
 
   if(L.Browser.any3d) {
     L.DomUtil.setTransform(el, point, undefined, angle);

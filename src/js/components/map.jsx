@@ -31,7 +31,7 @@ export default class LMap extends React.Component {
 
       let overlay = robots[move.id].robot.overlay;
       overlay.latlng = [move.x, move.y];
-      overlay.angle = move.angle;
+      overlay.angle = move.theta;
     });
   }
 
@@ -41,13 +41,12 @@ export default class LMap extends React.Component {
     if (robot) {
       let { robot: obj, id } = robot;
 
-      obj.sio = new WebSocket(`ws://${obj.host}:${obj.port}/websocket`);
       obj.sio.onmessage = (msg) => {
         let data = JSON.parse(msg.data);
 
-        switch(data[0]) {
+        switch(data.type) {
         case 'position':
-          this.props.moveRobot(id, data[1]);
+          this.props.moveRobot(id, data.data);
         }
       };
 
