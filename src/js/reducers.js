@@ -86,6 +86,10 @@ export function mode (state = { order: false, path: false, user: false }, action
       path: false,
       user: true
     };
+  case actions.SELECT_ROBOT:
+    if (action.id < 0) {
+      return { order: false, path: false, user: false };
+    }
   default:
     return state;
   }
