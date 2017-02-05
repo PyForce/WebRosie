@@ -10,6 +10,9 @@ export default class Robot {
   }
 
   // API
+  keys (keys) {
+    this.sio.send(JSON.stringify({type: 'keys', data: keys}));
+  }
 
   // GET: /sensor/`name`
   sensor (name) {

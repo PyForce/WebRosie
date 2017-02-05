@@ -10,6 +10,7 @@ import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
 import RosieMap from '../containers/rosiemap';
 import RosieAppBar from '../containers/rosiebar';
 import AddRobotDialog from './robotdialog';
+import { ORDER_MODE, USER_MODE } from '../actions';
 
 
 export default class MainApp extends React.Component {
@@ -30,6 +31,8 @@ export default class MainApp extends React.Component {
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.closeSnack = this.closeSnack.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
     // map zoom control
     this._zoomIn = this._zoomIn.bind(this);
     this._zoomOut = this._zoomOut.bind(this);
@@ -51,10 +54,26 @@ export default class MainApp extends React.Component {
   componentDidMount () {
     let store = this._reactInternalInstance._context.store;
     store.subscribe(() => {
-      let { message, robot } = store.getState();
+      let { message, robot, robots, lastaction, mode, keys } = store.getState();
       if (message) {
         this.setState({ message, notification: true });
       }
+
+      if (robot < 0) {
+        return;
+      }
+
+      let selectedRobot = robots[robot].robot;
+      // mode action, change real robot mode accordingly
+      if (lastaction >= ORDER_MODE && lastaction <= USER_MODE) {
+        if (mode.user) {
+          selectedRobot.manual();
+        } else {
+          selectedRobot.auto();
+        }
+      }
+
+      selectedRobot.keys(keys);
     });
   }
 
@@ -95,6 +114,20 @@ export default class MainApp extends React.Component {
     map.zoomOut(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
+  handleKeyDown (event) {
+    let store = this._reactInternalInstance._context.store;
+    if (store.getState().mode.user) {
+      this.props.keyDown(event.which);
+    }
+  }
+
+  handleKeyUp (event) {
+    let store = this._reactInternalInstance._context.store;
+    if (store.getState().mode.user) {
+      this.props.keyUp(event.which);
+    }
+  }
+
   render () {
     let zoombtns = {
       position: 'absolute',
@@ -106,7 +139,7 @@ export default class MainApp extends React.Component {
     };
 
     return (
-      <div>
+      <div onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}>
         <AddRobotDialog open={this.state.dialog} onRequestClose={this.closeDialog}/>
 
         <Drawer open={this.state.drawer} docked={false}
