@@ -1,14 +1,14 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Snackbar from 'material-ui/Snackbar';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
-import ZoomIn from 'material-ui/svg-icons/action/zoom-in';
-import ZoomOut from 'material-ui/svg-icons/action/zoom-out';
+import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
+import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
 
 import RosieMap from '../containers/rosiemap';
+import RosieAppBar from '../containers/rosiebar';
 import AddRobotDialog from './robotdialog';
 
 
@@ -116,17 +116,17 @@ export default class MainApp extends React.Component {
         </Drawer>
 
         <div style={{height: '100%'}} className='flex column wrap start'>
-          <AppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
+          <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
           <div style={zoombtns}>
             <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
                                   onTouchTap={this._zoomIn}
                                   disabled={!this.state.zoomin}>
-              <ZoomIn />
+              <ZoomInIcon />
             </FloatingActionButton>
             <FloatingActionButton style={zoombtn} onTouchTap={this._zoomOut}
                                   disabled={!this.state.zoomout}>
-              <ZoomOut />
+              <ZoomOutIcon />
             </FloatingActionButton>
           </div>
           <Snackbar open={this.state.notification} message={this.state.message}

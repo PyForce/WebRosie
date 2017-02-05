@@ -57,16 +57,17 @@ export default class LMap extends React.Component {
 
         obj.overlay = new RobotOverlay(image, [0, 0],
           data.size[1], data.size[0], {
-            interactive: true
+            interactive: true,
+            nonBubblingEvents: ['click']
           });
         // put the leaflet overlay into the map
-        obj.overlay.addTo(this.map);
-        obj.overlay.on('click', (event) => {
-          // set this robot as selected on overlay click
-          this.props.selectRobot(id);
-          // don't propagate event
-          return false;
-        });
+        obj.overlay.addTo(this.map)
+          .on('click', (event) => {
+            // set this robot as selected on overlay click
+            this.props.selectRobot(id);
+            // don't propagate event
+            return false;
+          });
 
         // move to the initial position
         obj.odometry().then((pos) => this.props.moveRobot(id, pos));
