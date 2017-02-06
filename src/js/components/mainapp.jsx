@@ -50,6 +50,9 @@ export default class MainApp extends React.Component {
         this.setState({zoomin: !disabledIn, zoomout: !disabledOut});
       });
     });
+
+    window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('keyup', this.handleKeyUp);
   }
 
   componentDidMount () {
@@ -142,7 +145,7 @@ export default class MainApp extends React.Component {
     };
 
     return (
-      <div onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}>
+      <div>
         <AddRobotDialog open={this.state.robotdialog}
                         onRequestClose={this.acceptRobot} />
         <MapDialogProvider open={this.state.mapdialog}
