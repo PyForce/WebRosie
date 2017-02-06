@@ -1,25 +1,27 @@
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import { selectRobot, moveRobot } from '../actions'
-import LMap from '../components/map'
+import { selectRobot, moveRobot, notifyMessage, removeRobot, ADD_ROBOT } from '../actions';
+import LMap from '../components/map';
 
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps (state, ownProps) {
   let last;
-  if (ownProps.robot)
+  if (ownProps.robot) {
     last = ownProps.robot.id + 1;
-  else
+  }
+  else {
     last = 0;
+  }
 
   return {
-    robot: state.robots.length > last ?
+    robot: state.lastaction === ADD_ROBOT && state.robots.length > last ?
       state.robots[last] : null,
-    map: state.map !== ownProps.map ? state.map : null,
+    map: state.map,
     mode: state.mode
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     deselectRobot: () => {
       // select an invalid robot id to
@@ -27,13 +29,17 @@ function mapDispatchToProps(dispatch) {
       dispatch(selectRobot(-1));
     },
     selectRobot: (id) => dispatch(selectRobot(id)),
-    moveRobot: (id, pos) => dispatch(moveRobot(id, pos))
-  }
+    moveRobot: (id, pos) => dispatch(moveRobot(id, pos)),
+    notify: (text) => dispatch(notifyMessage(text)),
+    removeRobot: (id) => dispatch(removeRobot(id))
+  };
 }
 
 const RosieMap = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps, null, {
+    withRef: true
+  }
 )(LMap);
 
 export default RosieMap;

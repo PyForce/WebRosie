@@ -1,72 +1,99 @@
-import React from 'react'
-import L from 'leaflet'
+import React from 'react';
+import L from 'leaflet';
 
-import draw from '../map/map'
-import RobotOverlay from '../map/robot'
+import draw from '../map/map';
+import RobotOverlay from '../map/robot';
 
 
 export default class LMap extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     this.map = L.map('map', {
       crs: L.CRS.Simple,
-      zoomAnimation: false
+      zoomAnimation: false,
+      zoomControl: false
     }).setView([0, 0], 9);
 
     this.map.on('click', () => {
-      if (!this.props.mode.path)
-        this.props.deselectRobot();
+      if (!this.props.mode.path) {
+        this.props.selectRobot();
+      }
       // TODO: if the path mode is active,
       // create a new path point
     });
+
+    let store = this._reactInternalInstance._context.store;
+
+    store.subscribe(() => {
+      let { move, robots } = store.getState();
+      if (!move) {
+        return;
+      }
+
+      let overlay = robots[move.id].robot.overlay;
+      overlay.latlng = [move.x, move.y];
+      overlay.angle = move.theta;
+    });
   }
 
-  shouldComponentUpdate(nextProps) {
+  componentWillReceiveProps (nextProps) {
     let { robot, map } = nextProps;
-    let { robot: obj, id } = robot;
 
-    if (obj) {
-      obj.sio = new WebSocket(`ws://${obj.host}:${obj.port}/websocket`);
+    if (robot) {
+      let { robot: obj, id } = robot;
+
       obj.sio.onmessage = (msg) => {
         let data = JSON.parse(msg.data);
 
-        switch(data[0]) {
-          case 'position':
-            this.props.moveRobot(id, data[1]);
+        switch(data.type) {
+        case 'position':
+          this.props.moveRobot(id, data.data);
         }
       };
 
-      obj.metadata().done((data) => {
+      obj.metadata().then((data) => {
         // construct the image URL
         let image = `http://${obj.host}:${obj.port}${data.vector}`;
 
         obj.overlay = new RobotOverlay(image, [0, 0],
           data.size[1], data.size[0], {
-          interactive: true
-        });
+            interactive: true,
+            nonBubblingEvents: ['click']
+          });
         // put the leaflet overlay into the map
-        obj.overlay.addTo(this.map);
-        obj.overlay.on('click', (event) => {
-          // set this robot as selected on overlay click
-          this.props.selectRobot(id);
-          // don't propagate event
-          return false;
-        });
+        obj.overlay.addTo(this.map)
+          .on('click', (event) => {
+            // set this robot as selected on overlay click
+            this.props.selectRobot(id);
+            // don't propagate event
+            return false;
+          });
 
         // move to the initial position
-        obj.odometry().done((pos) => this.props.moveRobot(id, pos));
+        obj.odometry().then((pos) => {
+          this.map.panTo([pos.x, pos.y]);
+          this.props.moveRobot(id, pos);
+        });
+      }, (error) => {
+        // notify of connection error
+        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);
+        this.props.removeRobot(id);
       });
     }
 
-    if (map)
+    // draw the new map
+    if (map !== this.props.map) {
       draw(map, this.map);
+    }
+  }
 
+  shouldComponentUpdate (nextProps) {
     // prevent component from re-rendering
     return false;
   }
 
-  render() {
+  render () {
     return (
-      <div id='map' className='grow' />
+      <div id='map' className="grow" />
     );
   }
 };

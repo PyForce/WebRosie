@@ -8,8 +8,8 @@ export function robots (state = [], action) {
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    let last = state[state.length - 1],
-      id = last ? last.id + 1 : 0;
+    let last = state[state.length - 1];
+    let id = last ? last.id + 1 : 0;
     return [
       ...state,
       {
@@ -55,8 +55,9 @@ export function mode (state = { order: false, path: false, user: false }, action
   switch (action.type) {
     // set order mode
   case actions.ORDER_MODE:
-    if (!action.value)
+    if (!action.value) {
       return { ...state, order: false };
+    }
 
     return {
       order: true,
@@ -65,8 +66,9 @@ export function mode (state = { order: false, path: false, user: false }, action
     };
     // set path mode
   case actions.PATH_MODE:
-    if (!action.value)
+    if (!action.value) {
       return { ...state, path: false };
+    }
 
     return {
       order: false,
@@ -75,14 +77,19 @@ export function mode (state = { order: false, path: false, user: false }, action
     };
     // set user mode
   case actions.USER_MODE:
-    if (!action.value)
+    if (!action.value) {
       return { ...state, user: false };
+    }
 
     return {
       order: false,
       path: false,
       user: true
     };
+  case actions.SELECT_ROBOT:
+    if (action.id < 0) {
+      return { order: false, path: false, user: false };
+    }
   default:
     return state;
   }
@@ -110,9 +117,26 @@ export function move (state = null, action) {
       id: action.id,
       x: action.position.x,
       y: action.position.y,
-      angle: action.position.theta
+      theta: action.position.theta
     };
   default:
     return null;
   }
+}
+
+
+// handles application messages
+export function message (state = null, action) {
+  switch (action.type) {
+  case actions.NOTIFY_MSG:
+    return action.text;
+  default:
+    return null;
+  }
+}
+
+
+// handles the last action type
+export function lastaction (state = null, action) {
+  return action.type;
 }

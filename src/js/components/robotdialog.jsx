@@ -1,11 +1,11 @@
-import React from 'react'
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-import TextField from 'material-ui/TextField'
+import React from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
 
 export default class AddRobotDialog extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -17,18 +17,18 @@ export default class AddRobotDialog extends React.Component {
     this.cancelDialog = this.cancelDialog.bind(this);
   }
 
-  acceptDialog() {
+  acceptDialog () {
     this.props.onRequestClose(true,
       this.state.robotHost,
       this.state.robotPort
     );
   }
 
-  cancelDialog() {
+  cancelDialog () {
     this.props.onRequestClose(false);
   }
 
-  render() {
+  render () {
     const actions = [
       <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
                   primary={true} keyboardFocused={true} />,
