@@ -8,6 +8,11 @@ export default class Robot {
     this.port = port;
     this.video = video;
     this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
+
+    this.metadata()
+      .then((info) => {
+        this.name = info.name;
+      });
   }
 
   // API
@@ -69,6 +74,11 @@ export default class Robot {
   // POST: /auto_mode
   auto () {
     return this.post('auto_mode');
+  }
+
+  // GET: /maps
+  maps () {
+    return this.get('maps');
   }
 
   get (route, param) {
