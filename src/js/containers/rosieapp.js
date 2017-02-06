@@ -6,9 +6,7 @@ import { addRobot, pressKey, releaseKey, updateMap } from '../actions';
 
 function mapDispatchToProps (dispatch) {
   return {
-    onAddRobot: (...params) => {
-      dispatch(addRobot(...params));
-    },
+    addRobot: (...params) => dispatch(addRobot(...params)),
     keyDown: (key) => dispatch(pressKey(key)),
     keyUp: (key) => dispatch(releaseKey(key)),
     loadMap: (map) => dispatch(updateMap(map))

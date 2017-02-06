@@ -87,7 +87,7 @@ export default class MainApp extends React.Component {
 
   acceptRobot (accepted, ...data) {
     if (accepted) {
-      this.props.onAddRobot(...data);
+      this.props.addRobot(...data);
     }
 
     // hide the robotdialog
