@@ -4,11 +4,13 @@ import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Snackbar from 'material-ui/Snackbar';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
+import MapIcon from 'material-ui/svg-icons/maps/map';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
 
 import RosieMap from '../containers/rosiemap';
 import RosieAppBar from '../containers/rosiebar';
+import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
@@ -19,8 +21,8 @@ export default class MainApp extends React.Component {
 
     this.state = {
       drawer: false,
-      loading: true,
-      dialog: false,
+      robotdialog: false,
+      mapdialog: false,
       zoomin: true,
       zoomout: true,
       notification: false,
@@ -28,9 +30,8 @@ export default class MainApp extends React.Component {
     };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
-    this.openDialog = this.openDialog.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    this.closeSnack = this.closeSnack.bind(this);
+    this.acceptRobot = this.acceptRobot.bind(this);
+    this.acceptMap = this.acceptMap.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     // map zoom control
@@ -81,21 +82,18 @@ export default class MainApp extends React.Component {
     this.setState({ drawer: !this.state.drawer });
   }
 
-  openDialog () {
-    this.setState({ dialog: true, drawer: false });
-  }
-
-  closeDialog (accepted, ...data) {
+  acceptRobot (accepted, ...data) {
     if (accepted) {
       this.props.onAddRobot(...data);
     }
 
-    // hide the dialog
-    this.setState({ dialog: false });
+    // hide the robotdialog
+    this.setState({ robotdialog: false });
   }
 
-  closeSnack () {
-    this.setState({ notification: false });
+  acceptMap (accepted, data) {
+    // hide the robotdialog
+    this.setState({ mapdialog: false });
   }
 
   _zoomIn (e) {
@@ -132,7 +130,8 @@ export default class MainApp extends React.Component {
     let zoombtns = {
       position: 'absolute',
       bottom: 0,
-      margin: '0 0 1% 1%'
+      margin: '0 0 1% 1%',
+      zIndex: 1000
     };
     let zoombtn = {
       display: 'block'
@@ -140,12 +139,17 @@ export default class MainApp extends React.Component {
 
     return (
       <div onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}>
-        <AddRobotDialog open={this.state.dialog} onRequestClose={this.closeDialog}/>
+        <AddRobotDialog open={this.state.robotdialog}
+                        onRequestClose={this.acceptRobot} />
+        <MapDialogProvider open={this.state.mapdialog}
+                           onRequestClose={this.acceptMap} />
 
         <Drawer open={this.state.drawer} docked={false}
                 onRequestChange={(open) => this.setState({ drawer: open })}>
           <MenuItem primaryText="Add robot" leftIcon={<ContentAddIcon />}
-            onTouchTap={this.openDialog}/>
+            onTouchTap={() => this.setState({robotdialog: true, drawer: false})} />
+          <MenuItem primaryText="Select map" leftIcon={<MapIcon />}
+            onTouchTap={() => this.setState({mapdialog: true, drawer: false})} />
         </Drawer>
 
         <div style={{height: '100%'}} className='flex column wrap start'>
@@ -163,7 +167,8 @@ export default class MainApp extends React.Component {
             </FloatingActionButton>
           </div>
           <Snackbar open={this.state.notification} message={this.state.message}
-                    autoHideDuration={2000} onRequestClose={this.closeSnack} />
+                    autoHideDuration={2000}
+                    onRequestClose={() => this.setState({notification: false})} />
         </div>
       </div>
     );
