@@ -16,7 +16,7 @@ function mapStateToProps (state, ownProps) {
   return {
     robot: state.lastaction === ADD_ROBOT && state.robots.length > last ?
       state.robots[last] : null,
-    map: state.map !== ownProps.map ? state.map : null,
+    map: state.map,
     mode: state.mode
   };
 }

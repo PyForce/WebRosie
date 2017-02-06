@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import MainApp from '../components/mainapp';
-import { addRobot, pressKey, releaseKey } from '../actions';
+import { addRobot, pressKey, releaseKey, updateMap } from '../actions';
 
 
 function mapDispatchToProps (dispatch) {
@@ -10,7 +10,8 @@ function mapDispatchToProps (dispatch) {
       dispatch(addRobot(...params));
     },
     keyDown: (key) => dispatch(pressKey(key)),
-    keyUp: (key) => dispatch(releaseKey(key))
+    keyUp: (key) => dispatch(releaseKey(key)),
+    loadMap: (map) => dispatch(updateMap(map))
   };
 }
 

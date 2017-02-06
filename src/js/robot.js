@@ -81,6 +81,11 @@ export default class Robot {
     return this.get('maps');
   }
 
+  // GET: /map/`name`
+  map (name) {
+    return this.get('map', name);
+  }
+
   get (route, param) {
     let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
 

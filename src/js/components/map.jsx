@@ -35,7 +35,7 @@ export default class LMap extends React.Component {
     });
   }
 
-  shouldComponentUpdate (nextProps) {
+  componentWillReceiveProps (nextProps) {
     let { robot, map } = nextProps;
 
     if (robot) {
@@ -77,10 +77,13 @@ export default class LMap extends React.Component {
       });
     }
 
-    if (map) {
+    // draw the new map
+    if (map !== this.props.map) {
       draw(map, this.map);
     }
+  }
 
+  shouldComponentUpdate (nextProps) {
     // prevent component from re-rendering
     return false;
   }

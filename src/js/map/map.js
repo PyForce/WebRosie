@@ -27,31 +27,31 @@ export default function draw (jsonMap, leafletMap) {
   // drawing color
   let color = .25;
 
-  for (let room of jsonMap.rooms) {
-    for (let elements of jsonMap.rooms[room]) {
-      if (elements === 'borders') {
+  for (let room in jsonMap.rooms) {
+    for (let element in jsonMap.rooms[room]) {
+      if (element === 'borders') {
         let borderStyle = {
           color: `rgba(0, 0, 255, ${color})`,
           weight: 0
         };
 
-        L.geoJson(jsonMap.rooms[room][elements], {style: borderStyle})
+        L.geoJson(jsonMap.rooms[room][element], {style: borderStyle})
           .addTo(leafletMap);
         color += 0.25;
         if (color > .8) {
           color = .25;
         }
       }
-      else if (elements === 'items') {
-        for (let item of jsonMap.rooms[room][elements]) {
-          L.geoJson(jsonMap.rooms[room][elements][item], {
-            style: style[elements]
+      else if (element === 'items') {
+        for (let item in jsonMap.rooms[room][element]) {
+          L.geoJson(jsonMap.rooms[room][element][item], {
+            style: style[element]
           }).addTo(leafletMap);
         }
       }
       else {
-        L.geoJson(jsonMap.rooms[room][elements], {
-          style: style[elements]
+        L.geoJson(jsonMap.rooms[room][element], {
+          style: style[element]
         }).addTo(leafletMap);
       }
     }

@@ -92,6 +92,10 @@ export default class MainApp extends React.Component {
   }
 
   acceptMap (accepted, data) {
+    if (accepted) {
+      this.props.loadMap(data);
+    }
+
     // hide the robotdialog
     this.setState({ mapdialog: false });
   }
