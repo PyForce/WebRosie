@@ -69,7 +69,10 @@ export default class LMap extends React.Component {
           });
 
         // move to the initial position
-        obj.odometry().then((pos) => this.props.moveRobot(id, pos));
+        obj.odometry().then((pos) => {
+          this.map.panTo([pos.x, pos.y]);
+          this.props.moveRobot(id, pos);
+        });
       }, (error) => {
         // notify of connection error
         this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);

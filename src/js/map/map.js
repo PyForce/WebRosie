@@ -27,7 +27,7 @@ export default function draw (jsonMap, leafletMap) {
   // drawing color
   let color = .25;
 
-  for (let room in jsonMap.rooms) {
+  for (let room in jsonMap.rooms) {  // eslint-disable-line guard-for-in
     for (let element in jsonMap.rooms[room]) {
       if (element === 'borders') {
         let borderStyle = {
@@ -43,7 +43,7 @@ export default function draw (jsonMap, leafletMap) {
         }
       }
       else if (element === 'items') {
-        for (let item in jsonMap.rooms[room][element]) {
+        for (let item in jsonMap.rooms[room][element]) {  // eslint-disable-line guard-for-in
           L.geoJson(jsonMap.rooms[room][element][item], {
             style: style[element]
           }).addTo(leafletMap);
