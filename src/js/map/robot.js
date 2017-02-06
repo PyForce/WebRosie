@@ -66,6 +66,7 @@ export default class RobotOverlay extends L.ImageOverlay {
     L.DomUtil.setPosition(image, point, this._angle);
     image.style.width = `${size.x}px`;
     image.style.height = `${size.y}px`;
+    image.style.zIndex = '1000';
   }
 
   set angle (angle) {
