@@ -16,27 +16,17 @@ import { ORDER_MODE, USER_MODE } from '../actions';
 
 
 export default class MainApp extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      drawer: false,
-      robotdialog: false,
-      mapdialog: false,
-      zoomin: true,
-      zoomout: true,
-      notification: false,
-      message: ''
-    };
-
-    this.toggleDrawer = this.toggleDrawer.bind(this);
-    this.acceptRobot = this.acceptRobot.bind(this);
-    this.acceptMap = this.acceptMap.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    // map zoom control
-    this._zoomIn = this._zoomIn.bind(this);
-    this._zoomOut = this._zoomOut.bind(this);
+  state = {
+    drawer: false,
+    robotdialog: false,
+    mapdialog: false,
+    zoomin: true,
+    zoomout: true,
+    notification: false,
+    report: {
+      text: '',
+      level: 'info'
+    }
   }
 
   componentWillMount () {
@@ -81,11 +71,11 @@ export default class MainApp extends React.Component {
     });
   }
 
-  toggleDrawer () {
+  toggleDrawer = () => {
     this.setState({ drawer: !this.state.drawer });
   }
 
-  acceptRobot (accepted, ...data) {
+  acceptRobot = (accepted, ...data) => {
     if (accepted) {
       this.props.addRobot(...data);
     }
@@ -94,7 +84,7 @@ export default class MainApp extends React.Component {
     this.setState({ robotdialog: false });
   }
 
-  acceptMap (accepted, data) {
+  acceptMap = (accepted, data) => {
     if (accepted) {
       this.props.loadMap(data);
     }
@@ -103,7 +93,7 @@ export default class MainApp extends React.Component {
     this.setState({ mapdialog: false });
   }
 
-  _zoomIn (e) {
+  _zoomIn = (e) => {
     let map = this.refs.rosiemap.getWrappedInstance().map;
     if (map._zoom >= map.getMaxZoom()) {
       return;
@@ -111,7 +101,7 @@ export default class MainApp extends React.Component {
     map.zoomIn(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
-  _zoomOut (e) {
+  _zoomOut = (e) => {
     let map = this.refs.rosiemap.getWrappedInstance().map;
     if (map._zoom <= map.getMinZoom()) {
       return;
@@ -119,14 +109,14 @@ export default class MainApp extends React.Component {
     map.zoomOut(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
-  handleKeyDown (event) {
+  handleKeyDown = (event) => {
     let store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyDown(event.which);
     }
   }
 
-  handleKeyUp (event) {
+  handleKeyUp = (event) => {
     let store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyUp(event.which);
