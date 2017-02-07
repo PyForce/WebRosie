@@ -75,7 +75,7 @@ export default class LMap extends React.Component {
         });
       }, (error) => {
         // notify of connection error
-        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);
+        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`, 'error');
         this.props.removeRobot(id);
       });
     }

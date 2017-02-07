@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { selectRobot, moveRobot, notifyMessage, removeRobot, ADD_ROBOT } from '../actions';
+import { selectRobot, moveRobot, notifyReport, removeRobot, ADD_ROBOT } from '../actions';
 import LMap from '../components/map';
 
 
@@ -30,7 +30,7 @@ function mapDispatchToProps (dispatch) {
     },
     selectRobot: (id) => dispatch(selectRobot(id)),
     moveRobot: (id, pos) => dispatch(moveRobot(id, pos)),
-    notify: (text) => dispatch(notifyMessage(text)),
+    notify: (text, level) => dispatch(notifyReport(text, level)),
     removeRobot: (id) => dispatch(removeRobot(id))
   };
 }

@@ -126,10 +126,13 @@ export function move (state = null, action) {
 
 
 // handles application messages
-export function message (state = null, action) {
+export function report (state = null, action) {
   switch (action.type) {
-  case actions.NOTIFY_MSG:
-    return action.text;
+  case actions.NOTIFY_REPORT:
+    return {
+      text: action.text,
+      level: action.level
+    };
   default:
     return null;
   }

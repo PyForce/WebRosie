@@ -13,7 +13,7 @@ export const COMMAND_ROBOT = 10;
 export const PRESS_KEY = 11;
 export const RELEASE_KEY = 12;
 export const PATH_ROBOT = 13;
-export const NOTIFY_MSG = 14;
+export const NOTIFY_REPORT = 14;
 
 
 export function addRobot (host = document.domain, port = location.port, video = 8080) {
@@ -84,6 +84,6 @@ export function robotPath (path, smooth = false, interpolation = 'linear', k = 0
   };
 }
 
-export function notifyMessage (text) {
-  return { type: NOTIFY_MSG, text };
+export function notifyReport (text, level) {
+  return { type: NOTIFY_REPORT, text, level };
 }

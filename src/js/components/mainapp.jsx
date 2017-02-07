@@ -2,7 +2,6 @@ import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Snackbar from 'material-ui/Snackbar';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
@@ -12,6 +11,7 @@ import RosieMap from '../containers/rosiemap';
 import RosieAppBar from '../containers/rosiebar';
 import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
+import ReportSnackbar from './snackbar';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 
@@ -58,9 +58,9 @@ export default class MainApp extends React.Component {
   componentDidMount () {
     let store = this._reactInternalInstance._context.store;
     store.subscribe(() => {
-      let { message, robot, robots, lastaction, mode, keys } = store.getState();
-      if (message) {
-        this.setState({ message, notification: true });
+      let { report, robot, robots, lastaction, mode, keys } = store.getState();
+      if (report) {
+        this.setState({ report, notification: true });
       }
 
       if (robot < 0) {
@@ -173,8 +173,8 @@ export default class MainApp extends React.Component {
               <ZoomOutIcon />
             </FloatingActionButton>
           </div>
-          <Snackbar open={this.state.notification} message={this.state.message}
-                    autoHideDuration={2000}
+          <ReportSnackbar open={this.state.notification} message={this.state.report.text}
+                    autoHideDuration={2000} level={this.state.report.level}
                     onRequestClose={() => this.setState({notification: false})} />
         </div>
       </div>
