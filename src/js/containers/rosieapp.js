@@ -4,6 +4,12 @@ import MainApp from '../components/mainapp';
 import { addRobot, pressKey, releaseKey, updateMap } from '../actions';
 
 
+function mapStateToProps (state) {
+  return {
+    userMode: state.mode.user
+  };
+}
+
 function mapDispatchToProps (dispatch) {
   return {
     addRobot: (...params) => dispatch(addRobot(...params)),
@@ -14,7 +20,7 @@ function mapDispatchToProps (dispatch) {
 }
 
 const RosieApp = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(MainApp);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Nipple from 'nipplejs'
+import Nipple from 'nipplejs';
 
 
 export default class TouchJoystick extends React.Component {
@@ -11,8 +11,8 @@ export default class TouchJoystick extends React.Component {
       mode: 'static',
       color: muiTheme.palette.primary1Color,
       position: {
-        top: '50%',
-        left: '50%'
+        top: '0',
+        left: '0'
       }
     }).on('dir', (event, data) => {
       // take the direction in data.direction
@@ -31,6 +31,6 @@ export default class TouchJoystick extends React.Component {
 
     return (
       <div ref={(r) => this.zone = r} style={style}/>
-    )
+    );
   }
 }

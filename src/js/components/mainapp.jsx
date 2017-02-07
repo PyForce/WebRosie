@@ -6,14 +6,14 @@ import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
-import MobileDetect from 'mobile-detect'
+import MobileDetect from 'mobile-detect';
 
 import RosieMap from '../containers/rosiemap';
 import RosieAppBar from '../containers/rosiebar';
 import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
-import TouchJoystick from './joystick'
+import TouchJoystick from './joystick';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 
@@ -47,7 +47,7 @@ export default class MainApp extends React.Component {
     window.addEventListener('keyup', this.handleKeyUp);
 
     let md = new MobileDetect(window.navigator.userAgent);
-    this.isTouch = md.is('phone') || md.is('tablet');
+    this.isTouch = md.phone() !== null || md.tablet() !== null;
   }
 
   componentDidMount () {
