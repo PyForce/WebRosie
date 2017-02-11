@@ -4,10 +4,11 @@ import L from 'leaflet';
 L.DomUtil.setTransform = (el, offset, scale, angle) => {
   let pos = offset || new L.Point(0, 0);
 
+  // rotation is inverted on the page
   let translate = L.Browser.ie3d ?
     `translate(${pos.x}px, ${pos.y}px)` : `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-  let rotate = angle ? `rotate(${angle}rad)` : '';
-  let scl = scale ? `scale(#{scale})` : '';
+  let rotate = angle ? `rotate(${-angle}rad)` : '';
+  let scl = scale ? `scale(${scale})` : '';
 
   el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`;
 };
