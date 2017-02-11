@@ -19,11 +19,11 @@ describe('WebRosie store', function () {
     ).to.have.all.keys(
       'robots',
       'lastaction',
-      'message',
+      'report',
       'robot',
       'map',
       'mode',
-      'keys',
+      'direction',
       'move'
     );
   });

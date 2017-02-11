@@ -49,26 +49,60 @@ describe('move reducer', () => {
   });
 });
 
-describe('keys reducer', () => {
-  it('adds pressed keys', () => {
+const keys = {
+  W: 87,
+  S: 83,
+  D: 68,
+  A: 65
+};
+
+describe('direction reducer', () => {
+  it('goes up', () => {
     expect(
-      reducers.keys([12], actions.pressKey(32))
+      reducers.direction([0, 0], actions.pressKey(keys.W))
     )
-    .to.include(12)
-    .and.include(32);
+    .to.be.deep.equal([0, 1]);
   });
 
-  it('does not repeat keys', () => {
+  it('goes down', () => {
     expect(
-      reducers.keys([32, 12], actions.pressKey(32))
-    ).to.be.deep.equal([32, 12]);
+      reducers.direction([0, 0], actions.pressKey(keys.S))
+    )
+    .to.be.deep.equal([0, -1]);
   });
 
-  it('removes released keys', () => {
+  it('goes left', () => {
     expect(
-      reducers.keys([12, 32], actions.releaseKey(32))
+      reducers.direction([0, 0], actions.pressKey(keys.A))
     )
-    .to.include(12)
-    .and.not.include(32);
+    .to.be.deep.equal([-1, 0]);
+  });
+
+  it('goes right', () => {
+    expect(
+      reducers.direction([0, 0], actions.pressKey(keys.D))
+    )
+    .to.be.deep.equal([1, 0]);
+  });
+
+  it('goes north-east', () => {
+    expect(
+      reducers.direction([0, 1], actions.pressKey(keys.D))
+    )
+    .to.be.deep.equal([1, 1]);
+  });
+
+  it('stops going north-east', () => {
+    expect(
+      reducers.direction([1, 1], actions.releaseKey(keys.W))
+    )
+    .to.be.deep.equal([1, 0]);
+  });
+
+  it('stops on opposite keys', () => {
+    expect(
+      reducers.direction([0, 1], actions.pressKey(keys.S))
+    )
+    .to.be.deep.equal([0, 0]);
   });
 });
