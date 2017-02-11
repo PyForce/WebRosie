@@ -16,8 +16,8 @@ export default class Robot {
   }
 
   // API
-  keys (keys) {
-    this.sio.send(JSON.stringify({type: 'keys', data: keys}));
+  move (dir) {
+    this.sio.send(JSON.stringify({type: 'move', data: dir}));
   }
 
   // GET: /sensor/`name`

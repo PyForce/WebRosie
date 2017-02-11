@@ -95,14 +95,23 @@ export function mode (state = { order: false, path: false, user: false }, action
   }
 }
 
+const keyCodeToDirection = {
+  87: [0, 1],  // W
+  83: [0, -1],  // S
+  68: [1, 0],  // D
+  65: [-1, 0],  // A
+};
 
 // handles the pressed keys
-export function keys (state = [], action) {
+export function direction (state = [0, 0], action) {
+  let dir;
   switch (action.type) {
   case actions.PRESS_KEY:
-    return [ ...new Set(state.concat(action.key)) ];
+    dir = keyCodeToDirection[action.key];
+    return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e + dir[i]))) : state;
   case actions.RELEASE_KEY:
-    return state.filter((value) => value !== action.key);
+    dir = keyCodeToDirection[action.key];
+    return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e - dir[i]))) : state;
   default:
     return state;
   }
