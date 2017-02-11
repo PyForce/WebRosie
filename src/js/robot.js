@@ -50,15 +50,19 @@ export default class Robot {
     return this.post('position', pos);
   }
 
-  // POST: /path
+  // POST: /goto
   // {
-  //    path: `coordinate list`,
-  //    smooth: `wether or not to smooth the path`,
-  //    interpolation: `interpolation type`,
-  //    k: `constant`,
-  //    time: `finish time`
+  //    target: [x, y, t],
   // }
-  path (path) {
+  goto (pos) {
+    return this.post('goto', {target: pos});
+  }
+
+  // POST: /follow
+  // {
+  //    path: [[x, y, t], [x, y, t], ...],
+  // }
+  follow (path) {
     return this.post('path', path);
   }
 
@@ -94,13 +98,15 @@ export default class Robot {
   }
 
   post (route, param) {
+    let headers = new Headers({
+      'Content-Type': 'application/json;charset=UTF-8'
+    });
+
     return fetch(`http://${this.host}:${this.port}/${route}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: headers,
       body: JSON.stringify(param),
-      mode: 'no-cors'
+      mode: 'no-cors',
     });
   }
 }

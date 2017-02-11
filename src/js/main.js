@@ -1,7 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Needed for onTouchTap
@@ -24,7 +25,7 @@ const muiTheme = getMuiTheme({
 function init () {
   let app = document.getElementById('app');
   const reducer = combineReducers(reducers);
-  const store = createStore(reducer);
+  const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 
   render(
     <Provider store={store}>

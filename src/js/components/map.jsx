@@ -17,6 +17,8 @@ export default class LMap extends React.Component {
       if (!this.props.mode.path) {
         this.props.selectRobot();
       }
+
+      this.props.robotGoto(this.props.selected, [3, 1, 10]);
       // TODO: if the path mode is active,
       // create a new path point
     });
@@ -30,7 +32,7 @@ export default class LMap extends React.Component {
       }
 
       let overlay = robots[move.id].robot.overlay;
-      overlay.latlng = [move.x, move.y];
+      overlay.pos = move;
       overlay.angle = move.theta;
     });
   }

@@ -75,6 +75,14 @@ export default class RobotOverlay extends L.ImageOverlay {
     this._reset();
   }
 
+  get pos () {
+    return [this._latlng.lat, this._latlng.lng];
+  }
+
+  set pos (value) {
+    this.latlng = [value.y, value.x];
+  }
+
   get angle () {
     return this._angle;
   }

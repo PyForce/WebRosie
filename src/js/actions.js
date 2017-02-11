@@ -44,7 +44,17 @@ export function updateMap (map) {
 }
 
 export function robotGoto (id, pos) {
-  return { type: GOTO_ROBOT, id: id, position: pos };
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let [ selected ] = robots.filter((r) => r.id === id);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return selected.robot.goto(pos);
+  };
 }
 
 export function setOrder (value) {
