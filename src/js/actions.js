@@ -16,6 +16,12 @@ export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 
 
+function getRobot(robots, id) {
+  let [robot] = robots.filter((r) => r.id === id);
+  return robot;
+}
+
+
 export function addRobot (host = document.domain, port = location.port, video = 8080) {
   return {
     type: ADD_ROBOT,
@@ -45,8 +51,8 @@ export function updateMap (map) {
 
 export function robotGoto (id, pos) {
   return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let [ selected ] = robots.filter((r) => r.id === id);
+    let { robots } = getState();
+    let selected = getRobot(robots, id)
 
     if (!selected) {
       // no robot with such id
@@ -57,16 +63,50 @@ export function robotGoto (id, pos) {
   };
 }
 
+
+function autoMode(action, value) {
+  if (!value) {
+    // set to false, don't need to switch robot state
+    return action;
+  }
+
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return selected.robot
+      .auto()
+      .then(() => dispatch(action));
+  }
+}
+
+
 export function setOrder (value) {
-  return { type: ORDER_MODE, value: value };
+  return autoMode({ type: ORDER_MODE, value: value }, value);
 }
 
 export function setPath (value) {
-  return { type: PATH_MODE, value: value };
+  return autoMode({ type: PATH_MODE, value: value }, value);
 }
 
 export function setUser (value) {
-  return { type: USER_MODE, value: value };
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return (value ? selected.robot.manual() : selected.robot.auto())
+      .then(() => dispatch({ type: USER_MODE, value: value }));
+  }
 }
 
 export function robotCommand (command) {

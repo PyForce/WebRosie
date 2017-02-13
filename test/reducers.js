@@ -18,7 +18,7 @@ describe('mode reducer', function () {
 
   it('activates the user mode', () => {
     expect(
-      reducers.mode(undefined, actions.setUser(true))
+      reducers.mode(undefined, {type: actions.USER_MODE, value: true})
     )
     .to.have.property('user')
     .and.to.be.true;
@@ -30,7 +30,7 @@ describe('mode reducer', function () {
         order: true,
         user: false,
         path: false
-      }, actions.setPath(true))
+      }, {type: actions.PATH_MODE, value: true})
     )
     .to.be.deep.equal({
       order: false,
