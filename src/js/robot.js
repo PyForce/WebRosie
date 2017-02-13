@@ -7,7 +7,12 @@ export default class Robot {
     this.host = host;
     this.port = port;
     this.video = video;
-    this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
+    try {
+      this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
+    }
+    catch (ReferenceError) {
+      // no WebSocket
+    }
 
     this.metadata()
       .then((info) => {
