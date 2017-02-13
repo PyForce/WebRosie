@@ -96,14 +96,16 @@ export function mode (state = { order: false, path: false, user: false }, action
 }
 
 const keyCodeToDirection = {
-  87: [0, 1],  // W
-  83: [0, -1],  // S
-  68: [1, 0],  // D
-  65: [-1, 0],  // A
+  87: [0, 1, 0],  // W
+  83: [0, -1, 0],  // S
+  68: [1, 0, 0],  // D
+  65: [-1, 0, 0],  // A
+  69: [0, 0, 1],  // E
+  81: [0, 0, -1]  // Q
 };
 
 // handles the pressed keys
-export function direction (state = [0, 0], action) {
+export function direction (state = [0, 0, 0], action) {
   let dir;
   switch (action.type) {
   case actions.PRESS_KEY:

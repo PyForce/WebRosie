@@ -53,56 +53,72 @@ const keys = {
   W: 87,
   S: 83,
   D: 68,
-  A: 65
+  A: 65,
+  E: 69,
+  Q: 81
 };
 
 describe('direction reducer', () => {
   it('goes up', () => {
     expect(
-      reducers.direction([0, 0], actions.pressKey(keys.W))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.W))
     )
-    .to.be.deep.equal([0, 1]);
+    .to.be.deep.equal([0, 1, 0]);
   });
 
   it('goes down', () => {
     expect(
-      reducers.direction([0, 0], actions.pressKey(keys.S))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.S))
     )
-    .to.be.deep.equal([0, -1]);
+    .to.be.deep.equal([0, -1, 0]);
   });
 
   it('goes left', () => {
     expect(
-      reducers.direction([0, 0], actions.pressKey(keys.A))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.A))
     )
-    .to.be.deep.equal([-1, 0]);
+    .to.be.deep.equal([-1, 0, 0]);
   });
 
   it('goes right', () => {
     expect(
-      reducers.direction([0, 0], actions.pressKey(keys.D))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.D))
     )
-    .to.be.deep.equal([1, 0]);
+    .to.be.deep.equal([1, 0, 0]);
   });
 
   it('goes north-east', () => {
     expect(
-      reducers.direction([0, 1], actions.pressKey(keys.D))
+      reducers.direction([0, 1, 0], actions.pressKey(keys.D))
     )
-    .to.be.deep.equal([1, 1]);
+    .to.be.deep.equal([1, 1, 0]);
   });
 
   it('stops going north-east', () => {
     expect(
-      reducers.direction([1, 1], actions.releaseKey(keys.W))
+      reducers.direction([1, 1, 0], actions.releaseKey(keys.W))
     )
-    .to.be.deep.equal([1, 0]);
+    .to.be.deep.equal([1, 0, 0]);
   });
 
   it('stops on opposite keys', () => {
     expect(
-      reducers.direction([0, 1], actions.pressKey(keys.S))
+      reducers.direction([0, 1, 0], actions.pressKey(keys.S))
     )
-    .to.be.deep.equal([0, 0]);
+    .to.be.deep.equal([0, 0, 0]);
+  });
+
+  it('rotates rigth in-place', () => {
+    expect(
+      reducers.direction([0, 0, 0], actions.pressKey(keys.E))
+    )
+    .to.be.deep.equal([0, 0, 1]);
+  });
+
+  it('rotates left in-place', () => {
+    expect(
+      reducers.direction([0, 0, 0], actions.pressKey(keys.Q))
+    )
+    .to.be.deep.equal([0, 0, -1]);
   });
 });
