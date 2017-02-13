@@ -13,12 +13,13 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([0, 0], 9);
 
-    this.map.on('click', () => {
+    this.map.on('click', (event) => {
       if (!this.props.mode.path) {
         this.props.selectRobot();
       }
 
-      this.props.robotGoto(this.props.selected, [3, 1, 10]);
+      let {lat: y, lng: x} = event.latlng;
+      this.props.robotGoto(this.props.selected, [x, y, 10]);
       // TODO: if the path mode is active,
       // create a new path point
     });
