@@ -13,7 +13,7 @@ import RosieAppBar from '../containers/rosiebar';
 import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
-import TouchJoystick from './joystick';
+import RosieJoystick from '../containers/rosiejoystick';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 
@@ -150,7 +150,7 @@ export default class MainApp extends React.Component {
           <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
 
-          {this.props.userMode && this.isTouch ? <TouchJoystick /> : undefined}
+          {this.props.userMode && this.isTouch ? <RosieJoystick /> : undefined}
 
           <div style={zoombtns}>
             <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}

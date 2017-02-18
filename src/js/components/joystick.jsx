@@ -11,12 +11,18 @@ export default class TouchJoystick extends React.Component {
       mode: 'static',
       color: muiTheme.palette.primary1Color,
       position: {
-        top: '0',
-        left: '0'
+        top: '55%',
+        left: '50%'
       }
-    }).on('dir', (event, data) => {
-      // take the direction in data.direction
-      return;
+    }).on('move', (event, data) => {
+      let force = Math.min(data.force, 1);
+      let movement = {
+        x: force * Math.cos(data.angle.radian),
+        y: force * Math.sin(data.angle.radian)
+      };
+      this.props.moveJoystick(movement);
+    }).on('end', () => {
+      this.props.moveJoystick({x: 0, y: 0});
     });
   }
 

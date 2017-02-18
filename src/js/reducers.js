@@ -114,6 +114,8 @@ export function direction (state = [0, 0, 0], action) {
   case actions.RELEASE_KEY:
     dir = keyCodeToDirection[action.key];
     return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e - dir[i]))) : state;
+  case actions.JOYSTICK_MOVE:
+    return [action.movement.x, action.movement.y, state[2]];
   default:
     return state;
   }

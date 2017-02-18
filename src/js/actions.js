@@ -14,9 +14,10 @@ export const PRESS_KEY = 11;
 export const RELEASE_KEY = 12;
 export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
+export const JOYSTICK_MOVE = 15;
 
 
-function getRobot(robots, id) {
+function getRobot (robots, id) {
   let [robot] = robots.filter((r) => r.id === id);
   return robot;
 }
@@ -52,7 +53,7 @@ export function updateMap (map) {
 export function robotGoto (id, pos) {
   return (dispatch, getState) => {
     let { robots } = getState();
-    let selected = getRobot(robots, id)
+    let selected = getRobot(robots, id);
 
     if (!selected) {
       // no robot with such id
@@ -64,7 +65,7 @@ export function robotGoto (id, pos) {
 }
 
 
-function autoMode(action, value) {
+function autoMode (action, value) {
   if (!value) {
     // set to false, don't need to switch robot state
     return action;
@@ -82,7 +83,7 @@ function autoMode(action, value) {
     return selected.robot
       .auto()
       .then(() => dispatch(action));
-  }
+  };
 }
 
 
@@ -106,7 +107,7 @@ export function setUser (value) {
 
     return (value ? selected.robot.manual() : selected.robot.auto())
       .then(() => dispatch({ type: USER_MODE, value: value }));
-  }
+  };
 }
 
 export function robotCommand (command) {
@@ -119,6 +120,10 @@ export function pressKey (key) {
 
 export function releaseKey (key) {
   return { type: RELEASE_KEY, key: key };
+}
+
+export function moveJoystick (movement) {
+  return { type: JOYSTICK_MOVE, movement };
 }
 
 export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
