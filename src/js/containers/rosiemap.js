@@ -5,18 +5,10 @@ import { selectRobot, moveRobot, notifyReport,
 import LMap from '../components/map';
 
 
-function mapStateToProps (state, ownProps) {
-  let last;
-  if (ownProps.robot) {
-    last = ownProps.robot.id + 1;
-  }
-  else {
-    last = 0;
-  }
-
+function mapStateToProps (state) {
   return {
-    robot: state.lastaction === ADD_ROBOT && state.robots.length > last ?
-      state.robots[last] : null,
+    robot: state.lastaction === ADD_ROBOT && state.robots.length > 0 ?
+      state.robots[state.robots.length - 1] : null,
     map: state.map,
     mode: state.mode,
     selected: state.robot
