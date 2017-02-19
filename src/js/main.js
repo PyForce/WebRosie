@@ -10,7 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { blue500 } from 'material-ui/styles/colors';
+import { teal900 } from 'material-ui/styles/colors';
 
 import * as reducers from './reducers';
 import RosieApp from './containers/rosieapp';
@@ -18,7 +18,7 @@ import RosieApp from './containers/rosieapp';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: blue500
+    primary1Color: teal900
   }
 });
 
