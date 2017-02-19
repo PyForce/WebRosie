@@ -27,7 +27,7 @@ export default class LMap extends React.Component {
     let store = this._reactInternalInstance._context.store;
 
     store.subscribe(() => {
-      let { move, robots } = store.getState();
+      let { move, robots, robot } = store.getState();
       if (!move) {
         return;
       }
@@ -35,6 +35,19 @@ export default class LMap extends React.Component {
       let overlay = robots[move.id].robot.overlay;
       overlay.pos = move;
       overlay.angle = move.theta;
+
+      if (move.id !== robot) {
+        return;
+      }
+
+      let bounds = this.map.getBounds();
+
+      if (bounds.getNorth() < overlay.latlng.lat ||
+          bounds.getEast() < overlay.latlng.lng ||
+          bounds.getSouth() > overlay.latlng.lat ||
+          bounds.getWest() > overlay.latlng.lng) {
+        this.map.panTo(overlay.latlng);
+      }
     });
   }
 
@@ -73,8 +86,8 @@ export default class LMap extends React.Component {
 
         // move to the initial position
         obj.odometry().then((pos) => {
-          this.map.panTo([pos.x, pos.y]);
           this.props.moveRobot(id, pos);
+          this.map.panTo([pos.y, pos.y]);
         });
       }, (error) => {
         // notify of connection error
