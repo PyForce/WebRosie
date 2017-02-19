@@ -11,33 +11,33 @@ export default class Bar extends React.Component {
     let muiTheme = this._reactInternalInstance._context.muiTheme;
 
     let { selected, dispatch, user, path, order,
-          setPathMode, setUserMode, setOrderMode, ...other } = this.props;
+      setPathMode, setUserMode, setOrderMode, ...other } = this.props;
 
     let icons;
     if (selected >= 0) {
       icons =
         <div>
           <IconButton tooltip="Path Mode"
-                      onTouchTap={() => setPathMode(!path)}>
+            onTouchTap={() => setPathMode(!path)}>
             <PathIcon color={path ? muiTheme.baseTheme.palette.accent1Color :
-                                    muiTheme.appBar.textColor} />
+              muiTheme.appBar.textColor} />
           </IconButton>
           <IconButton tooltip="User Mode"
-                      onTouchTap={() => setUserMode(!user)}>
+            onTouchTap={() => setUserMode(!user)}>
             <UserIcon color={user ? muiTheme.baseTheme.palette.accent1Color :
-                                    muiTheme.appBar.textColor} />
+              muiTheme.appBar.textColor} />
           </IconButton>
           <IconButton tooltip="Command Mode"
-                      onTouchTap={() => setOrderMode(!order)}>
+            onTouchTap={() => setOrderMode(!order)}>
             <CommandIcon color={order ? muiTheme.baseTheme.palette.accent1Color :
-                                        muiTheme.appBar.textColor} />
+              muiTheme.appBar.textColor} />
           </IconButton>
         </div>;
     }
 
     return (
       <AppBar {...other} iconElementRight={icons}
-                        iconStyleRight={{marginRight: 0}}/>
+        iconStyleRight={{ marginRight: 0 }} />
     );
   }
 }
