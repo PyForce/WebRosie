@@ -95,14 +95,27 @@ export function mode (state = { order: false, path: false, user: false }, action
   }
 }
 
+const keyCodeToDirection = {
+  87: [0, 1, 0],  // W
+  83: [0, -1, 0],  // S
+  68: [1, 0, 0],  // D
+  65: [-1, 0, 0],  // A
+  69: [0, 0, 1],  // E
+  81: [0, 0, -1]  // Q
+};
 
 // handles the pressed keys
-export function keys (state = [], action) {
+export function direction (state = [0, 0, 0], action) {
+  let dir;
   switch (action.type) {
   case actions.PRESS_KEY:
-    return [ ...new Set(state.concat(action.key)) ];
+    dir = keyCodeToDirection[action.key];
+    return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e + dir[i]))) : state;
   case actions.RELEASE_KEY:
-    return state.filter((value) => value !== action.key);
+    dir = keyCodeToDirection[action.key];
+    return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e - dir[i]))) : state;
+  case actions.JOYSTICK_MOVE:
+    return [action.movement.x, action.movement.y, state[2]];
   default:
     return state;
   }
@@ -126,10 +139,13 @@ export function move (state = null, action) {
 
 
 // handles application messages
-export function message (state = null, action) {
+export function report (state = null, action) {
   switch (action.type) {
-  case actions.NOTIFY_MSG:
-    return action.text;
+  case actions.NOTIFY_REPORT:
+    return {
+      text: action.text,
+      level: action.level
+    };
   default:
     return null;
   }

@@ -6,18 +6,10 @@ import { Table, TableRow, TableHeader, TableHeaderColumn, TableBody,
 
 
 export default class MapDialog extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      maps: [],
-      any: false,
-      map: undefined
-    };
-
-    this.acceptDialog = this.acceptDialog.bind(this);
-    this.cancelDialog = this.cancelDialog.bind(this);
-    this.handleSelection = this.handleSelection.bind(this);
+  state = {
+    maps: [],
+    any: false,
+    map: undefined
   }
 
   componentWillReceiveProps (nextProps) {
@@ -37,7 +29,7 @@ export default class MapDialog extends React.Component {
     });
   }
 
-  loadMaps (robot, id) {
+  loadMaps = (robot, id) => {
     // load maps of a single robot
     return robot.maps()
       .then((data) => data.map((name) => ({
@@ -49,15 +41,15 @@ export default class MapDialog extends React.Component {
       );
   }
 
-  acceptDialog () {
+  acceptDialog = () => {
     this.props.onRequestClose(true, this.state.map);
   }
 
-  cancelDialog () {
+  cancelDialog = () => {
     this.props.onRequestClose(false);
   }
 
-  handleSelection (selection) {
+  handleSelection = (selection) => {
     let any = selection.length > 0;
     if (any) {
       // get the map info

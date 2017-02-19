@@ -5,26 +5,19 @@ import TextField from 'material-ui/TextField';
 
 
 export default class AddRobotDialog extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      robotHost: 'localhost',
-      robotPort: 5000
-    };
-
-    this.acceptDialog = this.acceptDialog.bind(this);
-    this.cancelDialog = this.cancelDialog.bind(this);
+  state = {
+    robotHost: document.domain,
+    robotPort: 5000
   }
 
-  acceptDialog () {
+  acceptDialog = () => {
     this.props.onRequestClose(true,
       this.state.robotHost,
       this.state.robotPort
     );
   }
 
-  cancelDialog () {
+  cancelDialog = () => {
     this.props.onRequestClose(false);
   }
 

@@ -13,7 +13,14 @@ export const COMMAND_ROBOT = 10;
 export const PRESS_KEY = 11;
 export const RELEASE_KEY = 12;
 export const PATH_ROBOT = 13;
-export const NOTIFY_MSG = 14;
+export const NOTIFY_REPORT = 14;
+export const JOYSTICK_MOVE = 15;
+
+
+function getRobot (robots, id) {
+  let [robot] = robots.filter((r) => r.id === id);
+  return robot;
+}
 
 
 export function addRobot (host = document.domain, port = location.port, video = 8080) {
@@ -44,19 +51,63 @@ export function updateMap (map) {
 }
 
 export function robotGoto (id, pos) {
-  return { type: GOTO_ROBOT, id: id, position: pos };
+  return (dispatch, getState) => {
+    let { robots } = getState();
+    let selected = getRobot(robots, id);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return selected.robot.goto(pos);
+  };
 }
 
+
+function autoMode (action, value) {
+  if (!value) {
+    // set to false, don't need to switch robot state
+    return action;
+  }
+
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return selected.robot
+      .auto()
+      .then(() => dispatch(action));
+  };
+}
+
+
 export function setOrder (value) {
-  return { type: ORDER_MODE, value: value };
+  return autoMode({ type: ORDER_MODE, value: value }, value);
 }
 
 export function setPath (value) {
-  return { type: PATH_MODE, value: value };
+  return autoMode({ type: PATH_MODE, value: value }, value);
 }
 
 export function setUser (value) {
-  return { type: USER_MODE, value: value };
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return (value ? selected.robot.manual() : selected.robot.auto())
+      .then(() => dispatch({ type: USER_MODE, value: value }));
+  };
 }
 
 export function robotCommand (command) {
@@ -69,6 +120,10 @@ export function pressKey (key) {
 
 export function releaseKey (key) {
   return { type: RELEASE_KEY, key: key };
+}
+
+export function moveJoystick (movement) {
+  return { type: JOYSTICK_MOVE, movement };
 }
 
 export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
@@ -84,6 +139,6 @@ export function robotPath (path, smooth = false, interpolation = 'linear', k = 0
   };
 }
 
-export function notifyMessage (text) {
-  return { type: NOTIFY_MSG, text };
+export function notifyReport (text, level) {
+  return { type: NOTIFY_REPORT, text, level };
 }

@@ -13,10 +13,13 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([0, 0], 9);
 
-    this.map.on('click', () => {
+    this.map.on('click', (event) => {
       if (!this.props.mode.path) {
         this.props.selectRobot();
       }
+
+      let {lat: y, lng: x} = event.latlng;
+      this.props.robotGoto(this.props.selected, [x, y, 10]);
       // TODO: if the path mode is active,
       // create a new path point
     });
@@ -24,14 +27,27 @@ export default class LMap extends React.Component {
     let store = this._reactInternalInstance._context.store;
 
     store.subscribe(() => {
-      let { move, robots } = store.getState();
+      let { move, robots, robot } = store.getState();
       if (!move) {
         return;
       }
 
       let overlay = robots[move.id].robot.overlay;
-      overlay.latlng = [move.x, move.y];
+      overlay.pos = move;
       overlay.angle = move.theta;
+
+      if (move.id !== robot) {
+        return;
+      }
+
+      let bounds = this.map.getBounds();
+
+      if (bounds.getNorth() < overlay.latlng.lat ||
+          bounds.getEast() < overlay.latlng.lng ||
+          bounds.getSouth() > overlay.latlng.lat ||
+          bounds.getWest() > overlay.latlng.lng) {
+        this.map.panTo(overlay.latlng);
+      }
     });
   }
 
@@ -70,12 +86,12 @@ export default class LMap extends React.Component {
 
         // move to the initial position
         obj.odometry().then((pos) => {
-          this.map.panTo([pos.x, pos.y]);
           this.props.moveRobot(id, pos);
+          this.map.panTo([pos.y, pos.y]);
         });
       }, (error) => {
         // notify of connection error
-        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`);
+        this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`, 'error');
         this.props.removeRobot(id);
       });
     }

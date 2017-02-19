@@ -18,7 +18,7 @@ describe('mode reducer', function () {
 
   it('activates the user mode', () => {
     expect(
-      reducers.mode(undefined, actions.setUser(true))
+      reducers.mode(undefined, {type: actions.USER_MODE, value: true})
     )
     .to.have.property('user')
     .and.to.be.true;
@@ -30,7 +30,7 @@ describe('mode reducer', function () {
         order: true,
         user: false,
         path: false
-      }, actions.setPath(true))
+      }, {type: actions.PATH_MODE, value: true})
     )
     .to.be.deep.equal({
       order: false,
@@ -49,26 +49,76 @@ describe('move reducer', () => {
   });
 });
 
-describe('keys reducer', () => {
-  it('adds pressed keys', () => {
+const keys = {
+  W: 87,
+  S: 83,
+  D: 68,
+  A: 65,
+  E: 69,
+  Q: 81
+};
+
+describe('direction reducer', () => {
+  it('goes up', () => {
     expect(
-      reducers.keys([12], actions.pressKey(32))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.W))
     )
-    .to.include(12)
-    .and.include(32);
+    .to.be.deep.equal([0, 1, 0]);
   });
 
-  it('does not repeat keys', () => {
+  it('goes down', () => {
     expect(
-      reducers.keys([32, 12], actions.pressKey(32))
-    ).to.be.deep.equal([32, 12]);
+      reducers.direction([0, 0, 0], actions.pressKey(keys.S))
+    )
+    .to.be.deep.equal([0, -1, 0]);
   });
 
-  it('removes released keys', () => {
+  it('goes left', () => {
     expect(
-      reducers.keys([12, 32], actions.releaseKey(32))
+      reducers.direction([0, 0, 0], actions.pressKey(keys.A))
     )
-    .to.include(12)
-    .and.not.include(32);
+    .to.be.deep.equal([-1, 0, 0]);
+  });
+
+  it('goes right', () => {
+    expect(
+      reducers.direction([0, 0, 0], actions.pressKey(keys.D))
+    )
+    .to.be.deep.equal([1, 0, 0]);
+  });
+
+  it('goes north-east', () => {
+    expect(
+      reducers.direction([0, 1, 0], actions.pressKey(keys.D))
+    )
+    .to.be.deep.equal([1, 1, 0]);
+  });
+
+  it('stops going north-east', () => {
+    expect(
+      reducers.direction([1, 1, 0], actions.releaseKey(keys.W))
+    )
+    .to.be.deep.equal([1, 0, 0]);
+  });
+
+  it('stops on opposite keys', () => {
+    expect(
+      reducers.direction([0, 1, 0], actions.pressKey(keys.S))
+    )
+    .to.be.deep.equal([0, 0, 0]);
+  });
+
+  it('rotates rigth in-place', () => {
+    expect(
+      reducers.direction([0, 0, 0], actions.pressKey(keys.E))
+    )
+    .to.be.deep.equal([0, 0, 1]);
+  });
+
+  it('rotates left in-place', () => {
+    expect(
+      reducers.direction([0, 0, 0], actions.pressKey(keys.Q))
+    )
+    .to.be.deep.equal([0, 0, -1]);
   });
 });

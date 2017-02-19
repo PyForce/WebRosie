@@ -2,41 +2,33 @@ import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Snackbar from 'material-ui/Snackbar';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
+import MobileDetect from 'mobile-detect';
 
 import RosieMap from '../containers/rosiemap';
 import RosieAppBar from '../containers/rosiebar';
 import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
+import ReportSnackbar from './reportsnackbar';
+import RosieJoystick from '../containers/rosiejoystick';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 
 export default class MainApp extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      drawer: false,
-      robotdialog: false,
-      mapdialog: false,
-      zoomin: true,
-      zoomout: true,
-      notification: false,
-      message: ''
-    };
-
-    this.toggleDrawer = this.toggleDrawer.bind(this);
-    this.acceptRobot = this.acceptRobot.bind(this);
-    this.acceptMap = this.acceptMap.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    // map zoom control
-    this._zoomIn = this._zoomIn.bind(this);
-    this._zoomOut = this._zoomOut.bind(this);
+  state = {
+    drawer: false,
+    robotdialog: false,
+    mapdialog: false,
+    zoomin: true,
+    zoomout: true,
+    notification: false,
+    report: {
+      text: '',
+      level: 'info'
+    }
   }
 
   componentWillMount () {
@@ -53,14 +45,17 @@ export default class MainApp extends React.Component {
 
     window.addEventListener('keydown', this.handleKeyDown);
     window.addEventListener('keyup', this.handleKeyUp);
+
+    let md = new MobileDetect(window.navigator.userAgent);
+    this.isTouch = md.phone() !== null || md.tablet() !== null;
   }
 
   componentDidMount () {
     let store = this._reactInternalInstance._context.store;
     store.subscribe(() => {
-      let { message, robot, robots, lastaction, mode, keys } = store.getState();
-      if (message) {
-        this.setState({ message, notification: true });
+      let { report, robot, robots, direction } = store.getState();
+      if (report) {
+        this.setState({ report, notification: true });
       }
 
       if (robot < 0) {
@@ -68,24 +63,16 @@ export default class MainApp extends React.Component {
       }
 
       let selectedRobot = robots[robot].robot;
-      // mode action, change real robot mode accordingly
-      if (lastaction >= ORDER_MODE && lastaction <= USER_MODE) {
-        if (mode.user) {
-          selectedRobot.manual();
-        } else {
-          selectedRobot.auto();
-        }
-      }
 
-      selectedRobot.keys(keys);
+      selectedRobot.move(direction);
     });
   }
 
-  toggleDrawer () {
+  toggleDrawer = () => {
     this.setState({ drawer: !this.state.drawer });
   }
 
-  acceptRobot (accepted, ...data) {
+  acceptRobot = (accepted, ...data) => {
     if (accepted) {
       this.props.addRobot(...data);
     }
@@ -94,7 +81,7 @@ export default class MainApp extends React.Component {
     this.setState({ robotdialog: false });
   }
 
-  acceptMap (accepted, data) {
+  acceptMap = (accepted, data) => {
     if (accepted) {
       this.props.loadMap(data);
     }
@@ -103,7 +90,7 @@ export default class MainApp extends React.Component {
     this.setState({ mapdialog: false });
   }
 
-  _zoomIn (e) {
+  _zoomIn = (e) => {
     let map = this.refs.rosiemap.getWrappedInstance().map;
     if (map._zoom >= map.getMaxZoom()) {
       return;
@@ -111,7 +98,7 @@ export default class MainApp extends React.Component {
     map.zoomIn(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
-  _zoomOut (e) {
+  _zoomOut = (e) => {
     let map = this.refs.rosiemap.getWrappedInstance().map;
     if (map._zoom <= map.getMinZoom()) {
       return;
@@ -119,14 +106,14 @@ export default class MainApp extends React.Component {
     map.zoomOut(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
-  handleKeyDown (event) {
+  handleKeyDown = (event) => {
     let store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyDown(event.which);
     }
   }
 
-  handleKeyUp (event) {
+  handleKeyUp = (event) => {
     let store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyUp(event.which);
@@ -134,13 +121,13 @@ export default class MainApp extends React.Component {
   }
 
   render () {
-    let zoombtns = {
+    const zoombtns = {
       position: 'absolute',
       bottom: 0,
       margin: '0 0 1% 1%',
       zIndex: 1000
     };
-    let zoombtn = {
+    const zoombtn = {
       display: 'block'
     };
 
@@ -162,6 +149,9 @@ export default class MainApp extends React.Component {
         <div style={{height: '100%'}} className='flex column wrap start'>
           <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
+
+          {this.props.userMode && this.isTouch ? <RosieJoystick /> : undefined}
+
           <div style={zoombtns}>
             <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
                                   onTouchTap={this._zoomIn}
@@ -173,8 +163,8 @@ export default class MainApp extends React.Component {
               <ZoomOutIcon />
             </FloatingActionButton>
           </div>
-          <Snackbar open={this.state.notification} message={this.state.message}
-                    autoHideDuration={2000}
+          <ReportSnackbar open={this.state.notification} message={this.state.report.text}
+                    autoHideDuration={2000} level={this.state.report.level}
                     onRequestClose={() => this.setState({notification: false})} />
         </div>
       </div>

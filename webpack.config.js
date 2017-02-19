@@ -11,13 +11,11 @@ config.entry = [
 ];
 
 config.module = {
-  loaders: [
-    {
-      loader:  'babel-loader',
-      test:    /\.jsx?$/,
-      exclude: /node_modules/
-    }
-  ],
+  loaders: [{
+    loader: 'babel-loader',
+    test: /\.jsx?$/,
+    exclude: /node_modules/
+  }],
   postLoaders: []
 };
 
