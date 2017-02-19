@@ -15,6 +15,9 @@ export default class LMap extends React.Component {
 
     this.map.on('click', (event) => {
       if (!this.props.mode.path) {
+        // return the robot to auto mode
+        this.props.modeOff();
+        // deselect the robot on map click
         this.props.selectRobot();
       }
 
@@ -87,7 +90,7 @@ export default class LMap extends React.Component {
         // move to the initial position
         obj.odometry().then((pos) => {
           this.props.moveRobot(id, pos);
-          this.map.panTo([pos.y, pos.y]);
+          this.map.panTo(obj.overlay.latlng);
         });
       }, (error) => {
         // notify of connection error

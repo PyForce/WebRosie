@@ -108,14 +108,21 @@ const keyCodeToDirection = {
 export function direction (state = [0, 0, 0], action) {
   let dir;
   switch (action.type) {
+  // wASD vector update
   case actions.PRESS_KEY:
     dir = keyCodeToDirection[action.key];
     return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e + dir[i]))) : state;
   case actions.RELEASE_KEY:
     dir = keyCodeToDirection[action.key];
     return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e - dir[i]))) : state;
+  // joystick vector update
   case actions.JOYSTICK_MOVE:
     return [action.movement.x, action.movement.y, state[2]];
+  // reset vector on mode change
+  case actions.ORDER_MODE:
+  case actions.PATH_MODE:
+  case actions.USER_MODE:
+    return [0, 0, 0];
   default:
     return state;
   }
