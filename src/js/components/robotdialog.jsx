@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 
 export default class AddRobotDialog extends React.Component {
   state = {
-    robotHost: 'localhost',
+    robotHost: document.domain,
     robotPort: 5000
   }
 
