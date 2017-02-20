@@ -10,6 +10,7 @@ function mapStateToProps (state) {
     joystickShow: state.settings.user.joystick,
     report: state.report || { text: '', level: 'info' },
     notification: Boolean(state.report)
+    selected: state.robot !== -1
   };
 }
 
