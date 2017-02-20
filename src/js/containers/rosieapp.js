@@ -6,7 +6,7 @@ import { addRobot, pressKey, releaseKey, updateMap } from '../actions';
 
 function mapStateToProps (state) {
   return {
-    userMode: state.mode.user
+    mode: state.mode
   };
 }
 

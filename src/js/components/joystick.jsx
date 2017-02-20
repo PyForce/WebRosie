@@ -27,16 +27,8 @@ export default class TouchJoystick extends React.Component {
   }
 
   render () {
-    const style = {
-      position: 'absolute',
-      height: '25%',
-      width: '25%',
-      bottom: 0,
-      right: 0
-    };
-
     return (
-      <div ref={(r) => this.zone = r} style={style}/>
+      <div ref={(r) => this.zone = r} style={this.props.style}/>
     );
   }
 }

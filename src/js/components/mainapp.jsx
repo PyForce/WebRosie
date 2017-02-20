@@ -130,6 +130,13 @@ export default class MainApp extends React.Component {
     const zoombtn = {
       display: 'block'
     };
+    const actionStyle = {
+      position: 'absolute',
+      height: '25%',
+      width: '25%',
+      bottom: 0,
+      right: 0
+    };
 
     return (
       <div>
@@ -150,7 +157,8 @@ export default class MainApp extends React.Component {
           <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
 
-          {this.props.userMode && this.isTouch ? <RosieJoystick /> : undefined}
+          {this.props.mode.user && this.isTouch ? <RosieJoystick style={actionStyle}/> : undefined}
+          {this.props.mode.path ? <PathActions style={actionStyle}/> : undefined}
 
           <div style={zoombtns}>
             <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
