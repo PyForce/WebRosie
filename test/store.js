@@ -1,9 +1,9 @@
-import { expect } from 'chai'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { expect } from 'chai';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import * as actions from '../src/js/actions'
-import * as reducers from '../src/js/reducers'
+import * as actions from '../src/js/actions';
+import * as reducers from '../src/js/reducers';
 
 
 describe('WebRosie store', function () {
@@ -33,14 +33,15 @@ describe('WebRosie store', function () {
   });
 
   it('dispatches an user mode action', () => {
-    return this.store.dispatch(actions.setUser(true))
-      .then(() => {
-        expect(
+    let check = () => {
+      expect(
           this.store.getState()
         )
         .to.have.property('mode')
         .that.has.property('user')
         .that.is.true;
-      });
+    };
+    return this.store.dispatch(actions.setUser(true))
+      .then(check);
   });
 });
