@@ -3,10 +3,10 @@ import request from 'superagent';
 
 // robot class with rosie API
 export default class Robot {
-  constructor (host = document.domain, port = location.port, video = 8080) {
+  constructor (host = document.domain, port = location.port) {
     this.host = host;
     this.port = port;
-    this.video = video;
+
     try {
       this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
     }
