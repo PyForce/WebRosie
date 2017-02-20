@@ -14,7 +14,7 @@ export default class LMap extends React.Component {
     }).setView([0, 0], 9);
 
     this.map.on('click', (event) => {
-      if (!this.props.mode.path) {
+      if (!(this.props.mode.single || this.props.mode.path)) {
         // return the robot to auto mode
         this.props.modeOff();
         // deselect the robot on map click
@@ -22,7 +22,11 @@ export default class LMap extends React.Component {
       }
 
       let {lat: y, lng: x} = event.latlng;
-      this.props.robotGoto(this.props.selected, [x, y, 10]);
+
+      if (this.props.mode.single) {
+        this.props.robotGoto(this.props.selected, [x, y, 10]);
+        return;
+      }
       // TODO: if the path mode is active,
       // create a new path point
     });

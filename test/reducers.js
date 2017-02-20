@@ -1,7 +1,7 @@
-import { expect } from 'chai'
+import { expect } from 'chai';
 
-import * as reducers from '../src/js/reducers'
-import * as actions from '../src/js/actions'
+import * as reducers from '../src/js/reducers';
+import * as actions from '../src/js/actions';
 
 
 describe('mode reducer', function () {
@@ -11,6 +11,7 @@ describe('mode reducer', function () {
     )
     .to.be.deep.equal({
       order: false,
+      single: false,
       path: false,
       user: false
     });
@@ -29,12 +30,14 @@ describe('mode reducer', function () {
       reducers.mode({
         order: true,
         user: false,
+        single: false,
         path: false
       }, {type: actions.PATH_MODE, value: true})
     )
     .to.be.deep.equal({
       order: false,
       user: false,
+      single: false,
       path: true
     });
   });

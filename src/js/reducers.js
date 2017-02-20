@@ -51,7 +51,7 @@ export function map (state = null, action) {
 
 
 // handles tha active modes
-export function mode (state = { order: false, path: false, user: false }, action) {
+export function mode (state = { order: false, single: false, path: false, user: false }, action) {
   switch (action.type) {
     // set order mode
   case actions.ORDER_MODE:
@@ -61,6 +61,18 @@ export function mode (state = { order: false, path: false, user: false }, action
 
     return {
       order: true,
+      single: false,
+      path: false,
+      user: false
+    };
+  case actions.SINGLE_MODE:
+    if (!action.value) {
+      return { ...state, single: false };
+    }
+
+    return {
+      order: false,
+      single: true,
       path: false,
       user: false
     };
@@ -72,6 +84,7 @@ export function mode (state = { order: false, path: false, user: false }, action
 
     return {
       order: false,
+      single: false,
       path: true,
       user: false
     };
@@ -83,6 +96,7 @@ export function mode (state = { order: false, path: false, user: false }, action
 
     return {
       order: false,
+      single: false,
       path: false,
       user: true
     };

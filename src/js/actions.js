@@ -15,6 +15,7 @@ export const RELEASE_KEY = 12;
 export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
+export const SINGLE_MODE = 16;
 
 
 function getRobot (robots, id) {
@@ -89,6 +90,10 @@ function autoMode (action, value) {
 
 export function setOrder (value) {
   return autoMode({ type: ORDER_MODE, value: value }, value);
+}
+
+export function setSingle (value) {
+  return autoMode({ type: SINGLE_MODE, value: value }, value);
 }
 
 export function setPath (value) {
