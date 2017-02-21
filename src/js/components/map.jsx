@@ -13,6 +13,12 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([0, 0], 9);
 
+    let muiTheme = this._reactInternalInstance._context.muiTheme;
+
+    this.marker = L.circleMarker([0, 0], {
+      color: muiTheme.palette.accent1Color
+    });
+
     this.map.on('click', (event) => {
       if (!(this.props.mode.single || this.props.mode.path)) {
         // return the robot to auto mode
@@ -24,7 +30,9 @@ export default class LMap extends React.Component {
       let {lat: y, lng: x} = event.latlng;
 
       if (this.props.mode.single) {
+        this.map.removeLayer(this.marker);
         this.props.robotGoto(this.props.selected, [x, y, 10]);
+        this.marker.addTo(this.map).setLatLng(event.latlng);
         return;
       }
 
@@ -35,10 +43,11 @@ export default class LMap extends React.Component {
       this.props.addPoint([x, y]);
     });
 
-    let muiTheme = this._reactInternalInstance._context.muiTheme;
-
-    this.polyline = L.polyline([], {
+    this.path = L.polyline([], {
       color: muiTheme.palette.accent1Color
+    }).addTo(this.map);
+    this.realPath = L.polyline([], {
+      color: muiTheme.palette.accent3Color
     }).addTo(this.map);
   }
 
@@ -63,13 +72,18 @@ export default class LMap extends React.Component {
           bounds.getWest() > overlay.latlng.lng) {
       this.map.panTo(overlay.latlng);
     }
+
+    if (this.props.mode.path) {
+      this.realPath.addLatLng(overlay.latlng);
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    let { robot, map, path, move, pathClear, selected } = nextProps;
+    let { robot, map, path, move, pathClear, selected, mode } = nextProps;
 
     if (pathClear) {
-      this.polyline.setLatLngs([]);
+      this.path.setLatLngs([]);
+      this.realPath.setLatLngs([]);
     }
     else if (path !== this.props.path) {
       let store = this._reactInternalInstance._context.store;
@@ -78,7 +92,11 @@ export default class LMap extends React.Component {
       let latlngs = path.map((elem) => [elem[1], elem[0]]);
       latlngs.unshift(overlay.latlng);
 
-      this.polyline.setLatLngs(latlngs);
+      this.path.setLatLngs(latlngs);
+    }
+
+    if (mode !== this.props.mode && !mode.single) {
+      this.map.removeLayer(this.marker);
     }
 
     if (move) {

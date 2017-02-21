@@ -14,6 +14,7 @@ function mapStateToProps (state) {
     selected: state.robot,
     path: state.path.path,
     move: state.move,
+    pathClear: state.path.path.length === 0
   };
 }
 

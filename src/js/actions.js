@@ -68,8 +68,8 @@ export function robotGoto (id, pos) {
 }
 
 
-function autoMode (action, value) {
-  if (!value) {
+function autoMode (action, value, quick = true, callback = () => null) {
+  if (!value && quick) {
     // set to false, don't need to switch robot state
     return action;
   }
@@ -85,38 +85,45 @@ function autoMode (action, value) {
 
     return selected.robot
       .auto()
-      .then(() => dispatch(action));
+      .then(() => {
+        dispatch(action);
+        callback(dispatch);
+      });
   };
 }
 
 
 export function setOrder (value) {
-  return autoMode({ type: ORDER_MODE, value: value }, value);
+  return autoMode({
+    type: ORDER_MODE,
+    value: value
+  },
+  value,
+  true,
+  (dispatch) => {
+    dispatch(clearPath());
+  });
 }
 
 export function setSingle (value) {
-  return autoMode({ type: SINGLE_MODE, value: value }, value);
-}
-
-export function setPathAction (value) {
-  return {type: PATH_MODE, value};
+  return autoMode({
+    type: SINGLE_MODE,
+    value: value
+  }, value, true,
+  (dispath) => dispath(clearPath())
+  );
 }
 
 export function setPath (value) {
-  return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let selected = getRobot(robots, robot);
-
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return selected.robot
-      .auto()
-      .then(() => dispatch(setPathAction(value)))
-      .then(() => dispatch(clearPath()));
-  };
+  return autoMode({
+    type: PATH_MODE,
+    value: value
+  },
+  value,
+  false,
+  (dispatch) => {
+    dispatch(clearPath());
+  });
 }
 
 export function setUser (value) {
@@ -130,7 +137,10 @@ export function setUser (value) {
     }
 
     return (value ? selected.robot.manual() : selected.robot.auto())
-      .then(() => dispatch({ type: USER_MODE, value: value }));
+      .then(() => {
+        dispatch({ type: USER_MODE, value: value });
+        dispatch(clearPath());
+      });
   };
 }
 
