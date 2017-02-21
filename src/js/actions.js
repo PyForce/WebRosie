@@ -16,6 +16,7 @@ export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
 export const SINGLE_MODE = 16;
+export const ADD_POINT = 17;
 
 
 function getRobot (robots, id) {
@@ -129,6 +130,10 @@ export function releaseKey (key) {
 
 export function moveJoystick (movement) {
   return { type: JOYSTICK_MOVE, movement };
+}
+
+export function addPathPoint (point) {
+  return {type: ADD_POINT, point};
 }
 
 export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {

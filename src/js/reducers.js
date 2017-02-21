@@ -173,6 +173,17 @@ export function report (state = null, action) {
 }
 
 
+// handles the path currently being edited
+export function path (state = [], action) {
+  switch (action.type) {
+  case actions.ADD_POINT:
+    return state.concat(action.point);
+  default:
+    return null;
+  }
+}
+
+
 // handles the last action type
 export function lastaction (state = null, action) {
   return action.type;

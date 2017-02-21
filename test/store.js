@@ -25,6 +25,7 @@ describe('WebRosie store', function () {
       'lastaction',
       'report',
       'robot',
+      'path',
       'map',
       'mode',
       'direction',

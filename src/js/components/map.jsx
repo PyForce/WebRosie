@@ -27,8 +27,12 @@ export default class LMap extends React.Component {
         this.props.robotGoto(this.props.selected, [x, y, 10]);
         return;
       }
-      // TODO: if the path mode is active,
-      // create a new path point
+
+      if (!this.props.mode.path) {
+        return;
+      }
+
+      this.props.addPoint([x, y]);
     });
 
     let store = this._reactInternalInstance._context.store;
