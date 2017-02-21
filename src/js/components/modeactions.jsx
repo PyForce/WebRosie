@@ -1,6 +1,6 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import AcceptIcon from 'material-ui/svg-icons/content/send';
+import AcceptIcon from 'material-ui/svg-icons/navigation/check';
 import CancelIcon from 'material-ui/svg-icons/content/clear';
 
 
