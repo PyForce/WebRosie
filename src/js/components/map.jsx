@@ -34,38 +34,51 @@ export default class LMap extends React.Component {
 
       this.props.addPoint([x, y]);
     });
+  }
 
+  updateRobotPos = (move) => {
     let store = this._reactInternalInstance._context.store;
+    let { robots, robot } = store.getState();
 
-    store.subscribe(() => {
-      let { move, robots, robot } = store.getState();
-      if (!move) {
-        return;
-      }
+    let overlay = robots.find((elem) => elem.id === move.id)
+      .robot.overlay;
+    overlay.pos = move;
+    overlay.angle = move.theta;
 
-      let overlay = robots[move.id].robot.overlay;
-      overlay.pos = move;
-      overlay.angle = move.theta;
+    if (move.id !== robot) {
+      return;
+    }
 
-      if (move.id !== robot) {
-        return;
-      }
+    let bounds = this.map.getBounds();
 
-      let bounds = this.map.getBounds();
-
-      if (bounds.getNorth() < overlay.latlng.lat ||
+    if (bounds.getNorth() < overlay.latlng.lat ||
           bounds.getEast() < overlay.latlng.lng ||
           bounds.getSouth() > overlay.latlng.lat ||
           bounds.getWest() > overlay.latlng.lng) {
-        this.map.panTo(overlay.latlng);
-      }
-    });
+      this.map.panTo(overlay.latlng);
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    let { robot, map } = nextProps;
+    let { robot, map, path, move } = nextProps;
 
-    if (robot) {
+    if (path !== this.props.path) {
+      let muiTheme = this._reactInternalInstance._context.muiTheme;
+
+      let [lng, lat] = path[path.length - 1];
+
+      let circle = L.circle([lat, lng], .02, {
+        color: muiTheme.palette.accent1Color,
+        fillColor: muiTheme.palette.accent1Color,
+        fillOpacity: .5
+      }).addTo(this.map);
+    }
+
+    if (move) {
+      this.updateRobotPos(move);
+    }
+
+    if (robot && robot !== this.props.robot) {
       let { robot: obj, id } = robot;
 
       obj.sio.onmessage = (msg) => {

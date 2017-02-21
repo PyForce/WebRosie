@@ -14,6 +14,7 @@ import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
 import RosieJoystick from '../containers/rosiejoystick';
+import { PathActions } from './modeactions';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 

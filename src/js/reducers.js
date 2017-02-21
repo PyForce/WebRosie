@@ -177,14 +177,8 @@ export function report (state = null, action) {
 export function path (state = [], action) {
   switch (action.type) {
   case actions.ADD_POINT:
-    return state.concat(action.point);
+    return state.concat([action.point]);
   default:
-    return null;
+    return state;
   }
-}
-
-
-// handles the last action type
-export function lastaction (state = null, action) {
-  return action.type;
 }

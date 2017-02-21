@@ -1,23 +1,19 @@
 import { connect } from 'react-redux';
 
 import { selectRobot, moveRobot, notifyReport,
-         removeRobot, ADD_ROBOT, robotGoto, setUser,
-         ADD_POINT, addPathPoint } from '../actions';
+         removeRobot, robotGoto, setUser, addPathPoint } from '../actions';
 import LMap from '../components/map';
 
 
-function lastActionItem (action, elems, state) {
-  let n = elems.length - 1;
-  return state.lastaction === action && n > -1 ? elems[n] : null;
-}
-
 function mapStateToProps (state) {
+  let len = state.robots.length;
   return {
-    robot: lastActionItem(ADD_ROBOT, state.robots, state),
+    robot: len > 0 ? state.robots[len - 1] : null,
     map: state.map,
     mode: state.mode,
     selected: state.robot,
-    path: lastActionItem(ADD_POINT, state.path, state)
+    path: state.path,
+    move: state.move
   };
 }
 
