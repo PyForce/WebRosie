@@ -174,10 +174,18 @@ export function report (state = null, action) {
 
 
 // handles the path currently being edited
-export function path (state = [], action) {
+export function path (state = { path: [], time: 2 }, action) {
   switch (action.type) {
   case actions.ADD_POINT:
-    return state.concat([action.point]);
+    return {
+      ...state,
+      path: state.path.concat([action.point])
+    };
+  case actions.CLEAR_PATH:
+    return {
+      ...state,
+      path: []
+    };
   default:
     return state;
   }

@@ -6,14 +6,14 @@ import LMap from '../components/map';
 
 
 function mapStateToProps (state) {
-  let len = state.robots.length;
+  let robotLen = state.robots.length;
   return {
-    robot: len > 0 ? state.robots[len - 1] : null,
+    robot: robotLen > 0 ? state.robots[robotLen - 1] : null,
     map: state.map,
     mode: state.mode,
     selected: state.robot,
-    path: state.path,
-    move: state.move
+    path: state.path.path,
+    move: state.move,
   };
 }
 
