@@ -5,7 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 export class PathActions extends React.Component {
   render () {
     return (
-      <FloatingActionButton>
+      <FloatingActionButton style={this.props.style}>
 
       </FloatingActionButton>
     );
