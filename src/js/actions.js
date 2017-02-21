@@ -136,16 +136,16 @@ export function addPathPoint (point) {
   return {type: ADD_POINT, point};
 }
 
-export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
-  return {
-    type: PATH_ROBOT,
-    path: {
-      path: path,
-      smooth: smooth,
-      interpolation: interpolation,
-      k: k,
-      time: time
+export function robotFollow () {
+  return (dispatch, getState) => {
+    let { robots, robot, path } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      return Promise.resolve();
     }
+
+    return selected.robot.follow(path);
   };
 }
 
