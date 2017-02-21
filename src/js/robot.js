@@ -68,7 +68,7 @@ export default class Robot {
   //    path: [[x, y, t], [x, y, t], ...],
   // }
   follow (path) {
-    return this.post('path', path);
+    return this.post('follow', path);
   }
 
   command (command) {

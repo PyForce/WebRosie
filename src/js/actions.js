@@ -16,6 +16,8 @@ export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
 export const SINGLE_MODE = 16;
+export const ADD_POINT = 17;
+export const CLEAR_PATH = 18;
 
 
 function getRobot (robots, id) {
@@ -66,8 +68,8 @@ export function robotGoto (id, pos) {
 }
 
 
-function autoMode (action, value) {
-  if (!value) {
+function autoMode (action, value, quick = true, callback = () => null) {
+  if (!value && quick) {
     // set to false, don't need to switch robot state
     return action;
   }
@@ -83,21 +85,45 @@ function autoMode (action, value) {
 
     return selected.robot
       .auto()
-      .then(() => dispatch(action));
+      .then(() => {
+        dispatch(action);
+        callback(dispatch);
+      });
   };
 }
 
 
 export function setOrder (value) {
-  return autoMode({ type: ORDER_MODE, value: value }, value);
+  return autoMode({
+    type: ORDER_MODE,
+    value: value
+  },
+  value,
+  true,
+  (dispatch) => {
+    dispatch(clearPath());
+  });
 }
 
 export function setSingle (value) {
-  return autoMode({ type: SINGLE_MODE, value: value }, value);
+  return autoMode({
+    type: SINGLE_MODE,
+    value: value
+  }, value, true,
+  (dispath) => dispath(clearPath())
+  );
 }
 
 export function setPath (value) {
-  return autoMode({ type: PATH_MODE, value: value }, value);
+  return autoMode({
+    type: PATH_MODE,
+    value: value
+  },
+  value,
+  false,
+  (dispatch) => {
+    dispatch(clearPath());
+  });
 }
 
 export function setUser (value) {
@@ -111,7 +137,10 @@ export function setUser (value) {
     }
 
     return (value ? selected.robot.manual() : selected.robot.auto())
-      .then(() => dispatch({ type: USER_MODE, value: value }));
+      .then(() => {
+        dispatch({ type: USER_MODE, value: value });
+        dispatch(clearPath());
+      });
   };
 }
 
@@ -131,16 +160,24 @@ export function moveJoystick (movement) {
   return { type: JOYSTICK_MOVE, movement };
 }
 
-export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
-  return {
-    type: PATH_ROBOT,
-    path: {
-      path: path,
-      smooth: smooth,
-      interpolation: interpolation,
-      k: k,
-      time: time
+export function addPathPoint (point) {
+  return {type: ADD_POINT, point};
+}
+
+export function clearPath () {
+  return {type: CLEAR_PATH};
+}
+
+export function robotFollow () {
+  return (dispatch, getState) => {
+    let { robots, robot, path } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      return Promise.resolve();
     }
+
+    return selected.robot.follow(path);
   };
 }
 

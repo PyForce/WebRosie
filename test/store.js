@@ -22,9 +22,9 @@ describe('WebRosie store', function () {
       this.store.getState()
     ).to.have.all.keys(
       'robots',
-      'lastaction',
       'report',
       'robot',
+      'path',
       'map',
       'mode',
       'direction',

@@ -13,6 +13,12 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([0, 0], 9);
 
+    let muiTheme = this._reactInternalInstance._context.muiTheme;
+
+    this.marker = L.circleMarker([0, 0], {
+      color: muiTheme.palette.accent1Color
+    });
+
     this.map.on('click', (event) => {
       if (!(this.props.mode.single || this.props.mode.path)) {
         // return the robot to auto mode
@@ -24,44 +30,80 @@ export default class LMap extends React.Component {
       let {lat: y, lng: x} = event.latlng;
 
       if (this.props.mode.single) {
+        this.map.removeLayer(this.marker);
         this.props.robotGoto(this.props.selected, [x, y, 10]);
+        this.marker.addTo(this.map).setLatLng(event.latlng);
         return;
       }
-      // TODO: if the path mode is active,
-      // create a new path point
+
+      if (!this.props.mode.path) {
+        return;
+      }
+
+      this.props.addPoint([x, y]);
     });
 
+    this.path = L.polyline([], {
+      color: muiTheme.palette.accent1Color
+    }).addTo(this.map);
+    this.realPath = L.polyline([], {
+      color: muiTheme.palette.accent3Color
+    }).addTo(this.map);
+  }
+
+  updateRobotPos = (move) => {
     let store = this._reactInternalInstance._context.store;
+    let { robots, robot } = store.getState();
 
-    store.subscribe(() => {
-      let { move, robots, robot } = store.getState();
-      if (!move) {
-        return;
-      }
+    let overlay = robots.find((elem) => elem.id === move.id)
+      .robot.overlay;
+    overlay.pos = move;
+    overlay.angle = move.theta;
 
-      let overlay = robots[move.id].robot.overlay;
-      overlay.pos = move;
-      overlay.angle = move.theta;
+    if (move.id !== robot) {
+      return;
+    }
 
-      if (move.id !== robot) {
-        return;
-      }
+    let bounds = this.map.getBounds();
 
-      let bounds = this.map.getBounds();
-
-      if (bounds.getNorth() < overlay.latlng.lat ||
+    if (bounds.getNorth() < overlay.latlng.lat ||
           bounds.getEast() < overlay.latlng.lng ||
           bounds.getSouth() > overlay.latlng.lat ||
           bounds.getWest() > overlay.latlng.lng) {
-        this.map.panTo(overlay.latlng);
-      }
-    });
+      this.map.panTo(overlay.latlng);
+    }
+
+    if (this.props.mode.path) {
+      this.realPath.addLatLng(overlay.latlng);
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    let { robot, map } = nextProps;
+    let { robot, map, path, move, pathClear, selected, mode } = nextProps;
 
-    if (robot) {
+    if (pathClear) {
+      this.path.setLatLngs([]);
+      this.realPath.setLatLngs([]);
+    }
+    else if (path !== this.props.path) {
+      let store = this._reactInternalInstance._context.store;
+      let overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
+
+      let latlngs = path.map((elem) => [elem[1], elem[0]]);
+      latlngs.unshift(overlay.latlng);
+
+      this.path.setLatLngs(latlngs);
+    }
+
+    if (mode !== this.props.mode && !mode.single) {
+      this.map.removeLayer(this.marker);
+    }
+
+    if (move) {
+      this.updateRobotPos(move);
+    }
+
+    if (robot && robot !== this.props.robot) {
       let { robot: obj, id } = robot;
 
       obj.sio.onmessage = (msg) => {
