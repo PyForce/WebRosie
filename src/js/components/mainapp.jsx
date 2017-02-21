@@ -14,7 +14,7 @@ import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
 import RosieJoystick from '../containers/rosiejoystick';
-import { PathActions } from './modeactions';
+import { RosiePathAction } from '../containers/rosiemodes';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
 
@@ -165,7 +165,7 @@ export default class MainApp extends React.Component {
           <RosieMap ref='rosiemap' />
 
           {this.props.mode.user && this.isTouch ? <RosieJoystick style={joystickContainer} /> : undefined}
-          {this.props.mode.path ? <PathActions style={actionsContainer}/> : undefined}
+          {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
 
           <div style={zoombtns}>
             <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
