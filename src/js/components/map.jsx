@@ -34,6 +34,12 @@ export default class LMap extends React.Component {
 
       this.props.addPoint([x, y]);
     });
+
+    let muiTheme = this._reactInternalInstance._context.muiTheme;
+
+    this.polyline = L.polyline([], {
+      color: muiTheme.palette.accent1Color
+    }).addTo(this.map);
   }
 
   updateRobotPos = (move) => {
@@ -60,18 +66,19 @@ export default class LMap extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let { robot, map, path, move } = nextProps;
+    let { robot, map, path, move, pathClear, selected } = nextProps;
 
-    if (path !== this.props.path) {
-      let muiTheme = this._reactInternalInstance._context.muiTheme;
+    if (pathClear) {
+      this.polyline.setLatLngs([]);
+    }
+    else if (path !== this.props.path) {
+      let store = this._reactInternalInstance._context.store;
+      let overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
 
-      let [lng, lat] = path[path.length - 1];
+      let latlngs = path.map((elem) => [elem[1], elem[0]]);
+      latlngs.unshift(overlay.latlng);
 
-      let circle = L.circle([lat, lng], .02, {
-        color: muiTheme.palette.accent1Color,
-        fillColor: muiTheme.palette.accent1Color,
-        fillOpacity: .5
-      }).addTo(this.map);
+      this.polyline.setLatLngs(latlngs);
     }
 
     if (move) {
