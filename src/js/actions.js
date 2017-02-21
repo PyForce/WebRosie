@@ -17,6 +17,7 @@ export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
 export const SINGLE_MODE = 16;
 export const ADD_POINT = 17;
+export const CLEAR_PATH = 18;
 
 
 function getRobot (robots, id) {
@@ -97,8 +98,25 @@ export function setSingle (value) {
   return autoMode({ type: SINGLE_MODE, value: value }, value);
 }
 
+export function setPathAction (value) {
+  return {type: PATH_MODE, value};
+}
+
 export function setPath (value) {
-  return autoMode({ type: PATH_MODE, value: value }, value);
+  return (dispatch, getState) => {
+    let { robots, robot } = getState();
+    let selected = getRobot(robots, robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return selected.robot
+      .auto()
+      .then(() => dispatch(setPathAction(value)))
+      .then(() => dispatch(clearPath()));
+  };
 }
 
 export function setUser (value) {
@@ -134,6 +152,10 @@ export function moveJoystick (movement) {
 
 export function addPathPoint (point) {
   return {type: ADD_POINT, point};
+}
+
+export function clearPath () {
+  return {type: CLEAR_PATH};
 }
 
 export function robotFollow () {
