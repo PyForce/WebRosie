@@ -2,6 +2,7 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import ToggleField from 'material-ui/Toggle';
 import PathIcon from 'material-ui/svg-icons/communication/swap-calls';
 import SingleIcon from 'material-ui/svg-icons/image/adjust';
 import UserIcon from 'material-ui/svg-icons/action/open-with';
@@ -49,6 +50,9 @@ export default class SettingsModal extends React.Component {
             <TextField floatingLabelText='Time to reach the destination'
                        type='number' hintText='amount of seconds' fullWidth={true}
                        value={settings.single.time} />
+            <ToggleField toggled={settings.single.planner}
+                         label='Use planner for target reach'
+                         onToggle={(e, checked) => this.configure('single', {planner: checked}) } />
           </Tab>
           <Tab label='path' icon={<PathIcon />}>
             <TextField floatingLabelText='Time interval between path points'
