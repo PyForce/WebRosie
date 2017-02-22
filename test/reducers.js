@@ -125,3 +125,39 @@ describe('direction reducer', () => {
     .to.be.deep.equal([0, 0, -1]);
   });
 });
+
+describe('settings reducer', () => {
+  it('adds new options', () => {
+    expect(
+      reducers.settings({}, actions.configOption({size: 3}))
+    ).to.have.property('size')
+    .that.is.equal(3);
+  });
+
+  it('changes values', () => {
+    expect(
+      reducers.settings({size: 5}, actions.configOption({size: 42}))
+    ).to.have.property('size')
+    .that.is.equal(42);
+  });
+
+  it('does not conflict with another actions', () => {
+    expect(
+      reducers.settings({ask: true, mode: 'one'}, actions.configOption({size: 3}))
+    )
+    .to.have.all.keys(['mode', 'ask', 'size'])
+    .and.to.have.property('size')
+    .that.is.equal(3);
+  });
+
+  it('changes only the desired values', () => {
+    expect(
+      reducers.settings({ask: true, mode: 'one'}, actions.configOption({ask: false, size: 3}))
+    )
+    .to.have.all.keys(['mode', 'ask', 'size'])
+    .and.to.contain.all.keys({
+      ask: false,
+      size: 3
+    });
+  });
+});

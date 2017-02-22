@@ -19,6 +19,7 @@ export const SINGLE_MODE = 16;
 export const ADD_POINT = 17;
 export const CLEAR_PATH = 18;
 export const CLEAR_REPORT = 19;
+export const CONFIG_OPTION = 20;
 
 
 // gets the robot with the specified id
@@ -216,4 +217,8 @@ export function notifyReport (text, level) {
 
 export function clearReport () {
   return { type: CLEAR_REPORT };
+}
+
+export function configOption (option) {
+  return { type: CONFIG_OPTION, option };
 }

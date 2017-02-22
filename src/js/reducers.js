@@ -192,3 +192,17 @@ export function path (state = { path: [], time: 2 }, action) {
     return state;
   }
 }
+
+
+// handles the change of the settings
+export function settings (state = {}, action) {
+  switch (action.type) {
+  case actions.CONFIG_OPTION:
+    return {
+      ...state,
+      ...action.option
+    };
+  default:
+    return state;
+  }
+}
