@@ -20,9 +20,31 @@ export const ADD_POINT = 17;
 export const CLEAR_PATH = 18;
 
 
+// gets the robot with the specified id
 function getRobot (robots, id) {
   let [robot] = robots.filter((r) => r.id === id);
   return robot;
+}
+
+
+// helper function to get a robot with id = `id` an execute an action on it
+function robotRequest (id, preaction, callback = Promise.resolve) {
+  return (dispatch, getState) => {
+    if (preaction) {
+      dispatch(preaction);
+    }
+
+    let { robots, robot } = getState();
+    // in case id isn't a valid value, use the selected robot
+    let selected = getRobot(robots, id || robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return callback(selected.robot, dispatch, getState);
+  };
 }
 
 
@@ -53,111 +75,123 @@ export function updateMap (map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto (id, pos) {
-  return (dispatch, getState) => {
-    let { robots } = getState();
-    let selected = getRobot(robots, id);
-
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return selected.robot.goto(pos);
-  };
+export function robotGoto (pos, id = null) {
+  return robotRequest(id, false, (robot, dispatch) => robot.goto(pos));
 }
 
-
-function autoMode (action, value, quick = true, callback = () => null) {
-  if (!value && quick) {
-    // set to false, don't need to switch robot state
-    return action;
-  }
-
-  return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let selected = getRobot(robots, robot);
-
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return selected.robot
-      .auto()
-      .then(() => {
-        dispatch(action);
-        callback(dispatch);
-      });
-  };
-}
-
-
-export function setOrder (value) {
-  return autoMode({
+// pure action method
+export function setOrderAction (value) {
+  return {
     type: ORDER_MODE,
-    value: value
-  },
-  value,
-  true,
-  (dispatch) => {
-    dispatch(clearPath());
+    value
+  };
+}
+
+// async action for mode set (waits for the request to the robot to be completed)
+export function setOrder (value) {
+  // mode actions act only on the selected robot, so `null` is the id
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then(() => {
+      dispatch(setOrderAction(value));
+      dispatch(clearPath());
+    });
   });
+}
+
+export function setSingleAction (value) {
+  return {
+    type: SINGLE_MODE,
+    value
+  };
 }
 
 export function setSingle (value) {
-  return autoMode({
-    type: SINGLE_MODE,
-    value: value
-  }, value, true,
-  (dispath) => dispath(clearPath())
-  );
-}
-
-export function setPath (value) {
-  return autoMode({
-    type: PATH_MODE,
-    value: value
-  },
-  value,
-  false,
-  (dispatch) => {
-    dispatch(clearPath());
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then(() => {
+      dispatch(setSingleAction(value));
+      dispatch(clearPath());
+    });
   });
 }
 
-export function setUser (value) {
-  return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let selected = getRobot(robots, robot);
-
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return (value ? selected.robot.manual() : selected.robot.auto())
-      .then(() => {
-        dispatch({ type: USER_MODE, value: value });
-        dispatch(clearPath());
-      });
+export function setPathAction (value) {
+  return {
+    type: PATH_MODE,
+    value
   };
 }
 
+export function setPath (value) {
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then(() => {
+      dispatch(setPathAction(value));
+      dispatch(clearPath());
+    });
+  });
+}
+
+export function setUserAction (value) {
+  return {
+    type: USER_MODE,
+    value
+  };
+}
+
+export function setUser (value) {
+  return robotRequest(null, false, (robot, dispatch) => {
+    return (value ? robot.manual() : robot.auto())
+      .then(() => {
+        dispatch(setUserAction(value));
+        dispatch(clearPath());
+      });
+  });
+}
+
 export function robotCommand (command) {
+  // TODO: wait for rosex to be implemented
   return { type: COMMAND_ROBOT, command: command };
 }
 
+export function pressKeyAction (key) {
+  return {
+    type: PRESS_KEY,
+    key
+  };
+}
+
 export function pressKey (key) {
-  return { type: PRESS_KEY, key: key };
+  return robotRequest(null, pressKeyAction(key), (robot, dispatch, getState) => {
+    let { direction } = getState();
+    return robot.move(direction);
+  });
+}
+
+export function releaseKeyAction (key) {
+  return {
+    type: RELEASE_KEY,
+    key
+  };
 }
 
 export function releaseKey (key) {
-  return { type: RELEASE_KEY, key: key };
+  return robotRequest(null, releaseKeyAction(key), (robot, dispatch, getState) => {
+    let { direction } = getState();
+    return robot.move(direction);
+  });
+}
+
+export function moveJoystickAction (movement) {
+  return {
+    type: JOYSTICK_MOVE,
+    movement
+  };
 }
 
 export function moveJoystick (movement) {
-  return { type: JOYSTICK_MOVE, movement };
+  return robotRequest(null, moveJoystickAction(movement), (robot, dispatch, getState) => {
+    let { direction } = getState();
+    return robot.move(direction);
+  });
 }
 
 export function addPathPoint (point) {
@@ -168,17 +202,11 @@ export function clearPath () {
   return {type: CLEAR_PATH};
 }
 
-export function robotFollow () {
-  return (dispatch, getState) => {
-    let { robots, robot, path } = getState();
-    let selected = getRobot(robots, robot);
-
-    if (!selected) {
-      return Promise.resolve();
-    }
-
-    return selected.robot.follow(path);
-  };
+export function robotFollow (id = null) {
+  return robotRequest(id, false, (robot, dispatch, getState) => {
+    let { path } = getState();
+    return robot.follow(path);
+  });
 }
 
 export function notifyReport (text, level) {
