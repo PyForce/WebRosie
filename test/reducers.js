@@ -46,7 +46,7 @@ describe('mode reducer', function () {
 describe('move reducer', () => {
   it('does not repeat moves', () => {
     expect(
-      reducers.move({id: 3, x: 2.3, y: 4, angle: 32}, actions.pressKey(32))
+      reducers.move({id: 3, x: 2.3, y: 4, angle: 32}, actions.pressKeyAction(32))
     )
     .to.not.exist;
   });
@@ -64,63 +64,63 @@ const keys = {
 describe('direction reducer', () => {
   it('goes up', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.W))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.W))
     )
     .to.be.deep.equal([0, 1, 0]);
   });
 
   it('goes down', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.S))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.S))
     )
     .to.be.deep.equal([0, -1, 0]);
   });
 
   it('goes left', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.A))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.A))
     )
     .to.be.deep.equal([-1, 0, 0]);
   });
 
   it('goes right', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.D))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.D))
     )
     .to.be.deep.equal([1, 0, 0]);
   });
 
   it('goes north-east', () => {
     expect(
-      reducers.direction([0, 1, 0], actions.pressKey(keys.D))
+      reducers.direction([0, 1, 0], actions.pressKeyAction(keys.D))
     )
     .to.be.deep.equal([1, 1, 0]);
   });
 
   it('stops going north-east', () => {
     expect(
-      reducers.direction([1, 1, 0], actions.releaseKey(keys.W))
+      reducers.direction([1, 1, 0], actions.releaseKeyAction(keys.W))
     )
     .to.be.deep.equal([1, 0, 0]);
   });
 
   it('stops on opposite keys', () => {
     expect(
-      reducers.direction([0, 1, 0], actions.pressKey(keys.S))
+      reducers.direction([0, 1, 0], actions.pressKeyAction(keys.S))
     )
     .to.be.deep.equal([0, 0, 0]);
   });
 
   it('rotates rigth in-place', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.E))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.E))
     )
     .to.be.deep.equal([0, 0, 1]);
   });
 
   it('rotates left in-place', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.Q))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.Q))
     )
     .to.be.deep.equal([0, 0, -1]);
   });

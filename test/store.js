@@ -10,9 +10,6 @@ describe('WebRosie store', function () {
   before(() => {
     let reducer = combineReducers(reducers);
     this.store = createStore(reducer, applyMiddleware(thunkMiddleware));
-    // add a robot to test requests
-    this.store.dispatch(actions.addRobot('localhost', 5000));
-    this.store.dispatch(actions.selectRobot(0));
   });
 
   it('creates the full initial state', () => {
@@ -33,15 +30,13 @@ describe('WebRosie store', function () {
   });
 
   it('dispatches an user mode action', () => {
-    let check = () => {
-      expect(
-          this.store.getState()
-        )
-        .to.have.property('mode')
-        .that.has.property('user')
-        .that.is.true;
-    };
-    return this.store.dispatch(actions.setUser(true))
-      .then(check);
+    this.store.dispatch(actions.setUserAction(true));
+
+    expect(
+      this.store.getState()
+    )
+    .to.have.property('mode')
+    .that.has.property('user')
+    .that.is.true;
   });
 });
