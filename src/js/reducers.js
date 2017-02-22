@@ -167,8 +167,10 @@ export function report (state = null, action) {
       text: action.text,
       level: action.level
     };
-  default:
+  case actions.CLEAR_REPORT:
     return null;
+  default:
+    return state;
   }
 }
 
