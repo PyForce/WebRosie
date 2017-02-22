@@ -54,18 +54,18 @@ export default class MainApp extends React.Component {
   componentDidMount () {
     let store = this._reactInternalInstance._context.store;
     store.subscribe(() => {
-      let { report, robot, robots, direction } = store.getState();
+      let { report } = store.getState();
       if (report) {
         this.setState({ report, notification: true });
       }
 
-      if (robot < 0) {
-        return;
-      }
+      // if (robot < 0) {
+      //   return;
+      // }
 
-      let selectedRobot = robots[robot].robot;
+      // let selectedRobot = robots[robot].robot;
 
-      selectedRobot.move(direction);
+      // selectedRobot.move(direction);
     });
   }
 
