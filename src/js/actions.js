@@ -18,7 +18,7 @@ export const JOYSTICK_MOVE = 15;
 export const SINGLE_MODE = 16;
 export const ADD_POINT = 17;
 export const CLEAR_PATH = 18;
-export const CLEAR_REPORT = 18;
+export const CLEAR_REPORT = 19;
 
 
 // gets the robot with the specified id
