@@ -51,24 +51,6 @@ export default class MainApp extends React.Component {
     this.isTouch = md.phone() !== null || md.tablet() !== null;
   }
 
-  componentDidMount () {
-    let store = this._reactInternalInstance._context.store;
-    store.subscribe(() => {
-      let { report } = store.getState();
-      if (report) {
-        this.setState({ report, notification: true });
-      }
-
-      // if (robot < 0) {
-      //   return;
-      // }
-
-      // let selectedRobot = robots[robot].robot;
-
-      // selectedRobot.move(direction);
-    });
-  }
-
   toggleDrawer = () => {
     this.setState({ drawer: !this.state.drawer });
   }
@@ -178,9 +160,9 @@ export default class MainApp extends React.Component {
               <ZoomOutIcon />
             </FloatingActionButton>
           </div>
-          <ReportSnackbar open={this.state.notification} message={this.state.report.text}
-                    autoHideDuration={2000} level={this.state.report.level}
-                    onRequestClose={() => this.setState({notification: false})} />
+          <ReportSnackbar open={this.props.notification} message={this.props.report.text}
+                    autoHideDuration={2000} level={this.props.report.level}
+                    onRequestClose={this.props.clearReport} />
         </div>
       </div>
     );
