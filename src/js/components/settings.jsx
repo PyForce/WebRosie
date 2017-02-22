@@ -21,6 +21,7 @@ export default class SettingsModal extends React.Component {
   }
 
   acceptDialog = () => {
+    this.props.saveSettings(this.state.settings);
     this.props.onRequestClose();
   }
 
@@ -30,6 +31,22 @@ export default class SettingsModal extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     this.setState({settings: nextProps.settings});
+  }
+
+  configure = (mode, option) => {
+    this.setState({
+      settings: {
+        // destructure settings to have all the values
+        ...this.state.settings,
+        // change the values in the desired mode
+        [mode]: {
+          // destructure the mode values to prevent deleting
+          ...this.state.settings[mode],
+          // overwrite the generated values
+          ...option
+        }
+      }
+    });
   }
 
   render () {
@@ -49,7 +66,8 @@ export default class SettingsModal extends React.Component {
           <Tab label='single' icon={<SingleIcon />}>
             <TextField floatingLabelText='Time to reach the destination'
                        type='number' hintText='amount of seconds' fullWidth={true}
-                       value={settings.single.time} />
+                       value={settings.single.time}
+                       onChange={(e, value) => this.configure('single', {time: parseFloat(value)})} />
             <ToggleField toggled={settings.single.planner}
                          label='Use planner for target reach'
                          onToggle={(e, checked) => this.configure('single', {planner: checked}) } />
@@ -57,7 +75,8 @@ export default class SettingsModal extends React.Component {
           <Tab label='path' icon={<PathIcon />}>
             <TextField floatingLabelText='Time interval between path points'
                        type='number' hintText='amount of seconds' fullWidth={true}
-                       value={settings.path.delay} />
+                       value={settings.path.delay}
+                       onChange={(e, value) => this.configure('path', {delay: parseFloat(value)})} />
           </Tab>
           <Tab label='user' icon={<UserIcon />}>
           </Tab>
