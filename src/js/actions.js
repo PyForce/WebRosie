@@ -77,8 +77,11 @@ export function updateMap (map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto (pos, id = null) {
-  return robotRequest(id, false, (robot, dispatch) => robot.goto(pos));
+export function robotGoto (x, y, id = null) {
+  return robotRequest(id, false, (robot, dispatch, getState) => {
+    let { settings } = getState();
+    robot.goto([x, y, settings.single.time]);
+  });
 }
 
 // pure action method
@@ -206,8 +209,8 @@ export function clearPath () {
 
 export function robotFollow (id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
-    let { path } = getState();
-    return robot.follow(path);
+    let { path, settings } = getState();
+    return robot.follow({path, time: settings.path.delay});
   });
 }
 

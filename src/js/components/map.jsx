@@ -31,7 +31,7 @@ export default class LMap extends React.Component {
 
       if (this.props.mode.single) {
         this.map.removeLayer(this.marker);
-        this.props.robotGoto([x, y, 10]);
+        this.props.robotGoto(x, y);
         this.marker.addTo(this.map).setLatLng(event.latlng);
         return;
       }
