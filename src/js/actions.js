@@ -19,6 +19,7 @@ export const SINGLE_MODE = 16;
 export const ADD_POINT = 17;
 export const CLEAR_PATH = 18;
 export const CLEAR_REPORT = 19;
+export const CONFIG_OPTION = 20;
 
 
 // gets the robot with the specified id
@@ -76,8 +77,11 @@ export function updateMap (map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto (pos, id = null) {
-  return robotRequest(id, false, (robot, dispatch) => robot.goto(pos));
+export function robotGoto (x, y, id = null) {
+  return robotRequest(id, false, (robot, dispatch, getState) => {
+    let { settings } = getState();
+    robot.goto([x, y, settings.single.time]);
+  });
 }
 
 // pure action method
@@ -205,8 +209,8 @@ export function clearPath () {
 
 export function robotFollow (id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
-    let { path } = getState();
-    return robot.follow(path);
+    let { path, settings } = getState();
+    return robot.follow({path, time: settings.path.delay});
   });
 }
 
@@ -216,4 +220,8 @@ export function notifyReport (text, level) {
 
 export function clearReport () {
   return { type: CLEAR_REPORT };
+}
+
+export function configOption (option) {
+  return { type: CONFIG_OPTION, option };
 }

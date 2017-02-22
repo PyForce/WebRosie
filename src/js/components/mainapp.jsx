@@ -4,6 +4,7 @@ import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
 import MobileDetect from 'mobile-detect';
@@ -13,6 +14,7 @@ import RosieAppBar from '../containers/rosiebar';
 import MapDialogProvider from '../containers/mapdialog';
 import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
+import RosieSettings from '../containers/rosiesettings';
 import RosieJoystick from '../containers/rosiejoystick';
 import { RosiePathAction } from '../containers/rosiemodes';
 import { ORDER_MODE, USER_MODE } from '../actions';
@@ -21,6 +23,7 @@ import { ORDER_MODE, USER_MODE } from '../actions';
 export default class MainApp extends React.Component {
   state = {
     drawer: false,
+    settings: false,
     robotdialog: false,
     mapdialog: false,
     zoomin: true,
@@ -133,6 +136,8 @@ export default class MainApp extends React.Component {
                         onRequestClose={this.acceptRobot} />
         <MapDialogProvider open={this.state.mapdialog}
                            onRequestClose={this.acceptMap} />
+        <RosieSettings open={this.state.settings}
+                       onRequestClose={() => this.setState({settings: false})}/>
 
         <Drawer open={this.state.drawer} docked={false}
                 onRequestChange={(open) => this.setState({ drawer: open })}>
@@ -140,6 +145,8 @@ export default class MainApp extends React.Component {
             onTouchTap={() => this.setState({robotdialog: true, drawer: false})} />
           <MenuItem primaryText="Select map" leftIcon={<MapIcon />}
             onTouchTap={() => this.setState({mapdialog: true, drawer: false})} />
+          <MenuItem primaryText="Settings" leftIcon={<SettingsIcon />}
+            onTouchTap={() => this.setState({settings: true, drawer: false})} />
         </Drawer>
 
         <div style={{height: '100%'}} className='flex column wrap start'>

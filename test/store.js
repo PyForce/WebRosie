@@ -25,7 +25,8 @@ describe('WebRosie store', function () {
       'map',
       'mode',
       'direction',
-      'move'
+      'move',
+      'settings'
     );
   });
 

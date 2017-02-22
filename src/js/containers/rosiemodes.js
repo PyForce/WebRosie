@@ -6,7 +6,7 @@ import { PathActions } from '../components/modeactions';
 
 function pathMapStateToProps (state) {
   return {
-    path: state.path.path.length > 0
+    path: state.path.length > 0
   };
 }
 

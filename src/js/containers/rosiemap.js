@@ -12,9 +12,9 @@ function mapStateToProps (state) {
     map: state.map,
     mode: state.mode,
     selected: state.robot,
-    path: state.path.path,
+    path: state.path,
     move: state.move,
-    pathClear: state.path.path.length === 0
+    pathClear: state.path.length === 0
   };
 }
 

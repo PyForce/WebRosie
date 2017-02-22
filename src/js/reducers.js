@@ -176,17 +176,25 @@ export function report (state = null, action) {
 
 
 // handles the path currently being edited
-export function path (state = { path: [], time: 2 }, action) {
+export function path (state = [], action) {
   switch (action.type) {
   case actions.ADD_POINT:
-    return {
-      ...state,
-      path: state.path.concat([action.point])
-    };
+    return state.concat([action.point]);
   case actions.CLEAR_PATH:
+    return [];
+  default:
+    return state;
+  }
+}
+
+
+// handles the change of the settings
+export function settings (state = {single: {time: 5, planner: false}, path: {delay: 2}}, action) {
+  switch (action.type) {
+  case actions.CONFIG_OPTION:
     return {
       ...state,
-      path: []
+      ...action.option
     };
   default:
     return state;
