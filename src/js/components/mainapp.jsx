@@ -132,12 +132,13 @@ export default class MainApp extends React.Component {
 
     return (
       <div>
-        <AddRobotDialog open={this.state.robotdialog}
-                        onRequestClose={this.acceptRobot} />
-        <MapDialogProvider open={this.state.mapdialog}
-                           onRequestClose={this.acceptMap} />
+        <AddRobotDialog open={this.state.robotdialog} onRequestClose={this.acceptRobot}
+                        autoDetectWindowHeight={true} autoScrollBodyContent={true} />
+        <MapDialogProvider open={this.state.mapdialog} onRequestClose={this.acceptMap}
+                           autoDetectWindowHeight={true} autoScrollBodyContent={true} />
         <RosieSettings open={this.state.settings}
-                       onRequestClose={() => this.setState({settings: false})}/>
+                       onRequestClose={() => this.setState({settings: false})}
+                       autoDetectWindowHeight={true} autoScrollBodyContent={true} />
 
         <Drawer open={this.state.drawer} docked={false}
                 onRequestChange={(open) => this.setState({ drawer: open })}>
