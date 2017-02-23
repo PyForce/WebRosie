@@ -157,8 +157,8 @@ export default class MainApp extends React.Component {
           {this.props.mode.user && this.isTouch ? <RosieJoystick style={joystickContainer} /> : undefined}
           {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
 
-          <div style={zoombtns}>
-            <FloatingActionButton style={{...zoombtn, margin: '0 0 20%'}}
+          <div  className="actions" style={zoombtns}>
+            <FloatingActionButton style={zoombtn}
                                   onTouchTap={this._zoomIn}
                                   disabled={!this.state.zoomin}>
               <ZoomInIcon />
