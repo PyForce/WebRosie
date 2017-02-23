@@ -189,7 +189,10 @@ export function path (state = [], action) {
 
 
 // handles the change of the settings
-export function settings (state = {single: {time: 5, planner: false}, path: {delay: 2}}, action) {
+export function settings (state = {
+  single: {time: 5, planner: false, smooth: false},
+  path: {delay: 2, smooth: false},
+  user: {joystick: 'touch'}}, action) {
   switch (action.type) {
   case actions.CONFIG_OPTION:
     return {
