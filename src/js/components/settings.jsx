@@ -1,7 +1,7 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import ToggleField from 'material-ui/Toggle';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -12,6 +12,35 @@ import CommandIcon from 'material-ui/svg-icons/content/send';
 import { Tab, Tabs } from 'material-ui/Tabs';
 
 
+class FloatField extends React.Component {
+  isValid () {
+    return this.field.isValid();
+  }
+
+  render () {
+    return (
+      <TextValidator type='number' validators={['isFloat', 'isPositive', 'required']}
+                     errorMessages={['time should be a floating point number',
+                      'the value should be positive', 'this field is required']}
+                     {...this.props} ref={(r) => this.field = r}
+                     style={{marginBottom: '1em'}} />
+    );
+  }
+}
+
+
+class DummyForm extends React.Component {
+  // form that doesn't submit
+  render () {
+    return (
+      <ValidatorForm onSubmit={() => null} {...this.props} >
+        {this.props.children}
+      </ValidatorForm>
+    );
+  }
+}
+
+
 export default class SettingsModal extends React.Component {
   state = {
     settings: {
@@ -19,7 +48,8 @@ export default class SettingsModal extends React.Component {
       path: {},
       user: {},
       command: {},
-    }
+    },
+    valid: true
   }
 
   acceptDialog = () => {
@@ -32,6 +62,7 @@ export default class SettingsModal extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    // put the original values on the state
     this.setState({settings: nextProps.settings});
   }
 
@@ -48,29 +79,35 @@ export default class SettingsModal extends React.Component {
           ...options
         }
       }
-    });
+    }, this.checkValid);
+  }
+
+  checkValid = () => {
+    this.setState({valid: this.time.isValid() && this.delay.isValid()});
   }
 
   render () {
+    let { settings: _, ...other } = this.props;
+    // the values are taken from the state to display edited values, not originals
+    let { settings, valid } = this.state;
     const actions = [
       <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
                   primary={true} keyboardFocused={true} />,
       <FlatButton label="Accept" onTouchTap={this.acceptDialog}
-                  primary={true} />,
+                  primary={true} disabled={!valid} />,
     ];
-    let { settings: _, ...other } = this.props;
-    let { settings } = this.state;
 
     return (
       <Dialog title="Rosie mode settings" modal={true} actions={actions}
               {...other}>
         <Tabs>
           <Tab label='single' icon={<SingleIcon />}>
+            <DummyForm>
             {/* reach time*/}
-            <TextField floatingLabelText='Time to reach the destination'
-                       type='number' hintText='amount of seconds' fullWidth={true}
-                       value={settings.single.time}
-                       onChange={(e, value) => this.configure('single', {time: parseFloat(value)})} />
+            <FloatField floatingLabelText='Time to reach the destination' fullWidth={true}
+                        ref={(r) => this.time = r}
+                        hintText='amount of seconds' value={settings.single.time}
+                        name='time' onChange={(e, value) => this.configure('single', {time: parseFloat(value)})} />
             {/* use planner?*/}
             <ToggleField toggled={settings.single.planner}
                          label='Use planner for target reach'
@@ -87,13 +124,15 @@ export default class SettingsModal extends React.Component {
             <ToggleField toggled={settings.single.smooth} disabled={!settings.single.planner}
                          label='Apply smooth to planner trajectories'
                          onToggle={(e, checked) => this.configure('single', {smooth: checked}) } />
+            </DummyForm>
           </Tab>
           <Tab label='path' icon={<PathIcon />}>
+            <DummyForm>
             {/* interval time*/}
-            <TextField floatingLabelText='Time interval between path points'
-                       type='number' hintText='amount of seconds' fullWidth={true}
-                       value={settings.path.delay}
-                       onChange={(e, value) => this.configure('path', {delay: parseFloat(value)})} />
+            <FloatField floatingLabelText='Time interval between path points' fullWidth={true}
+                        ref={(r) => this.delay = r}
+                        hintText='amount of seconds' value={settings.path.delay}
+                        name='delay' onChange={(e, value) => this.configure('path', {delay: parseFloat(value)})} />
             {/* interpolation*/}
             <SelectField floatingLabelText='Type of interpolation to apply' fullWidth={true}
                          value={settings.path.interpolation}
@@ -105,6 +144,7 @@ export default class SettingsModal extends React.Component {
             <ToggleField toggled={settings.path.smooth}
                          label='Apply smooth to planner trajectories'
                          onToggle={(e, checked) => this.configure('path', {smooth: checked}) } />
+            </DummyForm>
           </Tab>
           <Tab label='user' icon={<UserIcon />}>
             {/* nipple.js display: always, only for touch devices, none*/}
