@@ -7,6 +7,7 @@ import { addRobot, pressKey, releaseKey, updateMap, clearReport } from '../actio
 function mapStateToProps (state) {
   return {
     mode: state.mode,
+    joystickShow: state.settings.user.joystick,
     report: state.report || { text: '', level: 'info' },
     notification: Boolean(state.report)
   };

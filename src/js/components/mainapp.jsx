@@ -47,11 +47,22 @@ export default class MainApp extends React.Component {
       });
     });
 
-    window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('keyup', this.handleKeyUp);
-
     let md = new MobileDetect(window.navigator.userAgent);
     this.isTouch = md.phone() !== null || md.tablet() !== null;
+
+    if (!this.isTouch && this.props.joystickShow !== 'always') {
+      this.registerWASD();
+    }
+  }
+
+  // joystick show condition
+  showJoystick = () => this.isTouch || this.props.joystickShow === 'always' &&
+      this.props.joystickShow !== 'none';
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.joystickShow !== this.props.joystickShow) {
+      this.registerWASD(nextProps.joystickShow !== 'always' && !this.isTouch);
+    }
   }
 
   toggleDrawer = () => {
@@ -90,6 +101,18 @@ export default class MainApp extends React.Component {
       return;
     }
     map.zoomOut(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
+  }
+
+  // register or unregister the keyboard events
+  registerWASD = (active = true) => {
+    if (active) {
+      window.addEventListener('keydown', this.handleKeyDown);
+      window.addEventListener('keyup', this.handleKeyUp);
+      return;
+    }
+
+    window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('keyup', this.handleKeyUp);
   }
 
   handleKeyDown = (event) => {
@@ -154,10 +177,10 @@ export default class MainApp extends React.Component {
           <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
 
-          {this.props.mode.user && this.isTouch ? <RosieJoystick style={joystickContainer} /> : undefined}
+          {this.props.mode.user && this.showJoystick() ? <RosieJoystick style={joystickContainer} /> : undefined}
           {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
 
-          <div  className="actions" style={zoombtns}>
+          <div className="actions" style={zoombtns}>
             <FloatingActionButton style={zoombtn}
                                   onTouchTap={this._zoomIn}
                                   disabled={!this.state.zoomin}>
