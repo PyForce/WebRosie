@@ -80,7 +80,12 @@ export function updateMap (map) {
 export function robotGoto (x, y, id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
     let { settings } = getState();
-    robot.goto([x, y, settings.single.time]);
+    let t = settings.single.time;
+
+    if (settings.single.planner) {
+      return robot.gotoplanner([x, y, t]);
+    }
+    return robot.goto([x, y, t]);
   });
 }
 

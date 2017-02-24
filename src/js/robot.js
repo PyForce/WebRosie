@@ -63,6 +63,14 @@ export default class Robot {
     return this.post('goto', {target: pos});
   }
 
+  // POST: /gotoplanner
+  // {
+  //    target: [x, y, t]
+  // }
+  gotoplanner (pos) {
+    return this.post('gotoplanner', {target: pos});
+  }
+
   // POST: /follow
   // {
   //    path: [[x, y, t], [x, y, t], ...],
