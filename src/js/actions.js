@@ -50,6 +50,14 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
+// helper to make a dispatcher of a report action
+function makeReport (dispatch, level) {
+  return (text) => {
+    dispatch(notifyReport(text, level));
+  };
+}
+
+
 export function addRobot (host = document.domain, port = location.port, video = 8080) {
   return {
     type: ADD_ROBOT,
@@ -83,7 +91,13 @@ export function robotGoto (x, y, id = null) {
     let t = settings.single.time;
 
     if (settings.single.planner) {
-      return robot.gotoplanner([x, y, t]);
+      return robot.gotoplanner([x, y, t])
+        .then((response) => {
+          if (!response.ok) {
+            response.text().then(makeReport(dispatch, 'warning'));
+          }
+          return response;
+        });
     }
     return robot.goto([x, y, t]);
   });
@@ -101,9 +115,11 @@ export function setOrderAction (value) {
 export function setOrder (value) {
   // mode actions act only on the selected robot, so `null` is the id
   return robotRequest(null, false, (robot, dispatch) => {
-    return robot.auto().then(() => {
+    return robot.auto().then((response) => {
       dispatch(setOrderAction(value));
       dispatch(clearPath());
+
+      return response;
     });
   });
 }
@@ -117,9 +133,11 @@ export function setSingleAction (value) {
 
 export function setSingle (value) {
   return robotRequest(null, false, (robot, dispatch) => {
-    return robot.auto().then(() => {
+    return robot.auto().then((response) => {
       dispatch(setSingleAction(value));
       dispatch(clearPath());
+
+      return response;
     });
   });
 }
@@ -133,9 +151,11 @@ export function setPathAction (value) {
 
 export function setPath (value) {
   return robotRequest(null, false, (robot, dispatch) => {
-    return robot.auto().then(() => {
+    return robot.auto().then((response) => {
       dispatch(setPathAction(value));
       dispatch(clearPath());
+
+      return response;
     });
   });
 }
@@ -150,9 +170,11 @@ export function setUserAction (value) {
 export function setUser (value) {
   return robotRequest(null, false, (robot, dispatch) => {
     return (value ? robot.manual() : robot.auto())
-      .then(() => {
+      .then((response) => {
         dispatch(setUserAction(value));
         dispatch(clearPath());
+
+        return response;
       });
   });
 }
