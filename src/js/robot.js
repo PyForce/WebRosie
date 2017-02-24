@@ -111,15 +111,12 @@ export default class Robot {
   }
 
   post (route, param) {
-    let headers = new Headers({
-      'Content-Type': 'application/json;charset=UTF-8'
-    });
-
+    // with cors mode no headers can be set
+    // with no-cors mode no response is obtained
     return fetch(`http://${this.host}:${this.port}/${route}`, {
       method: 'POST',
-      headers: headers,
-      body: JSON.stringify(param),
-      mode: 'no-cors',
+      mode: 'cors',
+      body: JSON.stringify(param)
     });
   }
 }
