@@ -5,12 +5,16 @@ import { addRobot, pressKey, releaseKey, updateMap, clearReport } from '../actio
 
 
 function mapStateToProps (state) {
+  let selected = state.robot;
+  let robotInfo = state.robots.find((r) => r.id === selected);
+
   return {
     mode: state.mode,
     joystickShow: state.settings.user.joystick,
     report: state.report || { text: '', level: 'info' },
     notification: Boolean(state.report),
-    selected: state.robot !== -1
+    selected: selected !== -1,
+    hasCamera: robotInfo ? Boolean(robotInfo.robot.video) : false
   };
 }
 

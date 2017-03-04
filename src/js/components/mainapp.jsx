@@ -197,7 +197,7 @@ export default class MainApp extends React.Component {
           {this.state.camera ? <RosieWebCam /> : undefined}
 
           <div className="actions" style={zoombtns}>
-            {this.props.selected ? camerabutton : undefined}
+            {this.props.selected && this.props.hasCamera ? camerabutton : undefined}
             <FloatingActionButton style={zoombtn}
                                   onTouchTap={this._zoomIn}
                                   disabled={!this.state.zoomin}>
