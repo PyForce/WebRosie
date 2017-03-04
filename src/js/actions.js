@@ -90,16 +90,13 @@ export function robotGoto (x, y, id = null) {
     let { settings } = getState();
     let t = settings.single.time;
 
-    if (settings.single.planner) {
-      return robot.gotoplanner([x, y, t])
+    return robot.goto([x, y, t], settings.single.planner)
         .then((response) => {
           if (!response.ok) {
             response.text().then(makeReport(dispatch, 'warning'));
           }
           return response;
         });
-    }
-    return robot.goto([x, y, t]);
   });
 }
 

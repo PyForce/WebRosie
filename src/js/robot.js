@@ -58,17 +58,10 @@ export default class Robot {
   // POST: /goto
   // {
   //    target: [x, y, t],
+  //    planner: false
   // }
-  goto (pos) {
-    return this.post('goto', {target: pos});
-  }
-
-  // POST: /gotoplanner
-  // {
-  //    target: [x, y, t]
-  // }
-  gotoplanner (pos) {
-    return this.post('gotoplanner', {target: pos});
+  goto (pos, planner) {
+    return this.post('goto', {target: pos, planner});
   }
 
   // POST: /follow
