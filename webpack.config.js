@@ -28,12 +28,7 @@ config.output = {
   devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
 };
 
-config.plugins = [
-  new webpack.SourceMapDevToolPlugin({
-    test: /.*\.js(x)?$/,
-    filename: 'main.bundle.js.map'
-  })
-];
+config.plugins = [];
 
 config.resolve = {
   extensions: [

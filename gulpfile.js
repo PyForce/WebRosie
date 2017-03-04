@@ -37,6 +37,13 @@ function onBuild (name, done) {
 }
 
 gulp.task('js:compile', (done) => {
+  // add source map build
+  webpackConfig.plugins.push(
+      new webpack.SourceMapDevToolPlugin({
+        test: /.*\.js(x)?$/,
+        filename: 'main.bundle.js.map'
+      })
+  );
   webpack(webpackConfig, onBuild('js', done));
 });
 
@@ -49,6 +56,8 @@ gulp.task('js:prod', (done) => {
       }
     }),
     new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.UglifyJsPlugin({ comments: false })
   );
   webpack(prodConfig, onBuild('js', done));
