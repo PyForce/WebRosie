@@ -17,6 +17,7 @@ export default class Robot {
     this.metadata()
       .then((info) => {
         this.name = info.name;
+        this.video = info.video;
       });
   }
 
