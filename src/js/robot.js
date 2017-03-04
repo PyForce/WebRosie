@@ -17,7 +17,13 @@ export default class Robot {
     this.metadata()
       .then((info) => {
         this.name = info.name;
-        this.video = info.video;
+
+        let {video} = info;
+        if (video && video.startsWith(':')) {
+          this.video = `http://${this.host}${video}`;
+          return;
+        }
+        this.video = video;
       });
   }
 
