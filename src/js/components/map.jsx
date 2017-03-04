@@ -138,7 +138,8 @@ export default class LMap extends React.Component {
           this.props.moveRobot(id, pos);
           this.map.panTo(obj.overlay.latlng);
         });
-      }, (error) => {
+      })
+      .catch(() => {
         // notify of connection error
         this.props.notify(`Couldn't connect to ${obj.host}:${obj.port}`, 'error');
         this.props.removeRobot(id);

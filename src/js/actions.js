@@ -50,14 +50,6 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
-// helper to make a dispatcher of a report action
-function makeReport (dispatch, level) {
-  return (text) => {
-    dispatch(notifyReport(text, level));
-  };
-}
-
-
 export function addRobot (host = document.domain, port = location.port, video = 8080) {
   return {
     type: ADD_ROBOT,
@@ -91,12 +83,7 @@ export function robotGoto (x, y, id = null) {
     let t = settings.single.time;
 
     return robot.goto([x, y, t], settings.single.planner)
-        .then((response) => {
-          if (!response.ok) {
-            response.text().then(makeReport(dispatch, 'warning'));
-          }
-          return response;
-        });
+        .catch((err) => dispatch(notifyReport(err.response.body.error, 'warning')));
   });
 }
 
