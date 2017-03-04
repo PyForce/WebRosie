@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch';
+import request from 'superagent';
 
 
 // robot class with rosie API
@@ -99,17 +99,34 @@ export default class Robot {
   get (route, param) {
     let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
 
-    return fetch(url)
-      .then((response) => response.json());
+    return new Promise((resolve, reject) => {
+      request.get(url)
+        .set('Accept', 'application/json')
+        .end((err, response) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(response.body);
+        });
+    });
   }
 
   post (route, param) {
-    // with cors mode no headers can be set
-    // with no-cors mode no response is obtained
-    return fetch(`http://${this.host}:${this.port}/${route}`, {
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify(param)
+    return new Promise((resolve, reject) => {
+      request.post(`http://${this.host}:${this.port}/${route}`)
+        .type('json')
+        .set('Accept', 'application/json')
+        .send(param)
+        .end((err, response) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(response);
+        });
     });
   }
 }
