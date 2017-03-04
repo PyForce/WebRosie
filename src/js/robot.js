@@ -99,34 +99,16 @@ export default class Robot {
   get (route, param) {
     let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
 
-    return new Promise((resolve, reject) => {
-      request.get(url)
-        .set('Accept', 'application/json')
-        .end((err, response) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve(response.body);
-        });
-    });
+    return request.get(url)
+      .accept('json')
+      .then((response) => response.body);
   }
 
   post (route, param) {
-    return new Promise((resolve, reject) => {
-      request.post(`http://${this.host}:${this.port}/${route}`)
+    return request.post(`http://${this.host}:${this.port}/${route}`)
         .type('json')
-        .set('Accept', 'application/json')
+        .accept('json')
         .send(param)
-        .end((err, response) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve(response);
-        });
-    });
+        .then((response) => response.body);
   }
 }
