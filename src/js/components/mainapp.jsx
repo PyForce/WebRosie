@@ -5,6 +5,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import CameraOpenIcon from 'material-ui/svg-icons/av/videocam';
+import CameraCloseIcon from 'material-ui/svg-icons/av/videocam-off';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
 import MobileDetect from 'mobile-detect';
@@ -16,6 +18,7 @@ import AddRobotDialog from './robotdialog';
 import ReportSnackbar from './reportsnackbar';
 import RosieSettings from '../containers/rosiesettings';
 import RosieJoystick from '../containers/rosiejoystick';
+import RosieWebCam from '../containers/rosiewebcam';
 import { RosiePathAction } from '../containers/rosiemodes';
 import { ORDER_MODE, USER_MODE } from '../actions';
 
@@ -32,7 +35,8 @@ export default class MainApp extends React.Component {
     report: {
       text: '',
       level: 'info'
-    }
+    },
+    camera: false
   }
 
   componentWillMount () {
@@ -129,6 +133,10 @@ export default class MainApp extends React.Component {
     }
   }
 
+  toggleCamera = () => {
+    this.setState({camera: !this.state.camera});
+  }
+
   render () {
     const zoombtns = {
       position: 'absolute',
@@ -152,6 +160,13 @@ export default class MainApp extends React.Component {
       bottom: '40%',
       right: 0
     };
+
+    let camerabutton =
+      <FloatingActionButton style={zoombtn}
+                            onTouchTap={this.toggleCamera}
+                            secondary={this.state.camera}>
+        {this.state.camera ? <CameraCloseIcon /> : <CameraOpenIcon />}
+      </FloatingActionButton>;
 
     return (
       <div>
@@ -179,8 +194,10 @@ export default class MainApp extends React.Component {
 
           {this.props.mode.user && this.showJoystick() ? <RosieJoystick style={joystickContainer} /> : undefined}
           {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
+          {this.state.camera ? <RosieWebCam /> : undefined}
 
           <div className="actions" style={zoombtns}>
+            {this.props.selected && this.props.hasCamera ? camerabutton : undefined}
             <FloatingActionButton style={zoombtn}
                                   onTouchTap={this._zoomIn}
                                   disabled={!this.state.zoomin}>

@@ -50,13 +50,12 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
-export function addRobot (host = document.domain, port = location.port, video = 8080) {
+export function addRobot (host = document.domain, port = location.port) {
   return {
     type: ADD_ROBOT,
     params: [
       host,
-      port,
-      video
+      port
     ]
   };
 }
