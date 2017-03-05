@@ -12,8 +12,8 @@ function pathMapStateToProps (state) {
 
 function pathMapDispatchToProps (dispatch) {
   return {
-    sendPath: () => dispatch(robotFollow()),
-    modeOff: () => dispatch(clearPath())
+    handleSendPath: () => dispatch(robotFollow()),
+    handleModeOff: () => dispatch(clearPath())
   };
 }
 

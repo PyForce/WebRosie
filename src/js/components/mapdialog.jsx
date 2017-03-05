@@ -41,11 +41,11 @@ export default class MapDialog extends React.Component {
       );
   }
 
-  acceptDialog = () => {
+  handleAccept = () => {
     this.props.onRequestClose(true, this.state.map);
   }
 
-  cancelDialog = () => {
+  handleCancel = () => {
     this.props.onRequestClose(false);
   }
 
@@ -65,13 +65,14 @@ export default class MapDialog extends React.Component {
   }
 
   render () {
-    let { robots, ...other } = this.props;
+    let { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
     const actions = [
-      <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
-                  primary={true} keyboardFocused={true} />,
-      <FlatButton label="Accept" onTouchTap={this.acceptDialog}
-                  primary={true}
-                  disabled={!this.state.any} />,
+      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+        primary
+      />,
+      <FlatButton disabled={!this.state.any} key={1} label='Accept' onTouchTap={this.handleAccept}
+        primary
+      />,
     ];
 
     let rows = this.state.maps.map((elem, index) => (
@@ -83,26 +84,25 @@ export default class MapDialog extends React.Component {
     ));
 
     return (
-      <Dialog title="Map Select" modal={true} fixedHeader={true} actions={actions}
-              {...other}>
-        Select the map to load in the application<br />
-        <Table selectable={true} multiSelectable={false}
-               onRowSelection={this.handleSelection}>
+      <Dialog actions={actions} fixedHeader modal title='Map Select'
+        {...other}>
+        {'Select the map to load in the application'} <br />
+        <Table multiSelectable={false} onRowSelection={this.handleSelection} selectable>
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn tooltip="Map name">Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Robot that has the map">Robot</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Address of the robot">Address</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Map name'>{'Name'}</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Robot that has the map'>{'Robot'}</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Address of the robot'>{'Address'}</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody showRowHover={true} deselectOnClickaway={false}>
+          <TableBody deselectOnClickaway={false} showRowHover>
             {rows}
           </TableBody>
           {rows.length > 0 ? undefined :
             <TableFooter adjustForCheckbox={false}>
               <TableRow style={{ borderTop: null }}>
-                <TableRowColumn colSpan="3" style={{ textAlign: 'center' }}>
-                  No maps available
+                <TableRowColumn colSpan={3} style={{ textAlign: 'center' }}>
+                  {'No maps available'}
                 </TableRowColumn>
               </TableRow>
             </TableFooter>}

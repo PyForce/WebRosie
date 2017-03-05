@@ -14,9 +14,9 @@ export default class WebCam extends React.Component {
     let [ x, y ] = [ 14 * window.innerWidth / 15 - width, -window.innerHeight / 5 ];
 
     return (
-      <ResizeAndDrag zIndex={1002} initial={{ x: x, y: y, width: width, height: height }}>
+      <ResizeAndDrag initial={{ x: x, y: y, width: width, height: height }} zIndex={1002}>
         <Paper style={{ height: '100%', width: '100%' }} zDepth={2}>
-          <img src={this.props.url} alt="" style={style} />
+          <img src={this.props.url} style={style} />
         </Paper>
       </ResizeAndDrag>
     );

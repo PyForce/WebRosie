@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 
 import MapDialog from '../components/mapdialog';
-import { ADD_ROBOT } from '../actions';
 
 
 function mapStateToProps (state) {
