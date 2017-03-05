@@ -72,7 +72,7 @@
     "comma-style": [1, "last"],
     "curly": [2, "multi-line"],
     "indent": [1, 2],
-    "key-spacing": [1, {
+    "key-spacing": [0, {
       "align": "value",
       "beforeColon": false,
       "afterColon": true
@@ -127,7 +127,7 @@
     "react/jsx-no-literals": 1,
     "react/jsx-no-undef": 1,
     "react/jsx-pascal-case": 1,
-    "jsx-quotes": [1, ["single"]],
+    "jsx-quotes": [1, "prefer-single"],
     "react/jsx-sort-prop-types": 1,
     "react/jsx-sort-props": 1,
     "react/jsx-uses-react": 1,
