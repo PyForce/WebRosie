@@ -79,7 +79,7 @@
     }],
     "no-extra-semi": 1,
     "no-extra-boolean-cast": 1,
-    "no-extra-parens": [1, "all"],
+    "no-extra-parens": [1, "functions"],
     "no-extra-strict": 0,
     "no-multi-spaces": 1,
     "no-multi-str": 1,
@@ -116,8 +116,8 @@
     "react/jsx-curly-spacing": 1,
     "react/jsx-equals-spacing": 1,
     "react/jsx-handler-names": 1,
-    "react/jsx-indent-props": 1,
-    "react/jsx-indent": 1,
+    "react/jsx-indent-props": [1, 2],
+    "react/jsx-indent": [1, 2],
     "react/jsx-key": 1,
     "react/jsx-max-props-per-line": [1, {
       "maximum": 4
