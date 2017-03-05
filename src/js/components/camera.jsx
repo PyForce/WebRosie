@@ -9,13 +9,13 @@ export default class WebCam extends React.Component {
       width: '100%',
       height: '100%'
     };
-    let [width, height] = [200, 200];
+    let [ width, height ] = [ 200, 200 ];
     // locate the camera viewer in right: 15%, top: 10%
-    let [x, y] = [14 * window.innerWidth / 15 - width, -window.innerHeight / 5];
+    let [ x, y ] = [ 14 * window.innerWidth / 15 - width, -window.innerHeight / 5 ];
 
     return (
-      <ResizeAndDrag zIndex={1002} initial={{x: x, y: y, width: width, height: height}}>
-        <Paper style={{height: '100%', width: '100%'}} zDepth={2}>
+      <ResizeAndDrag zIndex={1002} initial={{ x: x, y: y, width: width, height: height }}>
+        <Paper style={{ height: '100%', width: '100%' }} zDepth={2}>
           <img src={this.props.url} alt="" style={style} />
         </Paper>
       </ResizeAndDrag>

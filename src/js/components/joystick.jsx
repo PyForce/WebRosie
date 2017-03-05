@@ -22,7 +22,7 @@ export default class TouchJoystick extends React.Component {
       };
       this.props.moveJoystick(movement);
     }).on('end', () => {
-      this.props.moveJoystick({x: 0, y: 0});
+      this.props.moveJoystick({ x: 0, y: 0 });
     });
   }
 

@@ -24,7 +24,7 @@ export const CONFIG_OPTION = 20;
 
 // gets the robot with the specified id
 function getRobot (robots, id) {
-  let [robot] = robots.filter((r) => r.id === id);
+  let [ robot ] = robots.filter((r) => r.id === id);
   return robot;
 }
 
@@ -81,7 +81,7 @@ export function robotGoto (x, y, id = null) {
     let { settings } = getState();
     let t = settings.single.time;
 
-    return robot.goto([x, y, t], settings.single.planner)
+    return robot.goto([ x, y, t ], settings.single.planner)
         .catch((err) => dispatch(notifyReport(err.response.body.error, 'warning')));
   });
 }
@@ -210,17 +210,17 @@ export function moveJoystick (movement) {
 }
 
 export function addPathPoint (point) {
-  return {type: ADD_POINT, point};
+  return { type: ADD_POINT, point };
 }
 
 export function clearPath () {
-  return {type: CLEAR_PATH};
+  return { type: CLEAR_PATH };
 }
 
 export function robotFollow (id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
     let { path, settings } = getState();
-    return robot.follow({path, time: settings.path.delay});
+    return robot.follow({ path, time: settings.path.delay });
   });
 }
 

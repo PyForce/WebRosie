@@ -110,16 +110,16 @@ export function mode (state = { order: false, single: false, path: false, user: 
 }
 
 const keyCodeToDirection = {
-  87: [0, 1, 0],  // W
-  83: [0, -1, 0],  // S
-  68: [1, 0, 0],  // D
-  65: [-1, 0, 0],  // A
-  69: [0, 0, 1],  // E
-  81: [0, 0, -1]  // Q
+  87: [ 0, 1, 0 ],  // W
+  83: [ 0, -1, 0 ],  // S
+  68: [ 1, 0, 0 ],  // D
+  65: [ -1, 0, 0 ],  // A
+  69: [ 0, 0, 1 ],  // E
+  81: [ 0, 0, -1 ]  // Q
 };
 
 // handles the pressed keys
-export function direction (state = [0, 0, 0], action) {
+export function direction (state = [ 0, 0, 0 ], action) {
   let dir;
   switch (action.type) {
   // wASD vector update
@@ -131,12 +131,12 @@ export function direction (state = [0, 0, 0], action) {
     return dir ? state.map((e, i) => Math.min(1, Math.max(-1, e - dir[i]))) : state;
   // joystick vector update
   case actions.JOYSTICK_MOVE:
-    return [action.movement.x, action.movement.y, state[2]];
+    return [ action.movement.x, action.movement.y, state[2] ];
   // reset vector on mode change
   case actions.ORDER_MODE:
   case actions.PATH_MODE:
   case actions.USER_MODE:
-    return [0, 0, 0];
+    return [ 0, 0, 0 ];
   default:
     return state;
   }
@@ -179,7 +179,7 @@ export function report (state = null, action) {
 export function path (state = [], action) {
   switch (action.type) {
   case actions.ADD_POINT:
-    return state.concat([action.point]);
+    return state.concat([ action.point ]);
   case actions.CLEAR_PATH:
     return [];
   default:
@@ -190,9 +190,9 @@ export function path (state = [], action) {
 
 // handles the change of the settings
 export function settings (state = {
-  single: {time: 5, planner: false, smooth: false},
-  path: {delay: 2, smooth: false},
-  user: {joystick: 'touch'}}, action) {
+  single: { time: 5, planner: false, smooth: false },
+  path: { delay: 2, smooth: false },
+  user: { joystick: 'touch' }}, action) {
   switch (action.type) {
   case actions.CONFIG_OPTION:
     return {

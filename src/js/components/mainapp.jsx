@@ -47,7 +47,7 @@ export default class MainApp extends React.Component {
         let disabledOut = map._zoom <= map.getMinZoom();
         let disabledIn = map._zoom >= map.getMaxZoom();
 
-        this.setState({zoomin: !disabledIn, zoomout: !disabledOut});
+        this.setState({ zoomin: !disabledIn, zoomout: !disabledOut });
       });
     });
 
@@ -134,7 +134,7 @@ export default class MainApp extends React.Component {
   }
 
   toggleCamera = () => {
-    this.setState({camera: !this.state.camera});
+    this.setState({ camera: !this.state.camera });
   }
 
   render () {
@@ -175,20 +175,20 @@ export default class MainApp extends React.Component {
         <MapDialogProvider open={this.state.mapdialog} onRequestClose={this.acceptMap}
                            autoDetectWindowHeight={true} autoScrollBodyContent={true} />
         <RosieSettings open={this.state.settings}
-                       onRequestClose={() => this.setState({settings: false})}
+                       onRequestClose={() => this.setState({ settings: false })}
                        autoDetectWindowHeight={true} autoScrollBodyContent={true} />
 
         <Drawer open={this.state.drawer} docked={false}
                 onRequestChange={(open) => this.setState({ drawer: open })}>
           <MenuItem primaryText="Add robot" leftIcon={<ContentAddIcon />}
-            onTouchTap={() => this.setState({robotdialog: true, drawer: false})} />
+            onTouchTap={() => this.setState({ robotdialog: true, drawer: false })} />
           <MenuItem primaryText="Select map" leftIcon={<MapIcon />}
-            onTouchTap={() => this.setState({mapdialog: true, drawer: false})} />
+            onTouchTap={() => this.setState({ mapdialog: true, drawer: false })} />
           <MenuItem primaryText="Settings" leftIcon={<SettingsIcon />}
-            onTouchTap={() => this.setState({settings: true, drawer: false})} />
+            onTouchTap={() => this.setState({ settings: true, drawer: false })} />
         </Drawer>
 
-        <div style={{height: '100%'}} className='flex column wrap start'>
+        <div style={{ height: '100%' }} className='flex column wrap start'>
           <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
           <RosieMap ref='rosiemap' />
 
@@ -215,4 +215,4 @@ export default class MainApp extends React.Component {
       </div>
     );
   }
-};
+}

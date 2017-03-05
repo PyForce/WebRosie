@@ -76,11 +76,11 @@ export default class RobotOverlay extends L.ImageOverlay {
   }
 
   get pos () {
-    return [this._latlng.lat, this._latlng.lng];
+    return [ this._latlng.lat, this._latlng.lng ];
   }
 
   set pos (value) {
-    this.latlng = [value.y, value.x];
+    this.latlng = [ value.y, value.x ];
   }
 
   get angle () {
@@ -111,4 +111,4 @@ export default class RobotOverlay extends L.ImageOverlay {
   get latlng () {
     return this._latlng;
   }
-};
+}

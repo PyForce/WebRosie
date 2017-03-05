@@ -35,7 +35,7 @@ export default function draw (jsonMap, leafletMap) {
           weight: 0
         };
 
-        L.geoJson(jsonMap.rooms[room][element], {style: borderStyle})
+        L.geoJson(jsonMap.rooms[room][element], { style: borderStyle })
           .addTo(leafletMap);
         color += 0.25;
         if (color > .8) {
@@ -56,4 +56,4 @@ export default function draw (jsonMap, leafletMap) {
       }
     }
   }
-};
+}
