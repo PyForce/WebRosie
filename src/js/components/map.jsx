@@ -11,11 +11,11 @@ export default class LMap extends React.Component {
       crs: L.CRS.Simple,
       zoomAnimation: false,
       zoomControl: false
-    }).setView([0, 0], 9);
+    }).setView([ 0, 0 ], 9);
 
     let muiTheme = this._reactInternalInstance._context.muiTheme;
 
-    this.marker = L.circleMarker([0, 0], {
+    this.marker = L.circleMarker([ 0, 0 ], {
       color: muiTheme.palette.accent1Color
     });
 
@@ -27,7 +27,7 @@ export default class LMap extends React.Component {
         this.props.selectRobot();
       }
 
-      let {lat: y, lng: x} = event.latlng;
+      let { lat: y, lng: x } = event.latlng;
 
       if (this.props.mode.single) {
         this.map.removeLayer(this.marker);
@@ -40,7 +40,7 @@ export default class LMap extends React.Component {
         return;
       }
 
-      this.props.addPoint([x, y]);
+      this.props.addPoint([ x, y ]);
     });
 
     this.path = L.polyline([], {
@@ -89,7 +89,7 @@ export default class LMap extends React.Component {
       let store = this._reactInternalInstance._context.store;
       let overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
 
-      let latlngs = path.map((elem) => [elem[1], elem[0]]);
+      let latlngs = path.map((elem) => [ elem[1], elem[0] ]);
       latlngs.unshift(overlay.latlng);
 
       this.path.setLatLngs(latlngs);
@@ -119,10 +119,10 @@ export default class LMap extends React.Component {
         // construct the image URL
         let image = `http://${obj.host}:${obj.port}${data.vector}`;
 
-        obj.overlay = new RobotOverlay(image, [0, 0],
+        obj.overlay = new RobotOverlay(image, [ 0, 0 ],
           data.size[1], data.size[0], {
             interactive: true,
-            nonBubblingEvents: ['click']
+            nonBubblingEvents: [ 'click' ]
           });
         // put the leaflet overlay into the map
         obj.overlay.addTo(this.map)
@@ -162,4 +162,4 @@ export default class LMap extends React.Component {
       <div id='map' className="grow" />
     );
   }
-};
+}

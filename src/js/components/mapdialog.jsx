@@ -18,13 +18,13 @@ export default class MapDialog extends React.Component {
       return;
     }
 
-    this.setState({maps: []});
+    this.setState({ maps: [] });
     robots.forEach((robotInfo) => {
       // for each robot, load its maps and add them to the state
       let { id, robot } = robotInfo;
       this.loadMaps(robot, id)
         .then((data) => {
-          this.setState({maps: this.state.maps.concat(data)});
+          this.setState({ maps: this.state.maps.concat(data) });
         });
     });
   }
@@ -58,10 +58,10 @@ export default class MapDialog extends React.Component {
       let { robot } = this.props.robots[id];
       robot.map(name)
         .then((map) => {
-          this.setState({map: map});
+          this.setState({ map: map });
         });
     }
-    this.setState({any: any});
+    this.setState({ any: any });
   }
 
   render () {
@@ -100,8 +100,8 @@ export default class MapDialog extends React.Component {
           </TableBody>
           {rows.length > 0 ? undefined :
             <TableFooter adjustForCheckbox={false}>
-              <TableRow style={{borderTop: null}}>
-                <TableRowColumn colSpan="3" style={{textAlign: 'center'}}>
+              <TableRow style={{ borderTop: null }}>
+                <TableRowColumn colSpan="3" style={{ textAlign: 'center' }}>
                   No maps available
                 </TableRowColumn>
               </TableRow>

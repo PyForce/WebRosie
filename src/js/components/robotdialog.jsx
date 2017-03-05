@@ -37,13 +37,13 @@ export default class AddRobotDialog extends React.Component {
         <TextField value={this.state.robotHost} floatingLabelText='Robot host address'
                    onChange={(e, val) => this.setState({ robotHost: val })}
                    hintText='localhost, 10.0.0.1, my.robot.com'
-                   style={{float: 'left', width: '70%'}} />
+                   style={{ float: 'left', width: '70%' }} />
 
         <TextField value={this.state.robotPort} floatingLabelText='Rosie WebHUD port'
                    onChange={(e, val) => this.setState({ robotPort: val })}
                    type='number' hintText='500, 5679'
-                   style={{float: 'left', width: '30%'}} />
+                   style={{ float: 'left', width: '30%' }} />
       </Dialog>
     );
   }
-};
+}

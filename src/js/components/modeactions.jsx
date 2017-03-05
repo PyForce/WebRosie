@@ -8,11 +8,11 @@ export class PathActions extends React.Component {
   render () {
     return (
       <div style={this.props.style} className='actions'>
-        <FloatingActionButton style={{display: 'block'}} disabled={!this.props.path}
+        <FloatingActionButton style={{ display: 'block' }} disabled={!this.props.path}
                               onTouchTap={this.props.sendPath}>
           <AcceptIcon />
         </FloatingActionButton>
-        <FloatingActionButton style={{display: 'block'}}
+        <FloatingActionButton style={{ display: 'block' }}
                               onTouchTap={this.props.modeOff}
                               disabled={!this.props.path}>
           <CancelIcon />

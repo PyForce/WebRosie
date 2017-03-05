@@ -18,7 +18,7 @@ export default class Robot {
       .then((info) => {
         this.name = info.name;
 
-        let {video} = info;
+        let { video } = info;
         if (video && video.startsWith(':')) {
           this.video = `http://${this.host}${video}`;
           return;
@@ -29,7 +29,7 @@ export default class Robot {
 
   // API
   move (dir) {
-    this.sio.send(JSON.stringify({type: 'move', data: dir}));
+    this.sio.send(JSON.stringify({ type: 'move', data: dir }));
   }
 
   // GET: /sensor/`name`
@@ -68,7 +68,7 @@ export default class Robot {
   //    planner: false
   // }
   goto (pos, planner) {
-    return this.post('goto', {target: pos, planner});
+    return this.post('goto', { target: pos, planner });
   }
 
   // POST: /follow
