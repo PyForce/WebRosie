@@ -106,6 +106,9 @@
       "objectsInArrays": false,
       "arraysInArrays": false
     }],
+    "max-len": [2, 100, 0, {
+      "ignoreComments": true
+    }],
     "react/display-name": 0,
     "react/forbid-prop-types": 1,
     "react/jsx-boolean-value": 1,
@@ -122,7 +125,9 @@
     "react/jsx-max-props-per-line": [1, {
       "maximum": 4
     }],
-    "react/jsx-no-bind": 1,
+    "react/jsx-no-bind": [1, {
+      "ignoreRefs": true
+    }],
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-literals": 1,
     "react/jsx-no-undef": 1,
