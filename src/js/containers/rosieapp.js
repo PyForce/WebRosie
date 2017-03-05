@@ -24,7 +24,7 @@ function mapDispatchToProps (dispatch) {
     keyDown: (key) => dispatch(pressKey(key)),
     keyUp: (key) => dispatch(releaseKey(key)),
     loadMap: (map) => dispatch(updateMap(map)),
-    clearReport: () => dispatch(clearReport())
+    handleClearReport: () => dispatch(clearReport())
   };
 }
 

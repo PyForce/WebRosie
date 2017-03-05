@@ -7,14 +7,13 @@ import CancelIcon from 'material-ui/svg-icons/content/clear';
 export class PathActions extends React.Component {
   render () {
     return (
-      <div style={this.props.style} className='actions'>
-        <FloatingActionButton style={{ display: 'block' }} disabled={!this.props.path}
-                              onTouchTap={this.props.sendPath}>
+      <div className='actions' style={this.props.style}>
+        <FloatingActionButton disabled={!this.props.path} onTouchTap={this.props.handleSendPath}
+          style={{ display: 'block' }}>
           <AcceptIcon />
         </FloatingActionButton>
-        <FloatingActionButton style={{ display: 'block' }}
-                              onTouchTap={this.props.modeOff}
-                              disabled={!this.props.path}>
+        <FloatingActionButton disabled={!this.props.path} onTouchTap={this.props.handleModeOff}
+          style={{ display: 'block' }}>
           <CancelIcon />
         </FloatingActionButton>
       </div>

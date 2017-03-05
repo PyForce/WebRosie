@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -19,11 +20,12 @@ class FloatField extends React.Component {
 
   render () {
     return (
-      <TextValidator type='number' validators={[ 'isFloat', 'isPositive', 'required' ]}
-                     errorMessages={[ 'time should be a floating point number',
-                      'the value should be positive', 'this field is required' ]}
-                     {...this.props} ref={(r) => this.field = r}
-                     style={{ marginBottom: '1em' }} />
+      <TextValidator errorMessages={[ 'time should be a floating point number',
+        'the value should be positive', 'this field is required' ]}
+        type='number' validators={[ 'isFloat', 'isPositive', 'required' ]}
+        {...this.props} ref={(r) => this.field = r}
+        style={{ marginBottom: '1em' }}
+      />
     );
   }
 }
@@ -31,9 +33,11 @@ class FloatField extends React.Component {
 
 class DummyForm extends React.Component {
   // form that doesn't submit
+  handleSubmit = () => null
+
   render () {
     return (
-      <ValidatorForm onSubmit={() => null} {...this.props} >
+      <ValidatorForm onSubmit={this.handleSubmit} {...this.props} >
         {this.props.children}
       </ValidatorForm>
     );
@@ -52,18 +56,22 @@ export default class SettingsModal extends React.Component {
     valid: true
   }
 
-  acceptDialog = () => {
+  componentWillReceiveProps (nextProps) {
+    // put the original values on the state
+    this.setState({ settings: nextProps.settings });
+  }
+
+  handleAccept = () => {
     this.props.saveSettings(this.state.settings);
     this.props.onRequestClose();
   }
 
-  cancelDialog = () => {
+  handleCancel = () => {
     this.props.onRequestClose();
   }
 
-  componentWillReceiveProps (nextProps) {
-    // put the original values on the state
-    this.setState({ settings: nextProps.settings });
+  handleSettingChange = (mode, key, index = 1, update = null) => {
+    return (...args) => this.configure(mode, { [key]: update ? update(args[index]) : args[index] });
   }
 
   configure = (mode, options) => {  // change a group of options inside a mode
@@ -87,77 +95,84 @@ export default class SettingsModal extends React.Component {
   }
 
   render () {
-    let { settings: _, ...other } = this.props;
+    let { settings: _, ...other } = this.props; // eslint-disable-line no-unused-vars
     // the values are taken from the state to display edited values, not originals
     let { settings, valid } = this.state;
     const actions = [
-      <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
-                  primary={true} keyboardFocused={true} />,
-      <FlatButton label="Accept" onTouchTap={this.acceptDialog}
-                  primary={true} disabled={!valid} />,
+      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+        primary
+      />,
+      <FlatButton disabled={!valid} key={1} label='Accept' onTouchTap={this.handleAccept}
+        primary
+      />,
     ];
 
     return (
-      <Dialog title="Rosie mode settings" modal={true} actions={actions}
-              {...other}>
+      <Dialog actions={actions} modal title='Rosie mode settings' {...other}>
         <Tabs>
-          <Tab label='single' icon={<SingleIcon />}>
+          <Tab icon={<SingleIcon />} label='single'>
             <DummyForm>
-            {/* reach time*/}
-            <FloatField floatingLabelText='Time to reach the destination' fullWidth={true}
-                        ref={(r) => this.time = r}
-                        hintText='amount of seconds' value={settings.single.time}
-                        name='time' onChange={(e, value) => this.configure('single', { time: parseFloat(value) })} />
-            {/* use planner?*/}
-            <ToggleField toggled={settings.single.planner}
-                         label='Use planner for target reach'
-                         onToggle={(e, checked) => this.configure('single', { planner: checked }) } />
-            {/* interpolation*/}
-            <SelectField floatingLabelText='Type of interpolation to apply' fullWidth={true}
-                         value={settings.single.interpolation}
-                         disabled={!settings.single.planner}
-                         onChange={(e, k, value) => this.configure('single', { interpolation: value })}>
-              <MenuItem value='Linear' primaryText='Linear' />
-              <MenuItem value='Cubic' primaryText='Cubic' />
-            </SelectField>
-            {/* smooth?*/}
-            <ToggleField toggled={settings.single.smooth} disabled={!settings.single.planner}
-                         label='Apply smooth to planner trajectories'
-                         onToggle={(e, checked) => this.configure('single', { smooth: checked }) } />
+              {/* reach time*/}
+              <FloatField floatingLabelText='Time to reach the destination' fullWidth
+                hintText='amount of seconds' name='time'
+                onChange={this.handleSettingChange('single', 'time', 1, parseFloat)}
+                ref={(r) => this.time = r} value={settings.single.time}
+              />
+              {/* use planner?*/}
+              <ToggleField label='Use planner for target reach'
+                onToggle={this.handleSettingChange('single', 'planner')}
+                toggled={settings.single.planner}
+              />
+              {/* interpolation*/}
+              <SelectField disabled={!settings.single.planner}
+                floatingLabelText='Type of interpolation to apply' fullWidth
+                onChange={this.handleSettingChange('single', 'interpolation', 2)}
+                value={settings.single.interpolation}>
+                <MenuItem primaryText='Linear' value='Linear' />
+                <MenuItem primaryText='Cubic' value='Cubic' />
+              </SelectField>
+              {/* smooth?*/}
+              <ToggleField disabled={!settings.single.planner}
+                label='Apply smooth to planner trajectories'
+                onToggle={this.handleSettingChange('single', 'smooth')}
+                toggled={settings.single.smooth}
+              />
             </DummyForm>
           </Tab>
-          <Tab label='path' icon={<PathIcon />}>
+          <Tab icon={<PathIcon />} label='path'>
             <DummyForm>
-            {/* interval time*/}
-            <FloatField floatingLabelText='Time interval between path points' fullWidth={true}
-                        ref={(r) => this.delay = r}
-                        hintText='amount of seconds' value={settings.path.delay}
-                        name='delay' onChange={(e, value) => this.configure('path', { delay: parseFloat(value) })} />
-            {/* interpolation*/}
-            <SelectField floatingLabelText='Type of interpolation to apply' fullWidth={true}
-                         value={settings.path.interpolation}
-                         onChange={(e, k, value) => this.configure('path', { interpolation: value })}>
-              <MenuItem value='linear' primaryText='Linear' />
-              <MenuItem value='cubic' primaryText='Cubic' />
-            </SelectField>
-            {/* smooth?*/}
-            <ToggleField toggled={settings.path.smooth}
-                         label='Apply smooth to planner trajectories'
-                         onToggle={(e, checked) => this.configure('path', { smooth: checked }) } />
+              {/* interval time*/}
+              <FloatField floatingLabelText='Time interval between path points' fullWidth
+                hintText='amount of seconds' name='delay'
+                onChange={this.handleSettingChange('path', 'delay', 1, parseFloat)}
+                ref={(r) => this.delay = r}
+                value={settings.path.delay}
+              />
+              {/* interpolation*/}
+              <SelectField floatingLabelText='Type of interpolation to apply' fullWidth
+                onChange={this.handleSettingChange('path', 'interpolation', 2)}
+                value={settings.path.interpolation}>
+                <MenuItem primaryText='Linear' value='linear' />
+                <MenuItem primaryText='Cubic' value='cubic' />
+              </SelectField>
+              {/* smooth?*/}
+              <ToggleField label='Apply smooth to planner trajectories'
+                onToggle={this.handleSettingChange('path', 'smooth')}
+                toggled={settings.path.smooth}
+              />
             </DummyForm>
           </Tab>
-          <Tab label='user' icon={<UserIcon />}>
+          <Tab icon={<UserIcon />} label='user'>
             {/* nipple.js display: always, only for touch devices, none*/}
-            <SelectField floatingLabelText='When to display the joystick' fullWidth={true}
-                         value={settings.user.joystick}
-                         onChange={(e, k, value) => this.configure('user', { joystick: value })}>
-              <MenuItem value='always' primaryText='Always' />
-              <MenuItem value='touch' primaryText='Touch Device'/>
-              <MenuItem value='none' primaryText='Do not show' />
+            <SelectField floatingLabelText='When to display the joystick' fullWidth
+              onChange={this.handleSettingChange('user', 'joystick', 2)}
+              value={settings.user.joystick}>
+              <MenuItem primaryText='Always' value='always' />
+              <MenuItem primaryText='Touch Device' value='touch'/>
+              <MenuItem primaryText='Do not show' value='none' />
             </SelectField>
           </Tab>
-          <Tab label='command' icon={<CommandIcon />}>
-          </Tab>
+          <Tab icon={<CommandIcon />} label='command' />
         </Tabs>
       </Dialog>
     );

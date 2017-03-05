@@ -20,7 +20,6 @@ import RosieSettings from '../containers/rosiesettings';
 import RosieJoystick from '../containers/rosiejoystick';
 import RosieWebCam from '../containers/rosiewebcam';
 import { RosiePathAction } from '../containers/rosiemodes';
-import { ORDER_MODE, USER_MODE } from '../actions';
 
 
 export default class MainApp extends React.Component {
@@ -41,7 +40,7 @@ export default class MainApp extends React.Component {
 
   componentWillMount () {
     window.addEventListener('load', () => {
-      let map = this.refs.rosiemap.getWrappedInstance().map;
+      let map = this.rosiemap.getWrappedInstance().map;
       // disable enable zoom buttons depending on zoom level
       map.on('zoomend zoomlevelschange', () => {
         let disabledOut = map._zoom <= map.getMinZoom();
@@ -59,21 +58,21 @@ export default class MainApp extends React.Component {
     }
   }
 
-  // joystick show condition
-  showJoystick = () => this.isTouch || this.props.joystickShow === 'always' &&
-      this.props.joystickShow !== 'none';
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.joystickShow !== this.props.joystickShow) {
       this.registerWASD(nextProps.joystickShow !== 'always' && !this.isTouch);
     }
   }
 
-  toggleDrawer = () => {
+  // joystick show condition
+  showJoystick = () => this.isTouch || this.props.joystickShow === 'always' &&
+      this.props.joystickShow !== 'none';
+
+  handleToggleDrawer = () => {
     this.setState({ drawer: !this.state.drawer });
   }
 
-  acceptRobot = (accepted, ...data) => {
+  handleCloseRobotDialog = (accepted, ...data) => {
     if (accepted) {
       this.props.addRobot(...data);
     }
@@ -82,7 +81,7 @@ export default class MainApp extends React.Component {
     this.setState({ robotdialog: false });
   }
 
-  acceptMap = (accepted, data) => {
+  handleCloseMapDialog = (accepted, data) => {
     if (accepted) {
       this.props.loadMap(data);
     }
@@ -91,16 +90,36 @@ export default class MainApp extends React.Component {
     this.setState({ mapdialog: false });
   }
 
-  _zoomIn = (e) => {
-    let map = this.refs.rosiemap.getWrappedInstance().map;
+  handleCloseSettings = () => {
+    this.setState({ settings: false });
+  }
+
+  handleChangeDrawer = (open) => {
+    this.setState({ drawer: open });
+  }
+
+  handleAddRobot = () => {
+    this.setState({ robotdialog: true, drawer: false });
+  }
+
+  handleChangeMap = () => {
+    this.setState({ mapdialog: true, drawer: false });
+  }
+
+  handleChangeSettings = () => {
+    this.setState({ settings: true, drawer: false });
+  }
+
+  _handleZoomIn = (e) => {
+    let map = this.rosiemap.getWrappedInstance().map;
     if (map._zoom >= map.getMaxZoom()) {
       return;
     }
     map.zoomIn(map.options.zoomDelta * (e.shiftKey ? 3 : 1));
   }
 
-  _zoomOut = (e) => {
-    let map = this.refs.rosiemap.getWrappedInstance().map;
+  _handleZoomOut = (e) => {
+    let map = this.rosiemap.getWrappedInstance().map;
     if (map._zoom <= map.getMinZoom()) {
       return;
     }
@@ -133,7 +152,7 @@ export default class MainApp extends React.Component {
     }
   }
 
-  toggleCamera = () => {
+  handleToggleCamera = () => {
     this.setState({ camera: !this.state.camera });
   }
 
@@ -161,56 +180,61 @@ export default class MainApp extends React.Component {
       right: 0
     };
 
-    let camerabutton =
-      <FloatingActionButton style={zoombtn}
-                            onTouchTap={this.toggleCamera}
-                            secondary={this.state.camera}>
+    let camerabutton = (
+      <FloatingActionButton onTouchTap={this.handleToggleCamera} secondary={this.state.camera}
+        style={zoombtn}>
         {this.state.camera ? <CameraCloseIcon /> : <CameraOpenIcon />}
-      </FloatingActionButton>;
+      </FloatingActionButton>
+    );
 
     return (
       <div>
-        <AddRobotDialog open={this.state.robotdialog} onRequestClose={this.acceptRobot}
-                        autoDetectWindowHeight={true} autoScrollBodyContent={true} />
-        <MapDialogProvider open={this.state.mapdialog} onRequestClose={this.acceptMap}
-                           autoDetectWindowHeight={true} autoScrollBodyContent={true} />
-        <RosieSettings open={this.state.settings}
-                       onRequestClose={() => this.setState({ settings: false })}
-                       autoDetectWindowHeight={true} autoScrollBodyContent={true} />
+        <AddRobotDialog autoDetectWindowHeight autoScrollBodyContent
+          onRequestClose={this.handleCloseRobotDialog} open={this.state.robotdialog}
+        />
+        <MapDialogProvider autoDetectWindowHeight autoScrollBodyContent
+          onRequestClose={this.handleCloseMapDialog} open={this.state.mapdialog}
+        />
+        <RosieSettings autoDetectWindowHeight autoScrollBodyContent
+          onRequestClose={this.handleCloseSettings} open={this.state.settings}
+        />
 
-        <Drawer open={this.state.drawer} docked={false}
-                onRequestChange={(open) => this.setState({ drawer: open })}>
-          <MenuItem primaryText="Add robot" leftIcon={<ContentAddIcon />}
-            onTouchTap={() => this.setState({ robotdialog: true, drawer: false })} />
-          <MenuItem primaryText="Select map" leftIcon={<MapIcon />}
-            onTouchTap={() => this.setState({ mapdialog: true, drawer: false })} />
-          <MenuItem primaryText="Settings" leftIcon={<SettingsIcon />}
-            onTouchTap={() => this.setState({ settings: true, drawer: false })} />
+        <Drawer docked={false} onRequestChange={this.handleChangeDrawer} open={this.state.drawer}>
+          <MenuItem leftIcon={<ContentAddIcon />} onTouchTap={this.handleAddRobot}
+            primaryText='Add robot'
+          />
+          <MenuItem leftIcon={<MapIcon />} onTouchTap={this.handleChangeMap}
+            primaryText='Select map'
+          />
+          <MenuItem leftIcon={<SettingsIcon />} onTouchTap={this.handleChangeSettings}
+            primaryText='Settings'
+          />
         </Drawer>
 
-        <div style={{ height: '100%' }} className='flex column wrap start'>
-          <RosieAppBar onLeftIconButtonTouchTap={this.toggleDrawer} />
-          <RosieMap ref='rosiemap' />
+        <div className='flex column wrap start' style={{ height: '100%' }}>
+          <RosieAppBar onLeftIconButtonTouchTap={this.handleToggleDrawer} />
+          <RosieMap ref={(r) => this.rosiemap = r} />
 
-          {this.props.mode.user && this.showJoystick() ? <RosieJoystick style={joystickContainer} /> : undefined}
+          {this.props.mode.user && this.showJoystick() ?
+            <RosieJoystick style={joystickContainer} /> : undefined}
           {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
           {this.state.camera ? <RosieWebCam /> : undefined}
 
-          <div className="actions" style={zoombtns}>
+          <div className='actions' style={zoombtns}>
             {this.props.selected && this.props.hasCamera ? camerabutton : undefined}
-            <FloatingActionButton style={zoombtn}
-                                  onTouchTap={this._zoomIn}
-                                  disabled={!this.state.zoomin}>
+            <FloatingActionButton disabled={!this.state.zoomin} onTouchTap={this._handleZoomIn}
+              style={zoombtn}>
               <ZoomInIcon />
             </FloatingActionButton>
-            <FloatingActionButton style={zoombtn} onTouchTap={this._zoomOut}
-                                  disabled={!this.state.zoomout}>
+            <FloatingActionButton disabled={!this.state.zoomout} onTouchTap={this._handleZoomOut}
+              style={zoombtn}>
               <ZoomOutIcon />
             </FloatingActionButton>
           </div>
-          <ReportSnackbar open={this.props.notification} message={this.props.report.text}
-                    autoHideDuration={2000} level={this.props.report.level}
-                    onRequestClose={this.props.clearReport} />
+          <ReportSnackbar autoHideDuration={2000} level={this.props.report.level}
+            message={this.props.report.text} onRequestClose={this.props.handleClearReport}
+            open={this.props.notification}
+          />
         </div>
       </div>
     );

@@ -51,33 +51,6 @@ export default class LMap extends React.Component {
     }).addTo(this.map);
   }
 
-  updateRobotPos = (move) => {
-    let store = this._reactInternalInstance._context.store;
-    let { robots, robot } = store.getState();
-
-    let overlay = robots.find((elem) => elem.id === move.id)
-      .robot.overlay;
-    overlay.pos = move;
-    overlay.angle = move.theta;
-
-    if (move.id !== robot) {
-      return;
-    }
-
-    let bounds = this.map.getBounds();
-
-    if (bounds.getNorth() < overlay.latlng.lat ||
-          bounds.getEast() < overlay.latlng.lng ||
-          bounds.getSouth() > overlay.latlng.lat ||
-          bounds.getWest() > overlay.latlng.lng) {
-      this.map.panTo(overlay.latlng);
-    }
-
-    if (this.props.mode.path) {
-      this.realPath.addLatLng(overlay.latlng);
-    }
-  }
-
   componentWillReceiveProps (nextProps) {
     let { robot, map, path, move, pathClear, selected, mode } = nextProps;
 
@@ -126,7 +99,7 @@ export default class LMap extends React.Component {
           });
         // put the leaflet overlay into the map
         obj.overlay.addTo(this.map)
-          .on('click', (event) => {
+          .on('click', () => {
             // set this robot as selected on overlay click
             this.props.selectRobot(id);
             // don't propagate event
@@ -152,14 +125,41 @@ export default class LMap extends React.Component {
     }
   }
 
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate () {
     // prevent component from re-rendering
     return false;
   }
 
+  updateRobotPos = (move) => {
+    let store = this._reactInternalInstance._context.store;
+    let { robots, robot } = store.getState();
+
+    let overlay = robots.find((elem) => elem.id === move.id)
+      .robot.overlay;
+    overlay.pos = move;
+    overlay.angle = move.theta;
+
+    if (move.id !== robot) {
+      return;
+    }
+
+    let bounds = this.map.getBounds();
+
+    if (bounds.getNorth() < overlay.latlng.lat ||
+          bounds.getEast() < overlay.latlng.lng ||
+          bounds.getSouth() > overlay.latlng.lat ||
+          bounds.getWest() > overlay.latlng.lng) {
+      this.map.panTo(overlay.latlng);
+    }
+
+    if (this.props.mode.path) {
+      this.realPath.addLatLng(overlay.latlng);
+    }
+  }
+
   render () {
     return (
-      <div id='map' className="grow" />
+      <div className='grow' id='map' />
     );
   }
 }
