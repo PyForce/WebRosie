@@ -12,7 +12,7 @@ export default function draw (jsonMap, leafletMap, theme) {
   // style for the map
   const style = defaultTheme;
   // drawing opacity
-  const opacity = .25;
+  let opacity = .25;
 
   if (theme) {
     for (const elem in style) {
@@ -27,7 +27,8 @@ export default function draw (jsonMap, leafletMap, theme) {
     for (const element in jsonMap.rooms[room]) {
       if (element === 'borders') {
         const borderStyle = {
-          color: `rgba(0, 0, 255, ${opacity})`,
+          color: style.borders.color,
+          fillOpacity: opacity,
           weight: 0
         };
 
