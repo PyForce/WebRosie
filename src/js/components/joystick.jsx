@@ -11,8 +11,8 @@ export default class TouchJoystick extends React.Component {
       mode: 'static',
       color: muiTheme.palette.primary1Color,
       position: {
-        top: '45%',
-        left: '40%'
+        top: '50%',
+        left: '50%'
       }
     }).on('move', (event, data) => {
       const force = Math.min(data.force, 1);
