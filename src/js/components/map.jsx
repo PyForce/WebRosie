@@ -121,7 +121,14 @@ export default class LMap extends React.Component {
 
     // draw the new map
     if (map !== this.props.map) {
-      draw(map, this.map);
+      let { palette } = this._reactInternalInstance._context.muiTheme;
+
+      draw(map, this.map, {
+        borders: { color: palette.disabledColor },
+        walls: { color: palette.textColor, opacity: 0.8 },
+        doors: { color: palette.primary1Color, opacity: 0.75 },
+        items: { color: palette.accent1Color }
+      });
     }
   }
 
