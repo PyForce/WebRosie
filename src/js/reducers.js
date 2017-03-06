@@ -8,8 +8,8 @@ export function robots (state = [], action) {
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    let last = state[state.length - 1];
-    let id = last ? last.id + 1 : 0;
+    const last = state[state.length - 1];
+    const id = last ? last.id + 1 : 0;
     return [
       ...state,
       {

@@ -5,8 +5,8 @@ import { addRobot, pressKey, releaseKey, updateMap, clearReport } from '../actio
 
 
 function mapStateToProps (state) {
-  let selected = state.robot;
-  let robotInfo = state.robots.find((r) => r.id === selected);
+  const selected = state.robot;
+  const robotInfo = state.robots.find((r) => r.id === selected);
 
   return {
     mode: state.mode,

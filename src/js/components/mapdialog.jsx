@@ -13,7 +13,7 @@ export default class MapDialog extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let { open, robots } = nextProps;
+    const { open, robots } = nextProps;
     if (!open || !robots) {
       return;
     }
@@ -21,7 +21,7 @@ export default class MapDialog extends React.Component {
     this.setState({ maps: [] });
     robots.forEach((robotInfo) => {
       // for each robot, load its maps and add them to the state
-      let { id, robot } = robotInfo;
+      const { id, robot } = robotInfo;
       this.loadMaps(robot, id)
         .then((data) => {
           this.setState({ maps: this.state.maps.concat(data) });
@@ -50,12 +50,12 @@ export default class MapDialog extends React.Component {
   }
 
   handleSelection = (selection) => {
-    let any = selection.length > 0;
+    const any = selection.length > 0;
     if (any) {
       // get the map info
-      let { name, id } = this.state.maps[selection[0]];
+      const { name, id } = this.state.maps[selection[0]];
       // get the map owner
-      let { robot } = this.props.robots[id];
+      const { robot } = this.props.robots[id];
       robot.map(name)
         .then((map) => {
           this.setState({ map: map });
@@ -65,7 +65,7 @@ export default class MapDialog extends React.Component {
   }
 
   render () {
-    let { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
+    const { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
     const actions = [
       <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
         primary
@@ -75,7 +75,7 @@ export default class MapDialog extends React.Component {
       />,
     ];
 
-    let rows = this.state.maps.map((elem, index) => (
+    const rows = this.state.maps.map((elem, index) => (
       <TableRow key={index}>
         <TableRowColumn>{elem.name}</TableRowColumn>
         <TableRowColumn>{elem.robot}</TableRowColumn>

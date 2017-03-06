@@ -23,7 +23,7 @@ const muiTheme = getMuiTheme({
 });
 
 function init () {
-  let app = document.getElementById('app');
+  const app = document.getElementById('app');
   const reducer = combineReducers(reducers);
   const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 

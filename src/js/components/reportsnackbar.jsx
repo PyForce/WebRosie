@@ -9,8 +9,8 @@ export default class ReportSnackBar extends React.Component {
   }
 
   render () {
-    let { level, ...other } = this.props;
-    let style = {
+    const { level, ...other } = this.props;
+    const style = {
       backgroundColor: level === 'error' ? red800 : yellow800
     };
 

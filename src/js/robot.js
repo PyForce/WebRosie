@@ -18,7 +18,7 @@ export default class Robot {
       .then((info) => {
         this.name = info.name;
 
-        let { video } = info;
+        const { video } = info;
         if (video && video.startsWith(':')) {
           this.video = `http://${this.host}${video}`;
           return;
@@ -104,7 +104,7 @@ export default class Robot {
   }
 
   get (route, param) {
-    let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
+    const url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
 
     return request.get(url)
       .accept('json')

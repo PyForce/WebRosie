@@ -95,9 +95,9 @@ export default class SettingsModal extends React.Component {
   }
 
   render () {
-    let { settings: _, ...other } = this.props; // eslint-disable-line no-unused-vars
+    const { settings: _, ...other } = this.props; // eslint-disable-line no-unused-vars
     // the values are taken from the state to display edited values, not originals
-    let { settings, valid } = this.state;
+    const { settings, valid } = this.state;
     const actions = [
       <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
         primary

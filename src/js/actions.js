@@ -24,7 +24,7 @@ export const CONFIG_OPTION = 20;
 
 // gets the robot with the specified id
 function getRobot (robots, id) {
-  let [ robot ] = robots.filter((r) => r.id === id);
+  const [ robot ] = robots.filter((r) => r.id === id);
   return robot;
 }
 
@@ -36,9 +36,9 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
       dispatch(preaction);
     }
 
-    let { robots, robot } = getState();
+    const { robots, robot } = getState();
     // in case id isn't a valid value, use the selected robot
-    let selected = getRobot(robots, id || robot);
+    const selected = getRobot(robots, id || robot);
 
     if (!selected) {
       // no robot with such id
@@ -78,10 +78,9 @@ export function updateMap (map) {
 
 export function robotGoto (x, y, id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
-    let { settings } = getState();
-    let t = settings.single.time;
+    const { settings } = getState();
 
-    return robot.goto([ x, y, t ], settings.single.planner)
+    return robot.goto([ x, y, settings.single.time ], settings.single.planner)
         .catch((err) => dispatch(notifyReport(err.response.body.error, 'warning')));
   });
 }
@@ -176,7 +175,7 @@ export function pressKeyAction (key) {
 
 export function pressKey (key) {
   return robotRequest(null, pressKeyAction(key), (robot, dispatch, getState) => {
-    let { direction } = getState();
+    const { direction } = getState();
     return robot.move(direction);
   });
 }
@@ -190,8 +189,7 @@ export function releaseKeyAction (key) {
 
 export function releaseKey (key) {
   return robotRequest(null, releaseKeyAction(key), (robot, dispatch, getState) => {
-    let { direction } = getState();
-    return robot.move(direction);
+    return robot.move(getState().direction);
   });
 }
 
@@ -204,8 +202,7 @@ export function moveJoystickAction (movement) {
 
 export function moveJoystick (movement) {
   return robotRequest(null, moveJoystickAction(movement), (robot, dispatch, getState) => {
-    let { direction } = getState();
-    return robot.move(direction);
+    return robot.move(getState().direction);
   });
 }
 
@@ -219,7 +216,7 @@ export function clearPath () {
 
 export function robotFollow (id = null) {
   return robotRequest(id, false, (robot, dispatch, getState) => {
-    let { path, settings } = getState();
+    const { path, settings } = getState();
     return robot.follow({ path, time: settings.path.delay });
   });
 }

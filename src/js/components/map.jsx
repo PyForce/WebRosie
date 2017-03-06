@@ -13,7 +13,7 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([ 0, 0 ], 9);
 
-    let muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this._reactInternalInstance._context.muiTheme;
 
     this.marker = L.circleMarker([ 0, 0 ], {
       color: muiTheme.palette.accent1Color
@@ -27,7 +27,7 @@ export default class LMap extends React.Component {
         this.props.selectRobot();
       }
 
-      let { lat: y, lng: x } = event.latlng;
+      const { lat: y, lng: x } = event.latlng;
 
       if (this.props.mode.single) {
         this.map.removeLayer(this.marker);
@@ -52,17 +52,17 @@ export default class LMap extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let { robot, map, path, move, pathClear, selected, mode } = nextProps;
+    const { robot, map, path, move, pathClear, selected, mode } = nextProps;
 
     if (pathClear) {
       this.path.setLatLngs([]);
       this.realPath.setLatLngs([]);
     }
     else if (path !== this.props.path) {
-      let store = this._reactInternalInstance._context.store;
-      let overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
+      const store = this._reactInternalInstance._context.store;
+      const overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
 
-      let latlngs = path.map((elem) => [ elem[1], elem[0] ]);
+      const latlngs = path.map((elem) => [ elem[1], elem[0] ]);
       latlngs.unshift(overlay.latlng);
 
       this.path.setLatLngs(latlngs);
@@ -77,10 +77,10 @@ export default class LMap extends React.Component {
     }
 
     if (robot && robot !== this.props.robot) {
-      let { robot: obj, id } = robot;
+      const { robot: obj, id } = robot;
 
       obj.sio.onmessage = (msg) => {
-        let data = JSON.parse(msg.data);
+        const data = JSON.parse(msg.data);
 
         switch(data.type) {
         case 'position':
@@ -90,7 +90,7 @@ export default class LMap extends React.Component {
 
       obj.metadata().then((data) => {
         // construct the image URL
-        let image = `http://${obj.host}:${obj.port}${data.vector}`;
+        const image = `http://${obj.host}:${obj.port}${data.vector}`;
 
         obj.overlay = new RobotOverlay(image, [ 0, 0 ],
           data.size[1], data.size[0], {
@@ -121,7 +121,7 @@ export default class LMap extends React.Component {
 
     // draw the new map
     if (map !== this.props.map) {
-      let { palette } = this._reactInternalInstance._context.muiTheme;
+      const { palette } = this._reactInternalInstance._context.muiTheme;
 
       draw(map, this.map, {
         borders: { color: palette.disabledColor },
@@ -138,10 +138,10 @@ export default class LMap extends React.Component {
   }
 
   updateRobotPos = (move) => {
-    let store = this._reactInternalInstance._context.store;
-    let { robots, robot } = store.getState();
+    const store = this._reactInternalInstance._context.store;
+    const { robots, robot } = store.getState();
 
-    let overlay = robots.find((elem) => elem.id === move.id)
+    const overlay = robots.find((elem) => elem.id === move.id)
       .robot.overlay;
     overlay.pos = move;
     overlay.angle = move.theta;
@@ -150,7 +150,7 @@ export default class LMap extends React.Component {
       return;
     }
 
-    let bounds = this.map.getBounds();
+    const bounds = this.map.getBounds();
 
     if (bounds.getNorth() < overlay.latlng.lat ||
           bounds.getEast() < overlay.latlng.lng ||

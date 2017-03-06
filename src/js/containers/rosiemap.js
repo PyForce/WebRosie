@@ -6,7 +6,8 @@ import LMap from '../components/map';
 
 
 function mapStateToProps (state) {
-  let robotLen = state.robots.length;
+  const robotLen = state.robots.length;
+
   return {
     robot: robotLen > 0 ? state.robots[robotLen - 1] : null,
     map: state.map,

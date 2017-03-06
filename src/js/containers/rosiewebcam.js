@@ -4,7 +4,8 @@ import WebCam from '../components/camera.jsx';
 
 
 function mapStateToProps (state) {
-  let robotInfo = state.robots.find((r) => r.id === state.robot);
+  const robotInfo = state.robots.find((r) => r.id === state.robot);
+
   return {
     url: robotInfo ? robotInfo.robot.video : ''
   };

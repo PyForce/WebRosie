@@ -9,9 +9,9 @@ import CommandIcon from 'material-ui/svg-icons/content/send';
 
 export default class Bar extends React.Component {
   render () {
-    let muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this._reactInternalInstance._context.muiTheme;
 
-    let { selected, single, user, path, order,
+    const { selected, single, user, path, order,
       singleMode, pathMode, userMode, orderMode, dispatch, // eslint-disable-line no-unused-vars
       ...other } = this.props;
 

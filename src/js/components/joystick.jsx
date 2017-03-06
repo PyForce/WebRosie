@@ -4,7 +4,7 @@ import Nipple from 'nipplejs';
 
 export default class TouchJoystick extends React.Component {
   componentDidMount () {
-    let muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this._reactInternalInstance._context.muiTheme;
 
     this.manager = Nipple.create({
       zone: this.zone,
@@ -15,8 +15,8 @@ export default class TouchJoystick extends React.Component {
         left: '40%'
       }
     }).on('move', (event, data) => {
-      let force = Math.min(data.force, 1);
-      let movement = {
+      const force = Math.min(data.force, 1);
+      const movement = {
         x: force * Math.cos(data.angle.radian),
         y: force * Math.sin(data.angle.radian)
       };

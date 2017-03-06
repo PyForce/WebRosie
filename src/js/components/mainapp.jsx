@@ -40,17 +40,17 @@ export default class MainApp extends React.Component {
 
   componentWillMount () {
     window.addEventListener('load', () => {
-      let map = this.rosiemap.getWrappedInstance().map;
+      const map = this.rosiemap.getWrappedInstance().map;
       // disable enable zoom buttons depending on zoom level
       map.on('zoomend zoomlevelschange', () => {
-        let disabledOut = map._zoom <= map.getMinZoom();
-        let disabledIn = map._zoom >= map.getMaxZoom();
+        const disabledOut = map._zoom <= map.getMinZoom();
+        const disabledIn = map._zoom >= map.getMaxZoom();
 
         this.setState({ zoomin: !disabledIn, zoomout: !disabledOut });
       });
     });
 
-    let md = new MobileDetect(window.navigator.userAgent);
+    const md = new MobileDetect(window.navigator.userAgent);
     this.isTouch = md.phone() !== null || md.tablet() !== null;
 
     if (!this.isTouch && this.props.joystickShow !== 'always') {
@@ -111,7 +111,7 @@ export default class MainApp extends React.Component {
   }
 
   _handleZoomIn = (e) => {
-    let map = this.rosiemap.getWrappedInstance().map;
+    const map = this.rosiemap.getWrappedInstance().map;
     if (map._zoom >= map.getMaxZoom()) {
       return;
     }
@@ -119,7 +119,7 @@ export default class MainApp extends React.Component {
   }
 
   _handleZoomOut = (e) => {
-    let map = this.rosiemap.getWrappedInstance().map;
+    const map = this.rosiemap.getWrappedInstance().map;
     if (map._zoom <= map.getMinZoom()) {
       return;
     }
@@ -139,14 +139,14 @@ export default class MainApp extends React.Component {
   }
 
   handleKeyDown = (event) => {
-    let store = this._reactInternalInstance._context.store;
+    const store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyDown(event.which);
     }
   }
 
   handleKeyUp = (event) => {
-    let store = this._reactInternalInstance._context.store;
+    const store = this._reactInternalInstance._context.store;
     if (store.getState().mode.user) {
       this.props.keyUp(event.which);
     }
@@ -180,7 +180,7 @@ export default class MainApp extends React.Component {
       right: 0
     };
 
-    let camerabutton = (
+    const camerabutton = (
       <FloatingActionButton onTouchTap={this.handleToggleCamera} secondary={this.state.camera}
         style={zoombtn}>
         {this.state.camera ? <CameraCloseIcon /> : <CameraOpenIcon />}

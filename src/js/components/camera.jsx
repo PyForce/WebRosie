@@ -5,13 +5,13 @@ import ResizeAndDrag from 'react-rnd';
 
 export default class WebCam extends React.Component {
   render () {
-    let style = {
+    const style = {
       width: '100%',
       height: '100%'
     };
-    let [ width, height ] = [ 200, 200 ];
+    const [ width, height ] = [ 200, 200 ];
     // locate the camera viewer in right: 15%, top: 10%
-    let [ x, y ] = [ 14 * window.innerWidth / 15 - width, -window.innerHeight / 5 ];
+    const [ x, y ] = [ 14 * window.innerWidth / 15 - width, -window.innerHeight / 5 ];
 
     return (
       <ResizeAndDrag initial={{ x: x, y: y, width: width, height: height }} zIndex={1002}>

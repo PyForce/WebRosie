@@ -10,12 +10,12 @@ const defaultTheme = {
 // draws a geoJSON map on the provided leaflet map
 export default function draw (jsonMap, leafletMap, theme) {
   // style for the map
-  let style = defaultTheme;
+  const style = defaultTheme;
   // drawing opacity
-  let opacity = .25;
+  const opacity = .25;
 
   if (theme) {
-    for (let elem in style) {
+    for (const elem in style) {
       // update style with theme parameter values
       if (elem in theme) {
         style[elem] = { ...style[elem], ...theme[elem] };
@@ -23,10 +23,10 @@ export default function draw (jsonMap, leafletMap, theme) {
     }
   }
 
-  for (let room in jsonMap.rooms) {  // eslint-disable-line guard-for-in
-    for (let element in jsonMap.rooms[room]) {
+  for (const room in jsonMap.rooms) {  // eslint-disable-line guard-for-in
+    for (const element in jsonMap.rooms[room]) {
       if (element === 'borders') {
-        let borderStyle = {
+        const borderStyle = {
           color: `rgba(0, 0, 255, ${opacity})`,
           weight: 0
         };
@@ -39,7 +39,7 @@ export default function draw (jsonMap, leafletMap, theme) {
         }
       }
       else if (element === 'items') {
-        for (let item in jsonMap.rooms[room][element]) {  // eslint-disable-line guard-for-in
+        for (const item in jsonMap.rooms[room][element]) {  // eslint-disable-line guard-for-in
           L.geoJson(jsonMap.rooms[room][element][item], {
             style: style[element]
           }).addTo(leafletMap);
