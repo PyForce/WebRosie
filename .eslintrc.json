@@ -111,6 +111,11 @@
     }],
     "prefer-const": 2,
     "prefer-template": 2,
+    "no-obj-calls": 2,
+    "no-unneeded-ternary": [2, {
+      "defaultAssignment": false
+    }],
+    "no-const-assign": 2,
     "react/display-name": 0,
     "react/forbid-prop-types": 1,
     "react/jsx-boolean-value": 1,
