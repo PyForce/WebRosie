@@ -12,7 +12,7 @@ export default class Bar extends React.Component {
     let muiTheme = this._reactInternalInstance._context.muiTheme;
 
     let { selected, single, user, path, order,
-      setSingleMode, setPathMode, setUserMode, setOrderMode, dispatch, // eslint-disable-line no-unused-vars
+      singleMode, pathMode, userMode, orderMode, dispatch, // eslint-disable-line no-unused-vars
       ...other } = this.props;
 
     const setMode = (mode, value) => {

@@ -16,10 +16,10 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    setUserMode: (value) => dispatch(setUser(value)),
-    setSingleMode: (value) => dispatch(setSingle(value)),
-    setPathMode: (value) => dispatch(setPath(value)),
-    setOrderMode: (value) => dispatch(setOrder(value))
+    userMode: (value) => dispatch(setUser(value)),
+    singleMode: (value) => dispatch(setSingle(value)),
+    pathMode: (value) => dispatch(setPath(value)),
+    orderMode: (value) => dispatch(setOrder(value))
   };
 }
 
