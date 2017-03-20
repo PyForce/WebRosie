@@ -8,6 +8,14 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 
 const webpackConfig = require('./webpack.config');
+const webpackDevConfig = Object.create(webpackConfig);
+// add source map build
+webpackDevConfig.plugins.push(
+  new webpack.SourceMapDevToolPlugin({
+    test: /.*\.js(x)?$/,
+    filename: 'main.bundle.js.map'
+  })
+);
 
 const LESS_SRC = './src/less/main.less';
 const LESS = less({
@@ -37,14 +45,7 @@ function onBuild (name, done) {
 }
 
 gulp.task('js:compile', (done) => {
-  // add source map build
-  webpackConfig.plugins.push(
-      new webpack.SourceMapDevToolPlugin({
-        test: /.*\.js(x)?$/,
-        filename: 'main.bundle.js.map'
-      })
-  );
-  webpack(webpackConfig, onBuild('js', done));
+   webpack(webpackDevConfig, onBuild('js', done));
 });
 
 gulp.task('js:prod', (done) => {
@@ -64,7 +65,7 @@ gulp.task('js:prod', (done) => {
 });
 
 gulp.task('js:watch', () => {
-  webpack(webpackConfig).watch(100, onBuild('js'));
+  webpack(webpackDevConfig).watch(100, onBuild('js'));
 });
 
 gulp.task('css:compile', () => gulp.src(LESS_SRC)
