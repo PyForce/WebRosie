@@ -32,7 +32,7 @@ export default class MapDialog extends React.Component {
   loadMaps = (robot, id) => {
     // load maps of a single robot
     return robot.maps()
-      .then((data) => data.map((name) => ({
+      .then((data) => data.maps.map((name) => ({
         name: name,
         robot: robot.name,
         robotaddr: `${robot.host}:${robot.port}`,
