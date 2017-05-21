@@ -1,7 +1,7 @@
-import { expect } from 'chai'
+import { expect } from 'chai';
 
-import * as reducers from '../src/js/reducers'
-import * as actions from '../src/js/actions'
+import * as reducers from '../src/js/reducers';
+import * as actions from '../src/js/actions';
 
 
 describe('mode reducer', function () {
@@ -11,6 +11,7 @@ describe('mode reducer', function () {
     )
     .to.be.deep.equal({
       order: false,
+      single: false,
       path: false,
       user: false
     });
@@ -29,12 +30,14 @@ describe('mode reducer', function () {
       reducers.mode({
         order: true,
         user: false,
+        single: false,
         path: false
       }, {type: actions.PATH_MODE, value: true})
     )
     .to.be.deep.equal({
       order: false,
       user: false,
+      single: false,
       path: true
     });
   });
@@ -43,7 +46,7 @@ describe('mode reducer', function () {
 describe('move reducer', () => {
   it('does not repeat moves', () => {
     expect(
-      reducers.move({id: 3, x: 2.3, y: 4, angle: 32}, actions.pressKey(32))
+      reducers.move({id: 3, x: 2.3, y: 4, angle: 32}, actions.pressKeyAction(32))
     )
     .to.not.exist;
   });
@@ -61,64 +64,100 @@ const keys = {
 describe('direction reducer', () => {
   it('goes up', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.W))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.W))
     )
     .to.be.deep.equal([0, 1, 0]);
   });
 
   it('goes down', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.S))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.S))
     )
     .to.be.deep.equal([0, -1, 0]);
   });
 
   it('goes left', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.A))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.A))
     )
     .to.be.deep.equal([-1, 0, 0]);
   });
 
   it('goes right', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.D))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.D))
     )
     .to.be.deep.equal([1, 0, 0]);
   });
 
   it('goes north-east', () => {
     expect(
-      reducers.direction([0, 1, 0], actions.pressKey(keys.D))
+      reducers.direction([0, 1, 0], actions.pressKeyAction(keys.D))
     )
     .to.be.deep.equal([1, 1, 0]);
   });
 
   it('stops going north-east', () => {
     expect(
-      reducers.direction([1, 1, 0], actions.releaseKey(keys.W))
+      reducers.direction([1, 1, 0], actions.releaseKeyAction(keys.W))
     )
     .to.be.deep.equal([1, 0, 0]);
   });
 
   it('stops on opposite keys', () => {
     expect(
-      reducers.direction([0, 1, 0], actions.pressKey(keys.S))
+      reducers.direction([0, 1, 0], actions.pressKeyAction(keys.S))
     )
     .to.be.deep.equal([0, 0, 0]);
   });
 
   it('rotates rigth in-place', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.E))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.E))
     )
     .to.be.deep.equal([0, 0, 1]);
   });
 
   it('rotates left in-place', () => {
     expect(
-      reducers.direction([0, 0, 0], actions.pressKey(keys.Q))
+      reducers.direction([0, 0, 0], actions.pressKeyAction(keys.Q))
     )
     .to.be.deep.equal([0, 0, -1]);
+  });
+});
+
+describe('settings reducer', () => {
+  it('adds new options', () => {
+    expect(
+      reducers.settings({}, actions.configOption({size: 3}))
+    ).to.have.property('size')
+    .that.is.equal(3);
+  });
+
+  it('changes values', () => {
+    expect(
+      reducers.settings({size: 5}, actions.configOption({size: 42}))
+    ).to.have.property('size')
+    .that.is.equal(42);
+  });
+
+  it('does not conflict with another actions', () => {
+    expect(
+      reducers.settings({ask: true, mode: 'one'}, actions.configOption({size: 3}))
+    )
+    .to.have.all.keys(['mode', 'ask', 'size'])
+    .and.to.have.property('size')
+    .that.is.equal(3);
+  });
+
+  it('changes only the desired values', () => {
+    expect(
+      reducers.settings({ask: true, mode: 'one'}, actions.configOption({ask: false, size: 3}))
+    )
+    .to.have.all.keys(['mode', 'ask', 'size'])
+    .and.to.contain.all.keys({
+      ask: false,
+      size: 3
+    });
   });
 });

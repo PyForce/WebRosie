@@ -13,18 +13,18 @@ export default class MapDialog extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    let { open, robots } = nextProps;
+    const { open, robots } = nextProps;
     if (!open || !robots) {
       return;
     }
 
-    this.setState({maps: []});
+    this.setState({ maps: [] });
     robots.forEach((robotInfo) => {
       // for each robot, load its maps and add them to the state
-      let { id, robot } = robotInfo;
+      const { id, robot } = robotInfo;
       this.loadMaps(robot, id)
         .then((data) => {
-          this.setState({maps: this.state.maps.concat(data)});
+          this.setState({ maps: this.state.maps.concat(data) });
         });
     });
   }
@@ -32,7 +32,7 @@ export default class MapDialog extends React.Component {
   loadMaps = (robot, id) => {
     // load maps of a single robot
     return robot.maps()
-      .then((data) => data.map((name) => ({
+      .then((data) => data.maps.map((name) => ({
         name: name,
         robot: robot.name,
         robotaddr: `${robot.host}:${robot.port}`,
@@ -41,40 +41,41 @@ export default class MapDialog extends React.Component {
       );
   }
 
-  acceptDialog = () => {
+  handleAccept = () => {
     this.props.onRequestClose(true, this.state.map);
   }
 
-  cancelDialog = () => {
+  handleCancel = () => {
     this.props.onRequestClose(false);
   }
 
   handleSelection = (selection) => {
-    let any = selection.length > 0;
+    const any = selection.length > 0;
     if (any) {
       // get the map info
-      let { name, id } = this.state.maps[selection[0]];
+      const { name, id } = this.state.maps[selection[0]];
       // get the map owner
-      let { robot } = this.props.robots[id];
+      const { robot } = this.props.robots[id];
       robot.map(name)
         .then((map) => {
-          this.setState({map: map});
+          this.setState({ map: map });
         });
     }
-    this.setState({any: any});
+    this.setState({ any: any });
   }
 
   render () {
-    let { robots, ...other } = this.props;
+    const { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
     const actions = [
-      <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
-                  primary={true} keyboardFocused={true} />,
-      <FlatButton label="Accept" onTouchTap={this.acceptDialog}
-                  primary={true}
-                  disabled={!this.state.any} />,
+      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+        primary
+      />,
+      <FlatButton disabled={!this.state.any} key={1} label='Accept' onTouchTap={this.handleAccept}
+        primary
+      />,
     ];
 
-    let rows = this.state.maps.map((elem, index) => (
+    const rows = this.state.maps.map((elem, index) => (
       <TableRow key={index}>
         <TableRowColumn>{elem.name}</TableRowColumn>
         <TableRowColumn>{elem.robot}</TableRowColumn>
@@ -83,26 +84,25 @@ export default class MapDialog extends React.Component {
     ));
 
     return (
-      <Dialog title="Map Select" modal={true} fixedHeader={true} actions={actions}
-              {...other}>
-        Select the map to load in the application<br />
-        <Table selectable={true} multiSelectable={false}
-               onRowSelection={this.handleSelection}>
+      <Dialog actions={actions} fixedHeader modal title='Map Select'
+        {...other}>
+        {'Select the map to load in the application'} <br />
+        <Table multiSelectable={false} onRowSelection={this.handleSelection} selectable>
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn tooltip="Map name">Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Robot that has the map">Robot</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Address of the robot">Address</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Map name'>{'Name'}</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Robot that has the map'>{'Robot'}</TableHeaderColumn>
+              <TableHeaderColumn tooltip='Address of the robot'>{'Address'}</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody showRowHover={true} deselectOnClickaway={false}>
+          <TableBody deselectOnClickaway={false} showRowHover>
             {rows}
           </TableBody>
           {rows.length > 0 ? undefined :
             <TableFooter adjustForCheckbox={false}>
-              <TableRow style={{borderTop: null}}>
-                <TableRowColumn colSpan="3" style={{textAlign: 'center'}}>
-                  No maps available
+              <TableRow style={{ borderTop: null }}>
+                <TableRowColumn colSpan={3} style={{ textAlign: 'center' }}>
+                  {'No maps available'}
                 </TableRowColumn>
               </TableRow>
             </TableFooter>}

@@ -1,6 +1,6 @@
 {
   "name": "webrosie",
-  "version": "0.1.7",
+  "version": "0.2.7",
   "description": "Front-end for rosie web module",
   "main": "src/js/main.js",
   "scripts": {
@@ -25,7 +25,8 @@
     "chai-enzyme": "^0.6.1",
     "cssnano": "^3.10.0",
     "enzyme": "^2.7.1",
-    "eslint": "^1.6.0",
+    "eslint": "^1.10.3",
+    "eslint-plugin-react": "^3.16.1",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
     "gulp-postcss": "^6.3.0",
@@ -52,11 +53,14 @@
     "normalize.less": "^1.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
+    "react-material-ui-form-validator": "0.0.5",
     "react-redux": "^4.4.5",
     "react-responsive": "^1.1.5",
+    "react-rnd": "^4.2.0",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "superagent": "^3.5.0",
     "webpack": "^1.13.1"
   },
   "browserslist": [

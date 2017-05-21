@@ -10,40 +10,50 @@ export default class AddRobotDialog extends React.Component {
     robotPort: 5000
   }
 
-  acceptDialog = () => {
+  handleAccept = () => {
     this.props.onRequestClose(true,
       this.state.robotHost,
       this.state.robotPort
     );
   }
 
-  cancelDialog = () => {
+  handleCancel = () => {
     this.props.onRequestClose(false);
+  }
+
+  handleAddressChange = (e, value) => {
+    this.setState({ robotHost: value });
+  }
+
+  handlePortChange = (e, value) => {
+    this.setState({ robotPort: value });
   }
 
   render () {
     const actions = [
-      <FlatButton label="Cancel" onTouchTap={this.cancelDialog}
-                  primary={true} keyboardFocused={true} />,
-      <FlatButton label="Accept" onTouchTap={this.acceptDialog}
-                  primary={true}
-                  disabled={!(this.state.robotHost && this.state.robotPort)} />,
+      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+        primary
+      />,
+      <FlatButton disabled={!(this.state.robotHost && this.state.robotPort)} key={1} label='Accept'
+        onTouchTap={this.handleAccept} primary
+      />,
     ];
 
     return (
-      <Dialog title="Robot information" modal={true}
-              actions={actions} {...this.props}>
-        Type the address of the new robot <br />
-        <TextField value={this.state.robotHost} floatingLabelText='Robot host address'
-                   onChange={(e, val) => this.setState({ robotHost: val })}
-                   hintText='localhost, 10.0.0.1, my.robot.com'
-                   style={{float: 'left', width: '70%'}} />
+      <Dialog actions={actions} modal title='Robot information'
+        {...this.props}>
+        {'Type the address of the new robot'} <br />
+        <TextField floatingLabelText='Robot host address'
+          hintText='localhost, 10.0.0.1, my.robot.com'
+          onChange={this.handleAddressChange}
+          style={{ float: 'left', width: '70%' }} value={this.state.robotHost}
+        />
 
-        <TextField value={this.state.robotPort} floatingLabelText='Rosie WebHUD port'
-                   onChange={(e, val) => this.setState({ robotPort: val })}
-                   type='number' hintText='500, 5679'
-                   style={{float: 'left', width: '30%'}} />
+        <TextField floatingLabelText='Rosie WebHUD port' hintText='500, 5679'
+          onChange={this.handlePortChange} style={{ float: 'left', width: '30%' }}
+          type='number' value={this.state.robotPort}
+        />
       </Dialog>
     );
   }
-};
+}

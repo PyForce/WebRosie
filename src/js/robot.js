@@ -1,12 +1,12 @@
-import fetch from 'isomorphic-fetch';
+import request from 'superagent';
 
 
 // robot class with rosie API
 export default class Robot {
-  constructor (host = document.domain, port = location.port, video = 8080) {
+  constructor (host = document.domain, port = location.port) {
     this.host = host;
     this.port = port;
-    this.video = video;
+
     try {
       this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
     }
@@ -17,12 +17,19 @@ export default class Robot {
     this.metadata()
       .then((info) => {
         this.name = info.name;
+
+        const { video } = info;
+        if (video && video.startsWith(':')) {
+          this.video = `http://${this.host}${video}`;
+          return;
+        }
+        this.video = video;
       });
   }
 
   // API
   move (dir) {
-    this.sio.send(JSON.stringify({type: 'move', data: dir}));
+    this.sio.send(JSON.stringify({ type: 'move', data: dir }));
   }
 
   // GET: /sensor/`name`
@@ -58,9 +65,10 @@ export default class Robot {
   // POST: /goto
   // {
   //    target: [x, y, t],
+  //    planner: false
   // }
-  goto (pos) {
-    return this.post('goto', {target: pos});
+  goto (pos, planner) {
+    return this.post('goto', { target: pos, planner });
   }
 
   // POST: /follow
@@ -68,7 +76,7 @@ export default class Robot {
   //    path: [[x, y, t], [x, y, t], ...],
   // }
   follow (path) {
-    return this.post('path', path);
+    return this.post('follow', path);
   }
 
   command (command) {
@@ -96,22 +104,18 @@ export default class Robot {
   }
 
   get (route, param) {
-    let url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
+    const url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
 
-    return fetch(url)
-      .then((response) => response.json());
+    return request.get(url)
+      .accept('json')
+      .then((response) => response.body);
   }
 
   post (route, param) {
-    let headers = new Headers({
-      'Content-Type': 'application/json;charset=UTF-8'
-    });
-
-    return fetch(`http://${this.host}:${this.port}/${route}`, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(param),
-      mode: 'no-cors',
-    });
+    return request.post(`http://${this.host}:${this.port}/${route}`)
+        .type('json')
+        .accept('json')
+        .send(param)
+        .then((response) => response.body);
   }
 }

@@ -1,57 +1,71 @@
-const gulp = require('gulp'),
-  webpack = require('webpack'),
-  watch = require('gulp-watch'),
-  less = require('gulp-less'),
-  postcss = require('gulp-postcss'),
-  autoprefixer = require('autoprefixer'),
-  cssnano = require('cssnano');
+/* eslint-disable no-console */
+const gulp = require('gulp');
+const webpack = require('webpack');
+const watch = require('gulp-watch');
+const less = require('gulp-less');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 
 const webpackConfig = require('./webpack.config');
+const webpackDevConfig = Object.create(webpackConfig);
+// add source map build
+webpackDevConfig.plugins.push(
+  new webpack.SourceMapDevToolPlugin({
+    test: /.*\.js(x)?$/,
+    filename: 'main.bundle.js.map'
+  })
+);
 
-const LESS_SRC = './src/less/main.less',
-      LESS = less({
-        paths: ['.', './node_modules']
-      }),
-      POSTCSS = postcss([
-          autoprefixer()
-      ]);
+const LESS_SRC = './src/less/main.less';
+const LESS = less({
+  paths: ['.', './node_modules']
+});
+const POSTCSS = postcss([
+  autoprefixer()
+]);
 
 function onBuild (name, done) {
   return (err, stats) => {
-    if (err)
+    if (err) {
       console.log('Error compiling ' + name, err);
+    }
 
-    if (stats)
+    if (stats) {
       console.log(stats.toString({
         colors: true,
         chunkModules: false
       }));
+    }
 
-    if (done)
+    if (done) {
       done();
+    }
   };
 }
 
 gulp.task('js:compile', (done) => {
-  webpack(webpackConfig, onBuild('js', done));
+   webpack(webpackDevConfig, onBuild('js', done));
 });
 
 gulp.task('js:prod', (done) => {
   var prodConfig = Object.create(webpackConfig);
   prodConfig.plugins = prodConfig.plugins.concat(
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify("production")
-			}
-		}),
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin({ comments: false })
-	);
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.UglifyJsPlugin({ comments: false })
+  );
   webpack(prodConfig, onBuild('js', done));
 });
 
 gulp.task('js:watch', () => {
-  webpack(webpackConfig).watch(100, onBuild('js'));
+  webpack(webpackDevConfig).watch(100, onBuild('js'));
 });
 
 gulp.task('css:compile', () => gulp.src(LESS_SRC)
@@ -63,11 +77,11 @@ gulp.task('css:compile', () => gulp.src(LESS_SRC)
 gulp.task('css:prod', () => gulp.src(LESS_SRC)
     .pipe(LESS)
     .pipe(postcss([
-        autoprefixer(), 
-        cssnano({
-          safe: true,
-          discardComments: { removeAll: true }
-        })
+      autoprefixer(),
+      cssnano({
+        safe: true,
+        discardComments: { removeAll: true }
+      })
     ]))
     .pipe(gulp.dest('./static/css'))
 );

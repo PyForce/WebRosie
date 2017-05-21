@@ -2,13 +2,13 @@ import L from 'leaflet';
 
 
 L.DomUtil.setTransform = (el, offset, scale, angle) => {
-  let pos = offset || new L.Point(0, 0);
+  const pos = offset || new L.Point(0, 0);
 
   // rotation is inverted on the page
-  let translate = L.Browser.ie3d ?
+  const translate = L.Browser.ie3d ?
     `translate(${pos.x}px, ${pos.y}px)` : `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-  let rotate = angle ? `rotate(${-angle}rad)` : '';
-  let scl = scale ? `scale(${scale})` : '';
+  const rotate = angle ? `rotate(${-angle}rad)` : '';
+  const scl = scale ? `scale(${scale})` : '';
 
   el.style[L.DomUtil.TRANSFORM] = `${translate}${rotate}${scl}`;
 };
@@ -41,11 +41,11 @@ export default class RobotOverlay extends L.ImageOverlay {
   }
 
   _recalcBounds () {
-    let sw = [
+    const sw = [
       this._latlng.lat + this._height / 2,
       this._latlng.lng - this._width / 2
     ];
-    let ne = [
+    const ne = [
       this._latlng.lat - this._height / 2,
       this._latlng.lng + this._width / 2
     ];
@@ -54,12 +54,12 @@ export default class RobotOverlay extends L.ImageOverlay {
   }
 
   _reset () {
-    let image = this._image;
-    let bounds = new L.Bounds(this._map.latLngToLayerPoint(this._bounds.getNorthWest()),
+    const image = this._image;
+    const bounds = new L.Bounds(this._map.latLngToLayerPoint(this._bounds.getNorthWest()),
         this._map.latLngToLayerPoint(this._bounds.getSouthEast()));
-    let size = bounds.getSize();
+    const size = bounds.getSize();
 
-    let point = {
+    const point = {
       x: (bounds.min.x),
       y: (bounds.min.y)
     };
@@ -76,11 +76,11 @@ export default class RobotOverlay extends L.ImageOverlay {
   }
 
   get pos () {
-    return [this._latlng.lat, this._latlng.lng];
+    return [ this._latlng.lat, this._latlng.lng ];
   }
 
   set pos (value) {
-    this.latlng = [value.y, value.x];
+    this.latlng = [ value.y, value.x ];
   }
 
   get angle () {
@@ -88,7 +88,7 @@ export default class RobotOverlay extends L.ImageOverlay {
   }
 
   set latlng (latlng) {
-    let oldLatLng = this._latlng;
+    const oldLatLng = this._latlng;
     this._latlng = L.latLng(latlng);
 
     this._recalcBounds();
@@ -111,4 +111,4 @@ export default class RobotOverlay extends L.ImageOverlay {
   get latlng () {
     return this._latlng;
   }
-};
+}

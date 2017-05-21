@@ -1,18 +1,15 @@
-import { expect } from 'chai'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { expect } from 'chai';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import * as actions from '../src/js/actions'
-import * as reducers from '../src/js/reducers'
+import * as actions from '../src/js/actions';
+import * as reducers from '../src/js/reducers';
 
 
 describe('WebRosie store', function () {
   before(() => {
     let reducer = combineReducers(reducers);
     this.store = createStore(reducer, applyMiddleware(thunkMiddleware));
-    // add a robot to test requests
-    this.store.dispatch(actions.addRobot('localhost', 5000));
-    this.store.dispatch(actions.selectRobot(0));
   });
 
   it('creates the full initial state', () => {
@@ -22,25 +19,25 @@ describe('WebRosie store', function () {
       this.store.getState()
     ).to.have.all.keys(
       'robots',
-      'lastaction',
       'report',
       'robot',
+      'path',
       'map',
       'mode',
       'direction',
-      'move'
+      'move',
+      'settings'
     );
   });
 
   it('dispatches an user mode action', () => {
-    return this.store.dispatch(actions.setUser(true))
-      .then(() => {
-        expect(
-          this.store.getState()
-        )
-        .to.have.property('mode')
-        .that.has.property('user')
-        .that.is.true;
-      });
+    this.store.dispatch(actions.setUserAction(true));
+
+    expect(
+      this.store.getState()
+    )
+    .to.have.property('mode')
+    .that.has.property('user')
+    .that.is.true;
   });
 });

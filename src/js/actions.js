@@ -15,21 +15,47 @@ export const RELEASE_KEY = 12;
 export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
+export const SINGLE_MODE = 16;
+export const ADD_POINT = 17;
+export const CLEAR_PATH = 18;
+export const CLEAR_REPORT = 19;
+export const CONFIG_OPTION = 20;
 
 
+// gets the robot with the specified id
 function getRobot (robots, id) {
-  let [robot] = robots.filter((r) => r.id === id);
+  const [ robot ] = robots.filter((r) => r.id === id);
   return robot;
 }
 
 
-export function addRobot (host = document.domain, port = location.port, video = 8080) {
+// helper function to get a robot with id = `id` an execute an action on it
+function robotRequest (id, preaction, callback = Promise.resolve) {
+  return (dispatch, getState) => {
+    if (preaction) {
+      dispatch(preaction);
+    }
+
+    const { robots, robot } = getState();
+    // in case id isn't a valid value, use the selected robot
+    const selected = getRobot(robots, id || robot);
+
+    if (!selected) {
+      // no robot with such id
+      return Promise.resolve();
+    }
+
+    return callback(selected.robot, dispatch, getState);
+  };
+}
+
+
+export function addRobot (host = document.domain, port = location.port) {
   return {
     type: ADD_ROBOT,
     params: [
       host,
-      port,
-      video
+      port
     ]
   };
 }
@@ -50,95 +76,159 @@ export function updateMap (map) {
   return { type: UPDATE_MAP, map: map };
 }
 
-export function robotGoto (id, pos) {
-  return (dispatch, getState) => {
-    let { robots } = getState();
-    let selected = getRobot(robots, id);
+export function robotGoto (x, y, id = null) {
+  return robotRequest(id, false, (robot, dispatch, getState) => {
+    const { settings } = getState();
 
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
+    return robot.goto([ x, y, settings.single.time ], settings.single.planner)
+        .catch((err) => dispatch(notifyReport(err.response.body.error, 'warning')));
+  });
+}
 
-    return selected.robot.goto(pos);
+// pure action method
+export function setOrderAction (value) {
+  return {
+    type: ORDER_MODE,
+    value
   };
 }
 
-
-function autoMode (action, value) {
-  if (!value) {
-    // set to false, don't need to switch robot state
-    return action;
-  }
-
-  return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let selected = getRobot(robots, robot);
-
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return selected.robot
-      .auto()
-      .then(() => dispatch(action));
-  };
-}
-
-
+// async action for mode set (waits for the request to the robot to be completed)
 export function setOrder (value) {
-  return autoMode({ type: ORDER_MODE, value: value }, value);
+  // mode actions act only on the selected robot, so `null` is the id
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then((response) => {
+      dispatch(setOrderAction(value));
+      dispatch(clearPath());
+
+      return response;
+    });
+  });
+}
+
+export function setSingleAction (value) {
+  return {
+    type: SINGLE_MODE,
+    value
+  };
+}
+
+export function setSingle (value) {
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then((response) => {
+      dispatch(setSingleAction(value));
+      dispatch(clearPath());
+
+      return response;
+    });
+  });
+}
+
+export function setPathAction (value) {
+  return {
+    type: PATH_MODE,
+    value
+  };
 }
 
 export function setPath (value) {
-  return autoMode({ type: PATH_MODE, value: value }, value);
+  return robotRequest(null, false, (robot, dispatch) => {
+    return robot.auto().then((response) => {
+      dispatch(setPathAction(value));
+      dispatch(clearPath());
+
+      return response;
+    });
+  });
+}
+
+export function setUserAction (value) {
+  return {
+    type: USER_MODE,
+    value
+  };
 }
 
 export function setUser (value) {
-  return (dispatch, getState) => {
-    let { robots, robot } = getState();
-    let selected = getRobot(robots, robot);
+  return robotRequest(null, false, (robot, dispatch) => {
+    return (value ? robot.manual() : robot.auto())
+      .then((response) => {
+        dispatch(setUserAction(value));
+        dispatch(clearPath());
 
-    if (!selected) {
-      // no robot with such id
-      return Promise.resolve();
-    }
-
-    return (value ? selected.robot.manual() : selected.robot.auto())
-      .then(() => dispatch({ type: USER_MODE, value: value }));
-  };
+        return response;
+      });
+  });
 }
 
 export function robotCommand (command) {
+  // TODO: wait for rosex to be implemented
   return { type: COMMAND_ROBOT, command: command };
 }
 
+export function pressKeyAction (key) {
+  return {
+    type: PRESS_KEY,
+    key
+  };
+}
+
 export function pressKey (key) {
-  return { type: PRESS_KEY, key: key };
+  return robotRequest(null, pressKeyAction(key), (robot, dispatch, getState) => {
+    const { direction } = getState();
+    return robot.move(direction);
+  });
+}
+
+export function releaseKeyAction (key) {
+  return {
+    type: RELEASE_KEY,
+    key
+  };
 }
 
 export function releaseKey (key) {
-  return { type: RELEASE_KEY, key: key };
+  return robotRequest(null, releaseKeyAction(key), (robot, dispatch, getState) => {
+    return robot.move(getState().direction);
+  });
+}
+
+export function moveJoystickAction (movement) {
+  return {
+    type: JOYSTICK_MOVE,
+    movement
+  };
 }
 
 export function moveJoystick (movement) {
-  return { type: JOYSTICK_MOVE, movement };
+  return robotRequest(null, moveJoystickAction(movement), (robot, dispatch, getState) => {
+    return robot.move(getState().direction);
+  });
 }
 
-export function robotPath (path, smooth = false, interpolation = 'linear', k = 0.1, time = 10) {
-  return {
-    type: PATH_ROBOT,
-    path: {
-      path: path,
-      smooth: smooth,
-      interpolation: interpolation,
-      k: k,
-      time: time
-    }
-  };
+export function addPathPoint (point) {
+  return { type: ADD_POINT, point };
+}
+
+export function clearPath () {
+  return { type: CLEAR_PATH };
+}
+
+export function robotFollow (id = null) {
+  return robotRequest(id, false, (robot, dispatch, getState) => {
+    const { path, settings } = getState();
+    return robot.follow({ path, time: settings.path.delay });
+  });
 }
 
 export function notifyReport (text, level) {
   return { type: NOTIFY_REPORT, text, level };
+}
+
+export function clearReport () {
+  return { type: CLEAR_REPORT };
+}
+
+export function configOption (option) {
+  return { type: CONFIG_OPTION, option };
 }
