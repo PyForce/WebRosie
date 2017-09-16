@@ -10,7 +10,7 @@ import (
 
 func serviceDiscover(results <-chan *zeroconf.ServiceEntry) {
 	for entry := range results {
-		log.Println("Found service:", entry.ServiceName(), entry.AddrIPv4[0].String(), entry.Port)
+		log.Println("Found rosie:", entry.Instance, entry.AddrIPv4[0].String(), entry.Port)
 	}
 }
 
@@ -28,11 +28,9 @@ func main() {
 		log.Fatalln("Failed to browse", err)
 	}
 
-	fs := http.FileServer(http.Dir("."))
-	http.Handle("/", fs)
-
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
+	// serve webrosie page
+	http.Handle("/", http.FileServer(http.Dir(".")))
+	if err = http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalln("Failed to start HTTP server", err)
 	}
 
