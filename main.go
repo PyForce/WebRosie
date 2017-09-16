@@ -1,16 +1,80 @@
 package main
 
 import (
+	"container/list"
 	"context"
 	"log"
 	"net/http"
 
+	"github.com/gorilla/websocket"
 	"github.com/grandcat/zeroconf"
 )
 
-func serviceDiscover(results <-chan *zeroconf.ServiceEntry) {
+type message struct {
+	Name string `json:"name"`
+	Host string `json:"host"`
+	Port int    `json:"port"`
+}
+
+var (
+	clients   = list.New()
+	broadcast = make(chan *message)
+	upgrader  = websocket.Upgrader{}
+	oldmsgs   []*message
+)
+
+func handleRosieDiscover(results <-chan *zeroconf.ServiceEntry) {
 	for entry := range results {
 		log.Println("Found rosie:", entry.Instance, entry.AddrIPv4[0].String(), entry.Port)
+
+		msg := new(message)
+		msg.Name = entry.Instance
+		msg.Host = entry.AddrIPv4[0].String()
+		msg.Port = entry.Port
+
+		broadcast <- msg
+		oldmsgs = append(oldmsgs, msg)
+	}
+}
+
+func handleWSConnection(w http.ResponseWriter, r *http.Request) {
+	// Upgrade GET request to a websocket
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Fatalln("Failed to upgrade:", err)
+	}
+
+	log.Println("Connected client:", ws.RemoteAddr().String())
+	clients.PushBack(ws)
+
+	// send all the clients all the already know hosts
+	for ptr := clients.Front(); ptr != nil; ptr = ptr.Next() {
+		switch ws := ptr.Value.(type) {
+		case *websocket.Conn:
+			for _, msg := range oldmsgs {
+				sendMessage(msg, ws, ptr)
+			}
+		}
+	}
+}
+
+func sendMessage(msg *message, ws *websocket.Conn, e *list.Element) {
+	if err := ws.WriteJSON(msg); err != nil {
+		log.Println("Failed to send:", err)
+		ws.Close()
+		clients.Remove(e)
+	}
+}
+
+func broadcastInfo() {
+	for {
+		msg := <-broadcast
+		for ptr := clients.Front(); ptr != nil; ptr = ptr.Next() {
+			switch ws := ptr.Value.(type) {
+			case *websocket.Conn:
+				sendMessage(msg, ws, ptr)
+			}
+		}
 	}
 }
 
@@ -21,7 +85,9 @@ func main() {
 	}
 
 	entries := make(chan *zeroconf.ServiceEntry)
-	go serviceDiscover(entries)
+	go handleRosieDiscover(entries)
+
+	go broadcastInfo()
 
 	ctx := context.Background()
 	if err = resolver.Browse(ctx, "_rosieapi._tcp", "local", entries); err != nil {
@@ -30,6 +96,8 @@ func main() {
 
 	// serve webrosie page
 	http.Handle("/", http.FileServer(http.Dir(".")))
+	// add websocket route
+	http.HandleFunc("/ws", handleWSConnection)
 	if err = http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalln("Failed to start HTTP server", err)
 	}
