@@ -24,9 +24,7 @@ func main() {
 	go serviceDiscover(entries)
 
 	ctx := context.Background()
-
-	err = resolver.Browse(ctx, "_rosieapi._tcp", "local.", entries)
-	if err != nil {
+	if err = resolver.Browse(ctx, "_rosieapi._tcp", "local", entries); err != nil {
 		log.Fatalln("Failed to browse", err)
 	}
 
