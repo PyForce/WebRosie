@@ -13,8 +13,8 @@ function mapStateToProps (state) {
     joystickShow: state.settings.user.joystick,
     report: state.report || { text: '', level: 'info' },
     notification: Boolean(state.report),
-    selected: selected !== -1,
     hasCamera: robotInfo ? Boolean(robotInfo.robot.video) : false
+    selected: selected !== null,
   };
 }
 

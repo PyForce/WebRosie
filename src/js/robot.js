@@ -3,7 +3,7 @@ import request from 'superagent';
 
 // robot class with rosie API
 export default class Robot {
-  constructor (host = document.domain, port = location.port) {
+  constructor (host, port) {
     this.host = host;
     this.port = port;
 

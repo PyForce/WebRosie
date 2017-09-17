@@ -32,7 +32,7 @@ function init () {
   sio.onmessage = (message) => {
     const data = JSON.parse(message.data);
 
-    store.dispatch(actions.addRobot(data.address, data.port));
+    store.dispatch(actions.addRobot(data.name, data.host, data.port));
   };
 
   render(
