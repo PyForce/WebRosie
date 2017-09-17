@@ -143,8 +143,11 @@ export default class LMap extends React.Component {
 
     const overlay = robots.find((elem) => elem.id === move.id)
       .robot.overlay;
-    overlay.pos = move;
-    overlay.angle = move.theta;
+    // check if this is a 'select' move
+    if ('x' in move && 'y' in move && 'theta' in move) {
+      overlay.pos = move;
+      overlay.angle = move.theta;
+    }
 
     if (move.id !== robot) {
       return;

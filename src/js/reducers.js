@@ -152,6 +152,10 @@ export function move (state = null, action) {
       y: action.position.y,
       theta: action.position.theta
     };
+  case actions.SELECT_ROBOT:
+    return {
+      id: action.id
+    };
   default:
     return null;
   }
