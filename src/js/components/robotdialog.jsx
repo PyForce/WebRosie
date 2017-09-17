@@ -6,14 +6,14 @@ import TextField from 'material-ui/TextField';
 
 export default class AddRobotDialog extends React.Component {
   state = {
-    robotHost: document.domain,
-    robotPort: 5000
+    robotHost: '',
+    robotPort: ''
   }
 
   handleAccept = () => {
     this.props.onRequestClose(true,
       this.state.robotHost,
-      this.state.robotPort
+      this.state.robotPort || 80
     );
   }
 
@@ -49,7 +49,7 @@ export default class AddRobotDialog extends React.Component {
           style={{ float: 'left', width: '70%' }} value={this.state.robotHost}
         />
 
-        <TextField floatingLabelText='Rosie WebHUD port' hintText='500, 5679'
+        <TextField floatingLabelText='Rosie WebHUD port' hintText='5000, 8080'
           onChange={this.handlePortChange} style={{ float: 'left', width: '30%' }}
           type='number' value={this.state.robotPort}
         />
