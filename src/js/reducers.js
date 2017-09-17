@@ -8,13 +8,12 @@ export function robots (state = [], action) {
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    const last = state[state.length - 1];
-    const id = last ? last.id + 1 : 0;
+    const [ id, host, port ] = action.params;
     return [
       ...state,
       {
         id: id,
-        robot: new Robot(...action.params)
+        robot: new Robot(host, port)
       }
     ];
     // remove a robot
@@ -27,7 +26,7 @@ export function robots (state = [], action) {
 
 
 // handles the selected robot
-export function robot (state = -1, action) {
+export function robot (state = null, action) {
   switch (action.type) {
     // update selected robot index
   case actions.SELECT_ROBOT:
@@ -101,7 +100,7 @@ export function mode (state = { order: false, single: false, path: false, user: 
       user: true
     };
   case actions.SELECT_ROBOT:
-    if (action.id < 0) {
+    if (!action.id) {
       return { order: false, path: false, user: false };
     }
   default:
@@ -152,6 +151,10 @@ export function move (state = null, action) {
       x: action.position.x,
       y: action.position.y,
       theta: action.position.theta
+    };
+  case actions.SELECT_ROBOT:
+    return {
+      id: action.id
     };
   default:
     return null;

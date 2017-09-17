@@ -55,7 +55,7 @@ export default class MapDialog extends React.Component {
       // get the map info
       const { name, id } = this.state.maps[selection[0]];
       // get the map owner
-      const { robot } = this.props.robots[id];
+      const { robot } = this.props.robots.find((r) => r.id === id);
       robot.map(name)
         .then((map) => {
           this.setState({ map: map });

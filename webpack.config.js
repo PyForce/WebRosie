@@ -21,7 +21,7 @@ config.module = {
 config.output = {
   filename: '[name].bundle.js',
   chunkFilename: '[id].chunk.js',
-  path: path.join(__dirname, 'static', 'js'),
+  path: path.join(__dirname, 'public', 'static', 'js'),
   publicPath: '/static/js',
   devtoolModuleFilenameTemplate: '[resourcePath]',
   devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'

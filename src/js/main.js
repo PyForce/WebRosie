@@ -12,6 +12,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { cyan900 } from 'material-ui/styles/colors';
 
+import * as actions from './actions';
 import * as reducers from './reducers';
 import RosieApp from './containers/rosieapp';
 
@@ -26,6 +27,13 @@ function init () {
   const app = document.getElementById('app');
   const reducer = combineReducers(reducers);
   const store = createStore(reducer, applyMiddleware(thunkMiddleware));
+
+  const sio = new WebSocket(`ws://${location.host}/ws`);
+  sio.onmessage = (message) => {
+    const data = JSON.parse(message.data);
+
+    store.dispatch(actions.addRobot(data.name, data.host, data.port));
+  };
 
   render(
     <Provider store={store}>

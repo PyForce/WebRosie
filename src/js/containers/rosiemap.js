@@ -24,7 +24,7 @@ function mapDispatchToProps (dispatch) {
     deselectRobot: () => {
       // select an invalid robot id to
       // deselect the currently selected
-      dispatch(selectRobot(-1));
+      dispatch(selectRobot(null));
     },
     selectRobot: (id) => dispatch(selectRobot(id)),
     moveRobot: (id, pos) => dispatch(moveRobot(id, pos)),

@@ -1,6 +1,7 @@
 import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import MapIcon from 'material-ui/svg-icons/maps/map';
@@ -9,6 +10,7 @@ import CameraOpenIcon from 'material-ui/svg-icons/av/videocam';
 import CameraCloseIcon from 'material-ui/svg-icons/av/videocam-off';
 import ZoomInIcon from 'material-ui/svg-icons/action/zoom-in';
 import ZoomOutIcon from 'material-ui/svg-icons/action/zoom-out';
+import { List, ListItem } from 'material-ui/List';
 import MobileDetect from 'mobile-detect';
 
 import RosieMap from '../containers/rosiemap';
@@ -156,6 +158,11 @@ export default class MainApp extends React.Component {
     this.setState({ camera: !this.state.camera });
   }
 
+  handleRobotListClick = (id) => () => {
+    this.props.selectRobot(id);
+    this.setState({ drawer: false });
+  }
+
   render () {
     const zoombtns = {
       position: 'absolute',
@@ -200,6 +207,14 @@ export default class MainApp extends React.Component {
         />
 
         <Drawer docked={false} onRequestChange={this.handleChangeDrawer} open={this.state.drawer}>
+          <List style={{ height: '75%' }}>
+            {this.props.robots.map((r, i) => (
+              <ListItem key={i} onTouchTap={this.handleRobotListClick(r.id)} primaryText={r.id}
+                secondaryText={`${r.robot.host}:${r.robot.port}`}
+              />
+            ))}
+          </List>
+          <Divider/>
           <MenuItem leftIcon={<ContentAddIcon />} onTouchTap={this.handleAddRobot}
             primaryText='Add robot'
           />

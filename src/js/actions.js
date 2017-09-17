@@ -50,10 +50,11 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
-export function addRobot (host = document.domain, port = location.port) {
+export function addRobot (name, host, port) {
   return {
     type: ADD_ROBOT,
     params: [
+      name,
       host,
       port
     ]
@@ -68,7 +69,7 @@ export function moveRobot (id, pos) {
   return { type: MOVE_ROBOT, id: id, position: pos };
 }
 
-export function selectRobot (id = -1) {
+export function selectRobot (id = null) {
   return { type: SELECT_ROBOT, id: id };
 }
 

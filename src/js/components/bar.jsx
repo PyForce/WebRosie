@@ -20,7 +20,7 @@ export default class Bar extends React.Component {
     };
 
     let icons;
-    if (selected >= 0) {
+    if (selected) {
       icons = (
         <div>
           <IconButton onTouchTap={setMode('single', !single)} tooltip='Single Point Mode'>
