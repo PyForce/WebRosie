@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/list"
 	"context"
 	"log"
 	"net/http"
@@ -17,7 +16,7 @@ type message struct {
 }
 
 var (
-	clients   = list.New()
+	clients   = make(map[*websocket.Conn]bool)
 	broadcast = make(chan *message)
 	upgrader  = websocket.Upgrader{}
 	oldmsgs   []*message
@@ -45,35 +44,29 @@ func handleWSConnection(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Connected client:", ws.RemoteAddr().String())
-	clients.PushBack(ws)
+	clients[ws] = true
 
 	// send all the clients all the already know hosts
-	for ptr := clients.Front(); ptr != nil; ptr = ptr.Next() {
-		switch ws := ptr.Value.(type) {
-		case *websocket.Conn:
-			for _, msg := range oldmsgs {
-				sendMessage(msg, ws, ptr)
-			}
+	for ws := range clients {
+		for _, msg := range oldmsgs {
+			sendMessage(msg, ws)
 		}
 	}
 }
 
-func sendMessage(msg *message, ws *websocket.Conn, e *list.Element) {
+func sendMessage(msg *message, ws *websocket.Conn) {
 	if err := ws.WriteJSON(msg); err != nil {
 		log.Println("Failed to send:", err)
-		ws.Close()
-		clients.Remove(e)
+		defer ws.Close()
+		delete(clients, ws)
 	}
 }
 
 func broadcastInfo() {
 	for {
 		msg := <-broadcast
-		for ptr := clients.Front(); ptr != nil; ptr = ptr.Next() {
-			switch ws := ptr.Value.(type) {
-			case *websocket.Conn:
-				sendMessage(msg, ws, ptr)
-			}
+		for ws := range clients {
+			sendMessage(msg, ws)
 		}
 	}
 }
