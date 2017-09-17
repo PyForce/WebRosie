@@ -45,7 +45,7 @@ function onBuild (name, done) {
 }
 
 gulp.task('js:compile', (done) => {
-  webpack(webpackDevConfig, onBuild('js', done));
+  webpack(webpackDevConfig).run(onBuild('js', done));
 });
 
 gulp.task('js:prod', (done) => {
@@ -61,11 +61,11 @@ gulp.task('js:prod', (done) => {
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.UglifyJsPlugin({ comments: false })
   );
-  webpack(prodConfig, onBuild('js', done));
+  webpack(prodConfig).run(onBuild('js', done));
 });
 
 gulp.task('js:watch', () => {
-  webpack(webpackDevConfig).watch(100, onBuild('js'));
+  webpack(webpackDevConfig).watch({}, onBuild('js'));
 });
 
 gulp.task('css:compile', () => gulp.src(LESS_SRC)
