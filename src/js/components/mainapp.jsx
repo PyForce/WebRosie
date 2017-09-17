@@ -233,13 +233,13 @@ export default class MainApp extends React.Component {
 
     return (
       <div>
-        <AddRobotDialog autoDetectWindowHeight autoScrollBodyContent
+        <AddRobotDialog autoDetectWindowHeight
           onRequestClose={this.handleCloseRobotDialog} open={this.state.robotdialog}
         />
-        <MapDialogProvider autoDetectWindowHeight autoScrollBodyContent
+        <MapDialogProvider autoDetectWindowHeight
           onRequestClose={this.handleCloseMapDialog} open={this.state.mapdialog}
         />
-        <RosieSettings autoDetectWindowHeight autoScrollBodyContent
+        <RosieSettings autoDetectWindowHeight
           onRequestClose={this.handleCloseSettings} open={this.state.settings}
         />
 
