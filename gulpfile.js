@@ -19,7 +19,7 @@ webpackDevConfig.plugins.push(
 
 const LESS_SRC = './src/less/main.less';
 const LESS = less({
-  paths: ['.', './node_modules']
+  paths: [ '.', './node_modules' ]
 });
 const POSTCSS = postcss([
   autoprefixer()
@@ -45,7 +45,7 @@ function onBuild (name, done) {
 }
 
 gulp.task('js:compile', (done) => {
-   webpack(webpackDevConfig, onBuild('js', done));
+  webpack(webpackDevConfig, onBuild('js', done));
 });
 
 gulp.task('js:prod', (done) => {
@@ -71,7 +71,7 @@ gulp.task('js:watch', () => {
 gulp.task('css:compile', () => gulp.src(LESS_SRC)
     .pipe(LESS)
     .pipe(POSTCSS)
-    .pipe(gulp.dest('./static/css'))
+    .pipe(gulp.dest('./public/static/css'))
 );
 
 gulp.task('css:prod', () => gulp.src(LESS_SRC)
@@ -83,16 +83,16 @@ gulp.task('css:prod', () => gulp.src(LESS_SRC)
         discardComments: { removeAll: true }
       })
     ]))
-    .pipe(gulp.dest('./static/css'))
+    .pipe(gulp.dest('./public/static/css'))
 );
 
 gulp.task('css:watch', () => gulp.src(LESS_SRC)
     .pipe(watch('./src/less/**/*'))
     .pipe(LESS)
     .pipe(POSTCSS)
-    .pipe(gulp.dest('./static/css'))
+    .pipe(gulp.dest('./public/static/css'))
 );
 
-gulp.task('compile', ['js:compile', 'css:compile']);
-gulp.task('prod',    ['js:prod', 'css:prod']);
-gulp.task('watch',   ['js:watch', 'css:watch']);
+gulp.task('compile', [ 'js:compile', 'css:compile' ]);
+gulp.task('prod', [ 'js:prod', 'css:prod' ]);
+gulp.task('watch', [ 'js:watch', 'css:watch' ]);

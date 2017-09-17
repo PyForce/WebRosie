@@ -88,7 +88,7 @@ func main() {
 	}
 
 	// serve webrosie page
-	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.Handle("/", http.FileServer(http.Dir("public")))
 	// add websocket route
 	http.HandleFunc("/ws", handleWSConnection)
 	if err = http.ListenAndServe(":8080", nil); err != nil {
