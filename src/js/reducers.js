@@ -1,6 +1,5 @@
 // state reducers for the store
 import * as actions from './actions';
-import Robot from './robot';
 
 
 // handles the displayed robots
@@ -8,14 +7,8 @@ export function robots (state = [], action) {
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    const [ id, host, port ] = action.params;
-    return [
-      ...state,
-      {
-        id: id,
-        robot: new Robot(host, port)
-      }
-    ];
+    const { robot: obj } = action;
+    return [ ...state, { id: obj.name, robot: obj }];
     // remove a robot
   case actions.RM_ROBOT:
     return state.filter((elem) => elem.id !== action.id);
@@ -153,9 +146,7 @@ export function move (state = null, action) {
       theta: action.position.theta
     };
   case actions.SELECT_ROBOT:
-    return {
-      id: action.id
-    };
+    return !action.id ? state : { id: action.id };
   default:
     return null;
   }

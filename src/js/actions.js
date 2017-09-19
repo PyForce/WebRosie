@@ -1,4 +1,5 @@
 // actions generators to use with store.dispatch(...)
+import Robot from './robot';
 
 export const ADD_ROBOT = 1;
 export const RM_ROBOT = 2;
@@ -50,14 +51,26 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
-export function addRobot (name, host, port) {
-  return {
-    type: ADD_ROBOT,
-    params: [
-      name,
-      host,
-      port
-    ]
+export function addRobot (host, port, name = '') {
+  return (dispatch) => {
+    const robot = new Robot(host, port, name);
+    const data = { type: ADD_ROBOT, robot };
+
+    // fill robot info before updating state
+    return robot.metadata().then(info => {
+      if (!name) {
+        robot.name = info.name;
+      }
+
+      const { video } = info;
+      if (video && video.startsWith(':')) {
+        robot.video = `http://${robot.host}${video}`;
+        return;
+      }
+      robot.video = video;
+
+      dispatch(data);
+    });
   };
 }
 

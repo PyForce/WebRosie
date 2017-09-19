@@ -3,9 +3,10 @@ import request from 'superagent';
 
 // robot class with rosie API
 export default class Robot {
-  constructor (host, port) {
+  constructor (host, port, name = '') {
     this.host = host;
     this.port = port;
+    this.name = name;
 
     try {
       this.sio = new WebSocket(`ws://${host}:${port}/websocket`);
@@ -13,18 +14,6 @@ export default class Robot {
     catch (ReferenceError) {
       // no WebSocket
     }
-
-    this.metadata()
-      .then((info) => {
-        this.name = info.name;
-
-        const { video } = info;
-        if (video && video.startsWith(':')) {
-          this.video = `http://${this.host}${video}`;
-          return;
-        }
-        this.video = video;
-      });
   }
 
   // API
