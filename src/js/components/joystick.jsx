@@ -1,8 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Nipple from 'nipplejs';
 
 
 export default class TouchJoystick extends React.Component {
+  static propTypes = {
+    moveJoystick: PropTypes.func,
+    style: PropTypes.object
+  }
+
   componentDidMount () {
     const muiTheme = this._reactInternalInstance._context.muiTheme;
 

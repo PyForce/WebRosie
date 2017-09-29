@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Snackbar from 'material-ui/Snackbar';
 import { red800, yellow800 } from 'material-ui/styles/colors';
 
 
 export default class ReportSnackBar extends React.Component {
   static propTypes = {
-    level: React.PropTypes.oneOf([ 'error', 'warning', 'info' ])
+    level: PropTypes.oneOf([ 'error', 'warning', 'info' ])
   }
 
   render () {

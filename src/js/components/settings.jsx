@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -32,6 +33,9 @@ class FloatField extends React.Component {
 
 
 class DummyForm extends React.Component {
+  static propTypes = {
+    children: PropTypes.array
+  }
   // form that doesn't submit
   handleSubmit = () => null
 
@@ -46,6 +50,17 @@ class DummyForm extends React.Component {
 
 
 export default class SettingsModal extends React.Component {
+  static propTypes = {
+    saveSettings: PropTypes.func,
+    onRequestClose: PropTypes.func,
+    settings: PropTypes.shape({
+      single: PropTypes.object,
+      path: PropTypes.object,
+      user: PropTypes.object,
+      command: PropTypes.object
+    })
+  }
+
   state = {
     settings: {
       single: {},

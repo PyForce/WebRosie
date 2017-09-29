@@ -1,10 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
 
 export default class AddRobotDialog extends React.Component {
+  static propTypes = {
+    onRequestClose: PropTypes.func
+  }
+
   state = {
     robotHost: '',
     robotPort: ''
