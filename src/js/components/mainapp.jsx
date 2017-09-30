@@ -233,18 +233,19 @@ export default class MainApp extends React.Component {
 
     return (
       <div>
-        <AddRobotDialog autoDetectWindowHeight autoScrollBodyContent
+        <AddRobotDialog autoScrollBodyContent
           onRequestClose={this.handleCloseRobotDialog} open={this.state.robotdialog}
         />
-        <MapDialogProvider autoDetectWindowHeight autoScrollBodyContent
+        <MapDialogProvider autoScrollBodyContent
           onRequestClose={this.handleCloseMapDialog} open={this.state.mapdialog}
         />
-        <RosieSettings autoDetectWindowHeight autoScrollBodyContent
+        <RosieSettings autoScrollBodyContent
           onRequestClose={this.handleCloseSettings} open={this.state.settings}
         />
 
-        <Drawer docked={false} onRequestChange={this.handleChangeDrawer} open={this.state.drawer}>
-          <List style={{ height: '75%' }}>
+        <Drawer docked={false} onRequestChange={this.handleChangeDrawer} open={this.state.drawer}
+          containerClassName='flex'>
+          <List style={{ flexGrow: 1, overflow: 'auto' }}>
             {this.props.robots.map((r, i) => (
               <ListItem key={i} onTouchTap={this.handleRobotListClick(r.id)} primaryText={r.id}
                 secondaryText={`${r.robot.host}:${r.robot.port}`}
