@@ -22,6 +22,13 @@ config.module = {
     use: ExtractTextWebpackPlugin.extract({
       use: [{
         loader: 'css-loader'
+      },{
+        loader: 'postcss-loader', options: {
+          plugins: [
+            require('autoprefixer'),
+            require('cssnano')
+          ]
+        }
       }, {
         loader: 'less-loader', options: {
           paths: [
