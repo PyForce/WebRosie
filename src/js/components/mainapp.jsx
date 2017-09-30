@@ -270,7 +270,8 @@ export default class MainApp extends React.Component {
 
           {this.props.mode.user && this.showJoystick() ?
             <RosieJoystick style={this.styles.joystickContainer} /> : undefined}
-          {this.props.mode.path ? <RosiePathAction style={this.styles.actionsContainer}/> : undefined}
+          {this.props.mode.path ?
+            <RosiePathAction style={this.styles.actionsContainer}/> : undefined}
           {this.state.camera ? <RosieWebCam /> : undefined}
 
           <div className='actions' style={this.styles.zoombtns}>
