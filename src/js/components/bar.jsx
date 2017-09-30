@@ -36,22 +36,22 @@ export default class Bar extends React.Component {
     if (selected) {
       icons = (
         <div>
-          <IconButton onTouchTap={singleMode(!single)} tooltip='Single Point Mode'>
+          <IconButton onTouchTap={() => singleMode(!single)} tooltip='Single Point Mode'>
             <SingleIcon color={single ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={pathMode(!path)} tooltip='Path Mode'>
+          <IconButton onTouchTap={() => pathMode(!path)} tooltip='Path Mode'>
             <PathIcon color={path ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={userMode(!user)} tooltip='User Mode'>
+          <IconButton onTouchTap={() => userMode(!user)} tooltip='User Mode'>
             <UserIcon color={user ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={orderMode(!order)} tooltip='Command Mode'>
+          <IconButton onTouchTap={() => orderMode(!order)} tooltip='Command Mode'>
             <CommandIcon color={order ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
