@@ -54,6 +54,37 @@ export default class MainApp extends React.Component {
     handleClearReport: PropTypes.func
   }
 
+  styles = {
+    zoombtns: {
+      position: 'absolute',
+      bottom: 0,
+      margin: '0 0 1% 1%',
+      zIndex: 1000
+    },
+    zoombtn: {
+      display: 'block'
+    },
+    joystickContainer: {
+      position: 'absolute',
+      height: '25%',
+      width: '25%',
+      bottom: 0,
+      right: 0
+    },
+    actionsContainer: {
+      position: 'absolute',
+      zIndex: 1000,
+      margin: '0 1% 1% 0',
+      bottom: '40%',
+      right: 0
+    },
+    appContainer: {
+      height: '100%',
+      width: '100%',
+      position: 'absolute'
+    }
+  }
+
   state = {
     drawer: false,
     settings: false,
@@ -193,32 +224,9 @@ export default class MainApp extends React.Component {
   }
 
   render () {
-    const zoombtns = {
-      position: 'absolute',
-      bottom: 0,
-      margin: '0 0 1% 1%',
-      zIndex: 1000
-    };
-    const zoombtn = {
-      display: 'block'
-    };
-    const joystickContainer = {
-      position: 'absolute',
-      height: '25%',
-      width: '25%',
-      bottom: 0,
-      right: 0
-    };
-    const actionsContainer = {
-      ...zoombtns,
-      margin: '0 1% 1% 0',
-      bottom: '40%',
-      right: 0
-    };
-
     const camerabutton = (
       <FloatingActionButton onTouchTap={this.handleToggleCamera} secondary={this.state.camera}
-        style={zoombtn}>
+        style={this.styles.zoombtn}>
         {this.state.camera ? <CameraCloseIcon /> : <CameraOpenIcon />}
       </FloatingActionButton>
     );
@@ -255,23 +263,23 @@ export default class MainApp extends React.Component {
           />
         </Drawer>
 
-        <div className='flex column wrap start' style={{ height: '100%' }}>
+        <div className='flex column wrap start' style={this.styles.appContainer}>
           <RosieAppBar onLeftIconButtonTouchTap={this.handleToggleDrawer} />
           <RosieMap ref={(r) => this.rosiemap = r} />
 
           {this.props.mode.user && this.showJoystick() ?
-            <RosieJoystick style={joystickContainer} /> : undefined}
-          {this.props.mode.path ? <RosiePathAction style={actionsContainer}/> : undefined}
+            <RosieJoystick style={this.styles.joystickContainer} /> : undefined}
+          {this.props.mode.path ? <RosiePathAction style={this.styles.actionsContainer}/> : undefined}
           {this.state.camera ? <RosieWebCam /> : undefined}
 
-          <div className='actions' style={zoombtns}>
+          <div className='actions' style={this.styles.zoombtns}>
             {this.props.selected && this.props.hasCamera ? camerabutton : undefined}
             <FloatingActionButton disabled={!this.state.zoomin} onTouchTap={this._handleZoomIn}
-              style={zoombtn}>
+              style={this.styles.zoombtn}>
               <ZoomInIcon />
             </FloatingActionButton>
             <FloatingActionButton disabled={!this.state.zoomout} onTouchTap={this._handleZoomOut}
-              style={zoombtn}>
+              style={this.styles.zoombtn}>
               <ZoomOutIcon />
             </FloatingActionButton>
           </div>
