@@ -73,3 +73,9 @@ jspm_packages
 .glide/
 
 
+# build files
+public/
+build/
+bindata.go
+webrosie
+
