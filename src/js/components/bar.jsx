@@ -14,7 +14,7 @@ export default class Bar extends React.Component {
   }
 
   static propTypes = {
-    selected: PropTypes.number,
+    selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     single: PropTypes.bool,
     user: PropTypes.bool,
     path: PropTypes.bool,

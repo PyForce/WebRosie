@@ -8,7 +8,8 @@ import RobotOverlay from '../map/robot';
 
 export default class LMap extends React.Component {
   static contextTypes = {
-    muiTheme: PropTypes.object
+    muiTheme: PropTypes.object,
+    store: PropTypes.object
   }
 
   static propTypes = {
@@ -26,19 +27,19 @@ export default class LMap extends React.Component {
     notify: PropTypes.func,
     removeRobot: PropTypes.func,
     robot: PropTypes.shape({
-      id: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       robot: PropTypes.object
     }),
     map: PropTypes.object,
     path: PropTypes.array,
     move: PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       x: PropTypes.number,
       y: PropTypes.number,
       theta: PropTypes.number
     }),
     pathClear: PropTypes.bool,
-    selected: PropTypes.number,
+    selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }
 
   componentDidMount () {
@@ -173,7 +174,7 @@ export default class LMap extends React.Component {
   }
 
   updateRobotPos = (move) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     const { robots, robot } = store.getState();
 
     const overlay = robots.find((elem) => elem.id === move.id)
