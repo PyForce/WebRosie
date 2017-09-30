@@ -9,6 +9,10 @@ import CommandIcon from 'material-ui/svg-icons/content/send';
 
 
 export default class Bar extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
   static propTypes = {
     selected: PropTypes.number,
     single: PropTypes.bool,
@@ -22,7 +26,7 @@ export default class Bar extends React.Component {
   }
 
   render () {
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     const { selected, single, user, path, order,
       singleMode, pathMode, userMode, orderMode, // eslint-disable-line no-unused-vars

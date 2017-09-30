@@ -4,13 +4,17 @@ import Nipple from 'nipplejs';
 
 
 export default class TouchJoystick extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
   static propTypes = {
     moveJoystick: PropTypes.func,
     style: PropTypes.object
   }
 
   componentDidMount () {
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     this.manager = Nipple.create({
       zone: this.zone,

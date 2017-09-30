@@ -26,6 +26,10 @@ import { RosiePathAction } from '../containers/rosiemodes';
 
 
 export default class MainApp extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  }
+
   static propTypes = {
     joystickShow: PropTypes.oneOf(['always', 'touch', 'none']),
     addRobot: PropTypes.func,
@@ -166,14 +170,14 @@ export default class MainApp extends React.Component {
   }
 
   handleKeyDown = (event) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     if (store.getState().mode.user) {
       this.props.keyDown(event.which);
     }
   }
 
   handleKeyUp = (event) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     if (store.getState().mode.user) {
       this.props.keyUp(event.which);
     }

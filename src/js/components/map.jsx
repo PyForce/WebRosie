@@ -7,6 +7,10 @@ import RobotOverlay from '../map/robot';
 
 
 export default class LMap extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
   static propTypes = {
     mode: PropTypes.shape({
       single: PropTypes.bool,
@@ -44,7 +48,7 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([ 0, 0 ], 9);
 
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     this.marker = L.circleMarker([ 0, 0 ], {
       color: muiTheme.palette.accent1Color
