@@ -6,8 +6,9 @@
   "scripts": {
     "lint": "eslint --fix --ext='[.js, .jsx]' src/js",
     "test": "mocha --compilers js:babel-register --recursive 'test/**/*.js*'",
-    "watch": "webpack -w",
-    "build": "webpack && go generate && go build",
+    "watch": "webpack --progress -w",
+    "build": "webpack --config webpack.config.prod.js --progress && go generate && go build",
+    "build:dev": "webpack --progress && go-bindata -debug && go build",
     "build:assets": "webpack"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",

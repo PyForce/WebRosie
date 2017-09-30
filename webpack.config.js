@@ -47,14 +47,11 @@ config.output = {
   filename: '[name].js',
   chunkFilename: 'chunk.js',
   path: path.join(__dirname, 'public'),
-  // publicPath: '/'
 };
 
+config.devtool = 'source-map';
+
 config.plugins = [
-  new webpack.SourceMapDevToolPlugin({
-    test: /.*\.js(x)?$/,
-    filename: '[name].js.map'
-  }),
   new ExtractTextWebpackPlugin({
     filename: '[name].css'
   }),
@@ -66,22 +63,6 @@ config.plugins = [
       collapseWhitespace: true,
       removeAttributeQuotes: true,
       useShortDoctype: true
-    }
-  }),
-  new webpack.LoaderOptionsPlugin({
-    minify: true,
-    debug: false
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    sourceMap: true,
-    comments: false,
-    beautify: false,
-    mangle: {
-      screw_ie8: true,
-      keep_fnames: true
-    },
-    compress: {
-      screw_ie8: true
     }
   })
 ];
