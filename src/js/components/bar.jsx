@@ -29,33 +29,29 @@ export default class Bar extends React.Component {
     const muiTheme = this.context.muiTheme;
 
     const { selected, single, user, path, order,
-      singleMode, pathMode, userMode, orderMode, // eslint-disable-line no-unused-vars
+      singleMode, pathMode, userMode, orderMode,
       ...other } = this.props;
-
-    const setMode = (mode, value) => {
-      return () => this.props[`${mode}Mode`](value);
-    };
 
     let icons;
     if (selected) {
       icons = (
         <div>
-          <IconButton onTouchTap={setMode('single', !single)} tooltip='Single Point Mode'>
+          <IconButton onTouchTap={singleMode(!single)} tooltip='Single Point Mode'>
             <SingleIcon color={single ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('path', !path)} tooltip='Path Mode'>
+          <IconButton onTouchTap={pathMode(!path)} tooltip='Path Mode'>
             <PathIcon color={path ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('user', !user)} tooltip='User Mode'>
+          <IconButton onTouchTap={userMode(!user)} tooltip='User Mode'>
             <UserIcon color={user ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('order', !order)} tooltip='Command Mode'>
+          <IconButton onTouchTap={orderMode(!order)} tooltip='Command Mode'>
             <CommandIcon color={order ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
