@@ -1,6 +1,6 @@
 package main
 
-//go:generate go-bindata -nomemcopy public/...
+//go:generate go-bindata -nomemcopy -nometadata -ignore=\.map$ public/...
 
 import (
 	"context"
