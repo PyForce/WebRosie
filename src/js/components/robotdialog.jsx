@@ -36,7 +36,7 @@ export default class AddRobotDialog extends React.Component {
 
   render () {
     const actions = [
-      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+      <FlatButton key={0} label='Cancel' onTouchTap={this.handleCancel}
         primary
       />,
       <FlatButton disabled={!(this.state.robotHost && this.state.robotPort)} key={1} label='Accept'

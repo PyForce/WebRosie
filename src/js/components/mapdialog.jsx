@@ -74,7 +74,7 @@ export default class MapDialog extends React.Component {
   render () {
     const { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
     const actions = [
-      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+      <FlatButton key={0} label='Cancel' onTouchTap={this.handleCancel}
         primary
       />,
       <FlatButton disabled={!this.state.any} key={1} label='Accept' onTouchTap={this.handleAccept}
