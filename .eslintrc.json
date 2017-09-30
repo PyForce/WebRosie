@@ -25,6 +25,9 @@
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
-    "semi": 1
+    "semi": 1,
+    "max-len": [2, 100, 0, {
+      "ignoreComments": true
+    }]
   }
 }
