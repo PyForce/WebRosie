@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import L from 'leaflet';
 
 import draw from '../map/map';
@@ -6,6 +7,40 @@ import RobotOverlay from '../map/robot';
 
 
 export default class LMap extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
+  static propTypes = {
+    mode: PropTypes.shape({
+      single: PropTypes.bool,
+      path: PropTypes.bool,
+      user: PropTypes.bool,
+      order: PropTypes.bool
+    }),
+    modeOff: PropTypes.func,
+    selectRobot: PropTypes.func,
+    robotGoto: PropTypes.func,
+    addPoint: PropTypes.func,
+    moveRobot: PropTypes.func,
+    notify: PropTypes.func,
+    removeRobot: PropTypes.func,
+    robot: PropTypes.shape({
+      id: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+      robot: PropTypes.object
+    }),
+    map: PropTypes.object,
+    path: PropTypes.array,
+    move: PropTypes.shape({
+      id: PropTypes.number,
+      x: PropTypes.number,
+      y: PropTypes.number,
+      theta: PropTypes.number
+    }),
+    pathClear: PropTypes.bool,
+    selected: PropTypes.number,
+  }
+
   componentDidMount () {
     this.map = L.map('map', {
       crs: L.CRS.Simple,
@@ -13,7 +48,7 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([ 0, 0 ], 9);
 
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     this.marker = L.circleMarker([ 0, 0 ], {
       color: muiTheme.palette.accent1Color

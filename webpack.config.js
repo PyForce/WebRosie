@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 var config = {
   context: __dirname
@@ -10,34 +11,35 @@ config.entry = [
 ];
 
 config.module = {
-  loaders: [{
-    loader: 'babel-loader',
+  rules: [{
     test: /\.jsx?$/,
+    loader: 'babel-loader',
     exclude: /node_modules/
   }],
-  postLoaders: []
 };
 
 config.output = {
   filename: '[name].bundle.js',
   chunkFilename: '[id].chunk.js',
   path: path.join(__dirname, 'public', 'static', 'js'),
-  publicPath: '/static/js',
-  devtoolModuleFilenameTemplate: '[resourcePath]',
-  devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
+  publicPath: '/static/js'
 };
 
-config.plugins = [];
+config.plugins = [
+  new webpack.SourceMapDevToolPlugin({
+    test: /.*\.js(x)?$/,
+    filename: 'main.bundle.js.map'
+  })
+];
 
 config.resolve = {
   extensions: [
-    '',
     '.js',
     '.jsx'
   ],
-  modulesDirectories: [
-    './src/js',
-    './node_modules/'
+  modules: [
+    path.join(__dirname, 'src'),
+    path.join(__dirname, 'node_modules')
   ]
 };
 

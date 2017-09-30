@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { Table, TableRow, TableHeader, TableHeaderColumn, TableBody,
@@ -6,6 +7,12 @@ import { Table, TableRow, TableHeader, TableHeaderColumn, TableBody,
 
 
 export default class MapDialog extends React.Component {
+  static propTypes = {
+    open: PropTypes.bool,
+    robots: PropTypes.array,
+    onRequestClose: PropTypes.func
+  }
+
   state = {
     maps: [],
     any: false,

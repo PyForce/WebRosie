@@ -4,10 +4,10 @@ import * as actions from './actions';
 
 // handles the displayed robots
 export function robots (state = [], action) {
+  const { robot: obj } = action;
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    const { robot: obj } = action;
     return [ ...state, { id: obj.name, robot: obj }];
     // remove a robot
   case actions.RM_ROBOT:
@@ -96,6 +96,7 @@ export function mode (state = { order: false, single: false, path: false, user: 
     if (!action.id) {
       return { order: false, path: false, user: false };
     }
+    return state;
   default:
     return state;
   }

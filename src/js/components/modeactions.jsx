@@ -1,10 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import AcceptIcon from 'material-ui/svg-icons/navigation/check';
 import CancelIcon from 'material-ui/svg-icons/content/clear';
 
 
 export class PathActions extends React.Component {
+  static propTypes = {
+    style: PropTypes.object,
+    path: PropTypes.bool,
+    handleSendPath: PropTypes.func,
+    handleModeOff: PropTypes.func
+  }
+
   render () {
     return (
       <div className='actions' style={this.props.style}>

@@ -1,9 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import ResizeAndDrag from 'react-rnd';
 
 
 export default class WebCam extends React.Component {
+  static propTypes = {
+    url: PropTypes.string
+  }
+
   render () {
     const style = {
       width: '100%',

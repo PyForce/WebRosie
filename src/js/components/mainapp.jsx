@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
@@ -25,6 +26,34 @@ import { RosiePathAction } from '../containers/rosiemodes';
 
 
 export default class MainApp extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  }
+
+  static propTypes = {
+    joystickShow: PropTypes.oneOf(['always', 'touch', 'none']),
+    addRobot: PropTypes.func,
+    loadMap: PropTypes.func,
+    keyDown: PropTypes.func,
+    keyUp: PropTypes.func,
+    selectRobot: PropTypes.func,
+    robots: PropTypes.array,
+    mode: PropTypes.shape({
+      single: PropTypes.bool,
+      path: PropTypes.bool,
+      user: PropTypes.bool,
+      order: PropTypes.bool
+    }),
+    selected: PropTypes.bool,
+    hasCamera: PropTypes.bool,
+    report: PropTypes.shape({
+      text: PropTypes.string,
+      level: PropTypes.string
+    }),
+    notification: PropTypes.bool,
+    handleClearReport: PropTypes.func
+  }
+
   state = {
     drawer: false,
     settings: false,
@@ -141,14 +170,14 @@ export default class MainApp extends React.Component {
   }
 
   handleKeyDown = (event) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     if (store.getState().mode.user) {
       this.props.keyDown(event.which);
     }
   }
 
   handleKeyUp = (event) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     if (store.getState().mode.user) {
       this.props.keyUp(event.which);
     }

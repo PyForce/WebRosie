@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import PathIcon from 'material-ui/svg-icons/communication/swap-calls';
@@ -8,11 +9,27 @@ import CommandIcon from 'material-ui/svg-icons/content/send';
 
 
 export default class Bar extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
+  static propTypes = {
+    selected: PropTypes.number,
+    single: PropTypes.bool,
+    user: PropTypes.bool,
+    path: PropTypes.bool,
+    order: PropTypes.bool,
+    singleMode: PropTypes.func,
+    pathMode: PropTypes.func,
+    userMode: PropTypes.func,
+    orderMode: PropTypes.func,
+  }
+
   render () {
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     const { selected, single, user, path, order,
-      singleMode, pathMode, userMode, orderMode, dispatch, // eslint-disable-line no-unused-vars
+      singleMode, pathMode, userMode, orderMode, // eslint-disable-line no-unused-vars
       ...other } = this.props;
 
     const setMode = (mode, value) => {
