@@ -95,7 +95,7 @@ export default class LMap extends React.Component {
       this.realPath.setLatLngs([]);
     }
     else if (path !== this.props.path) {
-      const store = this._reactInternalInstance._context.store;
+      const store = this.context.store;
       const overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
 
       const latlngs = path.map((elem) => [ elem[1], elem[0] ]);
@@ -157,7 +157,7 @@ export default class LMap extends React.Component {
 
     // draw the new map
     if (map !== this.props.map) {
-      const { palette } = this._reactInternalInstance._context.muiTheme;
+      const { palette } = this.context.muiTheme;
 
       draw(map, this.map, {
         borders: { color: palette.disabledColor },
