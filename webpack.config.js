@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 var config = {
   context: __dirname
@@ -24,7 +25,12 @@ config.output = {
   publicPath: '/static/js'
 };
 
-config.plugins = [];
+config.plugins = [
+  new webpack.SourceMapDevToolPlugin({
+    test: /.*\.js(x)?$/,
+    filename: 'main.bundle.js.map'
+  })
+];
 
 config.resolve = {
   extensions: [
