@@ -4,12 +4,11 @@
   "description": "Front-end for rosie web module",
   "main": "src/js/main.js",
   "scripts": {
-    "compile": "gulp compile",
     "lint": "eslint --fix --ext='[.js, .jsx]' src/js",
-    "prod": "gulp prod",
     "test": "mocha --compilers js:babel-register --recursive 'test/**/*.js*'",
-    "watch": "gulp watch",
-    "package": "npm run prod && tar -cafrelease.tar.gz static/ index.html"
+    "watch": "webpack -w",
+    "build": "webpack && go generate && go build",
+    "build:assets": "webpack"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",
   "repository": {

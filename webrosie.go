@@ -1,10 +1,13 @@
 package main
 
+//go:generate go-bindata -nomemcopy public/...
+
 import (
 	"context"
 	"log"
 	"net/http"
 
+	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/gorilla/websocket"
 	"github.com/grandcat/zeroconf"
 )
@@ -88,7 +91,11 @@ func main() {
 	}
 
 	// serve webrosie page
-	http.Handle("/", http.FileServer(http.Dir("public")))
+	http.Handle("/",
+		http.FileServer(&assetfs.AssetFS{
+			Asset:    Asset,
+			AssetDir: AssetDir,
+			Prefix:   "public"}))
 	// add websocket route
 	http.HandleFunc("/ws", handleWSConnection)
 	if err = http.ListenAndServe(":8080", nil); err != nil {
