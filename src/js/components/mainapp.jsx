@@ -22,7 +22,7 @@ import ReportSnackbar from './reportsnackbar';
 import RosieSettings from '../containers/rosiesettings';
 import RosieJoystick from '../containers/rosiejoystick';
 import RosieWebCam from '../containers/rosiewebcam';
-import { RosiePathAction } from '../containers/rosiemodes';
+import RosiePathAction from '../containers/rosiemodes';
 
 
 export default class MainApp extends React.Component {

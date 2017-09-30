@@ -17,7 +17,9 @@ function pathMapDispatchToProps (dispatch) {
   };
 }
 
-export const RosiePathAction = connect(
+const RosiePathAction = connect(
   pathMapStateToProps,
   pathMapDispatchToProps
 )(PathActions);
+
+export default RosiePathAction;
