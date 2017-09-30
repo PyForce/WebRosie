@@ -37,7 +37,7 @@ export default class LMap extends React.Component {
       y: PropTypes.number,
       theta: PropTypes.number
     }),
-    pathClear: PropTypes.func,
+    pathClear: PropTypes.bool,
     selected: PropTypes.number,
   }
 
