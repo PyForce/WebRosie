@@ -1,8 +1,10 @@
-import request from 'superagent';
+import axios from 'axios';
 
 
 // robot class with rosie API
 export default class Robot {
+  static _respTransform = (response) => response.data;
+
   constructor (host, port, name = '') {
     this.host = host;
     this.port = port;
@@ -14,6 +16,10 @@ export default class Robot {
     catch (ReferenceError) {
       // no WebSocket
     }
+
+    this.axios = axios.create({
+      baseURL: `http://${this.host}:${this.port}/`
+    });
   }
 
   // API
@@ -93,18 +99,11 @@ export default class Robot {
   }
 
   get (route, param) {
-    const url = `http://${this.host}:${this.port}/${route}${param ? `/${param}` : ''}`;
-
-    return request.get(url)
-      .accept('json')
-      .then((response) => response.body);
+    return this.axios.get(`/${route}${param ? `/${param}`: ''}`)
+      .then(Robot._respTransform);
   }
 
-  post (route, param) {
-    return request.post(`http://${this.host}:${this.port}/${route}`)
-        .type('json')
-        .accept('json')
-        .send(param)
-        .then((response) => response.body);
+  post (route, data) {
+    return this.axios.post(`/${route}`, data).then(Robot._respTransform);
   }
 }

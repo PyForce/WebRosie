@@ -6,9 +6,9 @@
   "scripts": {
     "lint": "eslint --fix --ext='[.js, .jsx]' src/js",
     "test": "mocha --compilers js:babel-register --recursive 'test/**/*.js*'",
-    "watch": "webpack --progress -w",
+    "watch": "go-bindata -debug public/... && webpack --progress -w",
     "build": "webpack --config webpack.config.prod.js --progress && go generate && go build",
-    "build:dev": "webpack --progress && go-bindata -debug && go build",
+    "build:dev": "webpack --progress && go-bindata -debug public/... && go build",
     "build:assets": "webpack"
   },
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",
@@ -65,7 +65,6 @@
     "react-tap-event-plugin": "^3.0.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "superagent": "^3.6.1",
     "webpack": "^3.6.0"
   },
   "browserslist": [
