@@ -91,7 +91,7 @@ export default class SettingsModal extends React.Component {
                 }}
               />
               {/* use planner?*/}
-              <FormsyToggle label='Use planner for target reach' style={{marginTop: '2%'}}
+              <FormsyToggle label='Use planner for target reach'
                 name='single.planner' value={settings.single.planner}
               />
               {/* interpolation*/}
