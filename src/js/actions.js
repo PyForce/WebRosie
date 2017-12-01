@@ -1,18 +1,19 @@
 // actions generators to use with store.dispatch(...)
+import Robot from './robot';
 
 export const ADD_ROBOT = 1;
 export const RM_ROBOT = 2;
 export const MOVE_ROBOT = 3;
 export const SELECT_ROBOT = 4;
 export const UPDATE_MAP = 5;
-export const GOTO_ROBOT = 6;
+// export const GOTO_ROBOT = 6;
 export const ORDER_MODE = 7;
 export const PATH_MODE = 8;
 export const USER_MODE = 9;
 export const COMMAND_ROBOT = 10;
 export const PRESS_KEY = 11;
 export const RELEASE_KEY = 12;
-export const PATH_ROBOT = 13;
+// export const PATH_ROBOT = 13;
 export const NOTIFY_REPORT = 14;
 export const JOYSTICK_MOVE = 15;
 export const SINGLE_MODE = 16;
@@ -50,13 +51,26 @@ function robotRequest (id, preaction, callback = Promise.resolve) {
 }
 
 
-export function addRobot (host = document.domain, port = location.port) {
-  return {
-    type: ADD_ROBOT,
-    params: [
-      host,
-      port
-    ]
+export function addRobot (host, port, name = '') {
+  return (dispatch) => {
+    const robot = new Robot(host, port, name);
+    const data = { type: ADD_ROBOT, robot };
+
+    // fill robot info before updating state
+    return robot.metadata().then(info => {
+      if (!name) {
+        robot.name = info.name;
+      }
+
+      const { video } = info;
+      if (video && video.startsWith(':')) {
+        robot.video = `http://${robot.host}${video}`;
+        return;
+      }
+      robot.video = video;
+
+      dispatch(data);
+    });
   };
 }
 
@@ -68,7 +82,7 @@ export function moveRobot (id, pos) {
   return { type: MOVE_ROBOT, id: id, position: pos };
 }
 
-export function selectRobot (id = -1) {
+export function selectRobot (id = null) {
   return { type: SELECT_ROBOT, id: id };
 }
 

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import MainApp from '../components/mainapp';
-import { addRobot, pressKey, releaseKey, updateMap, clearReport } from '../actions';
+import { addRobot, pressKey, releaseKey, updateMap, clearReport, selectRobot } from '../actions';
 
 
 function mapStateToProps (state) {
@@ -13,8 +13,9 @@ function mapStateToProps (state) {
     joystickShow: state.settings.user.joystick,
     report: state.report || { text: '', level: 'info' },
     notification: Boolean(state.report),
-    selected: selected !== -1,
-    hasCamera: robotInfo ? Boolean(robotInfo.robot.video) : false
+    selected: selected !== null,
+    hasCamera: robotInfo ? Boolean(robotInfo.robot.video) : false,
+    robots: state.robots
   };
 }
 
@@ -24,7 +25,8 @@ function mapDispatchToProps (dispatch) {
     keyDown: (key) => dispatch(pressKey(key)),
     keyUp: (key) => dispatch(releaseKey(key)),
     loadMap: (map) => dispatch(updateMap(map)),
-    handleClearReport: () => dispatch(clearReport())
+    handleClearReport: () => dispatch(clearReport()),
+    selectRobot: (id) => dispatch(selectRobot(id))
   };
 }
 

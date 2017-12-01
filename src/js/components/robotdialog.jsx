@@ -1,19 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
 
 export default class AddRobotDialog extends React.Component {
+  static propTypes = {
+    onRequestClose: PropTypes.func
+  }
+
   state = {
-    robotHost: document.domain,
-    robotPort: 5000
+    robotHost: '',
+    robotPort: ''
   }
 
   handleAccept = () => {
     this.props.onRequestClose(true,
       this.state.robotHost,
-      this.state.robotPort
+      this.state.robotPort || 80
     );
   }
 
@@ -31,7 +36,7 @@ export default class AddRobotDialog extends React.Component {
 
   render () {
     const actions = [
-      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+      <FlatButton key={0} label='Cancel' onTouchTap={this.handleCancel}
         primary
       />,
       <FlatButton disabled={!(this.state.robotHost && this.state.robotPort)} key={1} label='Accept'
@@ -49,7 +54,7 @@ export default class AddRobotDialog extends React.Component {
           style={{ float: 'left', width: '70%' }} value={this.state.robotHost}
         />
 
-        <TextField floatingLabelText='Rosie WebHUD port' hintText='500, 5679'
+        <TextField floatingLabelText='Rosie WebHUD port' hintText='5000, 8080'
           onChange={this.handlePortChange} style={{ float: 'left', width: '30%' }}
           type='number' value={this.state.robotPort}
         />

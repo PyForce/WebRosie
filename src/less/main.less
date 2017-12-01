@@ -1,5 +1,4 @@
 @import 'normalize.less/normalize.less';
-@import (inline) 'leaflet/dist/leaflet.css';
 
 
 body {
@@ -9,7 +8,6 @@ body {
 .flex {
   display: flex;
   justify-content: center;
-  align-items: center;
 
   &, &.column {
     flex-direction: column;
@@ -25,6 +23,10 @@ body {
   }
   &.start {
     align-items: flex-start;
+  }
+
+  &.align {
+    align-items: center;
   }
 
   & > .grow {

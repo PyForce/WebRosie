@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import PathIcon from 'material-ui/svg-icons/communication/swap-calls';
@@ -8,37 +9,49 @@ import CommandIcon from 'material-ui/svg-icons/content/send';
 
 
 export default class Bar extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object
+  }
+
+  static propTypes = {
+    selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    single: PropTypes.bool,
+    user: PropTypes.bool,
+    path: PropTypes.bool,
+    order: PropTypes.bool,
+    singleMode: PropTypes.func,
+    pathMode: PropTypes.func,
+    userMode: PropTypes.func,
+    orderMode: PropTypes.func,
+  }
+
   render () {
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     const { selected, single, user, path, order,
-      singleMode, pathMode, userMode, orderMode, dispatch, // eslint-disable-line no-unused-vars
+      singleMode, pathMode, userMode, orderMode,
       ...other } = this.props;
 
-    const setMode = (mode, value) => {
-      return () => this.props[`${mode}Mode`](value);
-    };
-
     let icons;
-    if (selected >= 0) {
+    if (selected) {
       icons = (
         <div>
-          <IconButton onTouchTap={setMode('single', !single)} tooltip='Single Point Mode'>
+          <IconButton onTouchTap={() => singleMode(!single)} tooltip='Single Point Mode'>
             <SingleIcon color={single ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('path', !path)} tooltip='Path Mode'>
+          <IconButton onTouchTap={() => pathMode(!path)} tooltip='Path Mode'>
             <PathIcon color={path ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('user', !user)} tooltip='User Mode'>
+          <IconButton onTouchTap={() => userMode(!user)} tooltip='User Mode'>
             <UserIcon color={user ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />
           </IconButton>
-          <IconButton onTouchTap={setMode('order', !order)} tooltip='Command Mode'>
+          <IconButton onTouchTap={() => orderMode(!order)} tooltip='Command Mode'>
             <CommandIcon color={order ? muiTheme.baseTheme.palette.accent1Color :
               muiTheme.appBar.textColor}
             />

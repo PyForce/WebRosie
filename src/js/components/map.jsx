@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import L from 'leaflet';
 
 import draw from '../map/map';
@@ -6,6 +7,41 @@ import RobotOverlay from '../map/robot';
 
 
 export default class LMap extends React.Component {
+  static contextTypes = {
+    muiTheme: PropTypes.object,
+    store: PropTypes.object
+  }
+
+  static propTypes = {
+    mode: PropTypes.shape({
+      single: PropTypes.bool,
+      path: PropTypes.bool,
+      user: PropTypes.bool,
+      order: PropTypes.bool
+    }),
+    modeOff: PropTypes.func,
+    selectRobot: PropTypes.func,
+    robotGoto: PropTypes.func,
+    addPoint: PropTypes.func,
+    moveRobot: PropTypes.func,
+    notify: PropTypes.func,
+    removeRobot: PropTypes.func,
+    robot: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      robot: PropTypes.object
+    }),
+    map: PropTypes.object,
+    path: PropTypes.array,
+    move: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      x: PropTypes.number,
+      y: PropTypes.number,
+      theta: PropTypes.number
+    }),
+    pathClear: PropTypes.bool,
+    selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }
+
   componentDidMount () {
     this.map = L.map('map', {
       crs: L.CRS.Simple,
@@ -13,7 +49,7 @@ export default class LMap extends React.Component {
       zoomControl: false
     }).setView([ 0, 0 ], 9);
 
-    const muiTheme = this._reactInternalInstance._context.muiTheme;
+    const muiTheme = this.context.muiTheme;
 
     this.marker = L.circleMarker([ 0, 0 ], {
       color: muiTheme.palette.accent1Color
@@ -59,7 +95,7 @@ export default class LMap extends React.Component {
       this.realPath.setLatLngs([]);
     }
     else if (path !== this.props.path) {
-      const store = this._reactInternalInstance._context.store;
+      const store = this.context.store;
       const overlay = store.getState().robots.find((elem) => elem.id === selected).robot.overlay;
 
       const latlngs = path.map((elem) => [ elem[1], elem[0] ]);
@@ -98,13 +134,13 @@ export default class LMap extends React.Component {
             nonBubblingEvents: [ 'click' ]
           });
         // put the leaflet overlay into the map
-        obj.overlay.addTo(this.map)
-          .on('click', () => {
-            // set this robot as selected on overlay click
-            this.props.selectRobot(id);
-            // don't propagate event
-            return false;
-          });
+        obj.overlay.addTo(this.map).on('click', () => {
+          // set this robot as selected on overlay click
+          this.props.selectRobot(id);
+          // don't propagate event
+          return false;
+          // event.originalEvent.preventDefault();
+        });
 
         // move to the initial position
         obj.odometry().then((pos) => {
@@ -121,7 +157,7 @@ export default class LMap extends React.Component {
 
     // draw the new map
     if (map !== this.props.map) {
-      const { palette } = this._reactInternalInstance._context.muiTheme;
+      const { palette } = this.context.muiTheme;
 
       draw(map, this.map, {
         borders: { color: palette.disabledColor },
@@ -138,13 +174,16 @@ export default class LMap extends React.Component {
   }
 
   updateRobotPos = (move) => {
-    const store = this._reactInternalInstance._context.store;
+    const store = this.context.store;
     const { robots, robot } = store.getState();
 
     const overlay = robots.find((elem) => elem.id === move.id)
       .robot.overlay;
-    overlay.pos = move;
-    overlay.angle = move.theta;
+    // check if this is a 'select' move
+    if ('x' in move && 'y' in move && 'theta' in move) {
+      overlay.pos = move;
+      overlay.angle = move.theta;
+    }
 
     if (move.id !== robot) {
       return;

@@ -1,22 +1,14 @@
 // state reducers for the store
 import * as actions from './actions';
-import Robot from './robot';
 
 
 // handles the displayed robots
 export function robots (state = [], action) {
+  const { robot: obj } = action;
   switch (action.type) {
     // add a robot
   case actions.ADD_ROBOT:
-    const last = state[state.length - 1];
-    const id = last ? last.id + 1 : 0;
-    return [
-      ...state,
-      {
-        id: id,
-        robot: new Robot(...action.params)
-      }
-    ];
+    return [ ...state, { id: obj.name, robot: obj }];
     // remove a robot
   case actions.RM_ROBOT:
     return state.filter((elem) => elem.id !== action.id);
@@ -27,7 +19,7 @@ export function robots (state = [], action) {
 
 
 // handles the selected robot
-export function robot (state = -1, action) {
+export function robot (state = null, action) {
   switch (action.type) {
     // update selected robot index
   case actions.SELECT_ROBOT:
@@ -101,9 +93,10 @@ export function mode (state = { order: false, single: false, path: false, user: 
       user: true
     };
   case actions.SELECT_ROBOT:
-    if (action.id < 0) {
+    if (!action.id) {
       return { order: false, path: false, user: false };
     }
+    return state;
   default:
     return state;
   }
@@ -153,6 +146,8 @@ export function move (state = null, action) {
       y: action.position.y,
       theta: action.position.theta
     };
+  case actions.SELECT_ROBOT:
+    return !action.id ? state : { id: action.id };
   default:
     return null;
   }

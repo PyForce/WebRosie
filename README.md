@@ -1,30 +1,42 @@
 # WebRosie
 
-Front-end for the [rosie](https://github.com/PyForce/rosie) web module
+Front-end for the [rosie](https://github.com/PyForce/rosie) module.
 
-## Building individual pieces
+This application represents the visual interaction with the [rosie](https://github.com/PyForce/rosie) module. It provides a way of controlling multiple rosie running robots in a user friendly way.
 
-There are some npm scripts to make working with the JavaScript app nicer.
-These include compiling the app:
+## Features
+
+- Simple user interface
+
+    The user interface is designed to be simple, full featured and easily extensible, it uses [React](https://facebook.github.io/react/), [Material-UI](http://www.material-ui.com/) and [Redux](https://github.com/reactjs/redux.git) to achieve this funtionality.
+
+    <img src="./capture.png" width="100%"/>
+
+- Touch support
+
+    The page uses [nipplejs](https://github.com/yoannmoinet/nipplejs.git) to provide user control over the robot in touch devices.
+
+    <img src="./capture_mobile.png" width="80%"/>
+
+- Single packaged binary
+
+    The server of the application is implemented in [Go](https://golang.org), so you just need to run a single binary file.
+
+## Build
+
+This application uses go to serve the static files and also to autodiscover [rosie](https://github.com/PyForce/rosie). All the files needed can be packaged into a single binary file. In order to build the server run:
 
 ```
-npm run compile
+$ npm run build
 ```
 
-setting up watch-servers to re-compile the JS/CSS when you save changes:
+This runs webpack with the production configuration (`webpack.config.prod.js`), which creates all the static files, and then builds the go application.
+
+Alternatively, you can build a development version, this doesn't package the static files, instead, it loads them from disk:
 
 ```
-npm run watch
+$ npm run build:dev
 ```
-
-building the production version of the app:
-
-```
-npm run prod
-```
-
-Under the hood, these are just aliases for gulp tasks, so pop open `gulpfile.js`
-if you want to see what's going on.
 
 ## Running tests
 
@@ -32,14 +44,14 @@ To run the tests, use the following command. It runs the Mocha
 test-suite for the JavaScript app.
 
 ```
-npm run test
+$ npm run test
 ```
 
 You can also run the JavaScript tests in watch mode by passing an additional
 flag into the npm `run-script` command.
 
 ```
-npm run test -- -w
+$ npm run test -- -w
 ```
 
 This enables that TDD sweetness, allowing you to focus on feeding the

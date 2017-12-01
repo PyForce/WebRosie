@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { Table, TableRow, TableHeader, TableHeaderColumn, TableBody,
@@ -6,10 +7,15 @@ import { Table, TableRow, TableHeader, TableHeaderColumn, TableBody,
 
 
 export default class MapDialog extends React.Component {
+  static propTypes = {
+    open: PropTypes.bool,
+    robots: PropTypes.array,
+    onRequestClose: PropTypes.func
+  }
+
   state = {
     maps: [],
-    any: false,
-    map: undefined
+    selectedMap: null,
   }
 
   componentWillReceiveProps (nextProps) {
@@ -42,7 +48,11 @@ export default class MapDialog extends React.Component {
   }
 
   handleAccept = () => {
-    this.props.onRequestClose(true, this.state.map);
+    const selected = this.state.maps[this.state.selectedMap - 1];
+    // get the map owner
+    const { robot } = this.props.robots.find((r) => r.id === selected.id);
+    // get the map info
+    robot.map(selected.name).then((map) => this.props.onRequestClose(true, map));
   }
 
   handleCancel = () => {
@@ -50,33 +60,24 @@ export default class MapDialog extends React.Component {
   }
 
   handleSelection = (selection) => {
-    const any = selection.length > 0;
-    if (any) {
-      // get the map info
-      const { name, id } = this.state.maps[selection[0]];
-      // get the map owner
-      const { robot } = this.props.robots[id];
-      robot.map(name)
-        .then((map) => {
-          this.setState({ map: map });
-        });
-    }
-    this.setState({ any: any });
+    this.setState({ selectedMap: selection.length > 0 && selection[0] + 1 });
   }
 
   render () {
     const { robots, ...other } = this.props;  // eslint-disable-line no-unused-vars
+    let {selectedMap} = this.state;
     const actions = [
-      <FlatButton key={0} keyboardFocused label='Cancel' onTouchTap={this.handleCancel}
+      <FlatButton key={0} label='Cancel' onTouchTap={this.handleCancel}
         primary
       />,
-      <FlatButton disabled={!this.state.any} key={1} label='Accept' onTouchTap={this.handleAccept}
+      <FlatButton disabled={!selectedMap} key={1} label='Accept' onTouchTap={this.handleAccept}
         primary
       />,
     ];
 
+    selectedMap--;
     const rows = this.state.maps.map((elem, index) => (
-      <TableRow key={index}>
+      <TableRow key={index} selected={index === selectedMap}>
         <TableRowColumn>{elem.name}</TableRowColumn>
         <TableRowColumn>{elem.robot}</TableRowColumn>
         <TableRowColumn>{elem.robotaddr}</TableRowColumn>
