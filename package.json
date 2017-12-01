@@ -1,6 +1,6 @@
 {
   "name": "webrosie",
-  "version": "0.2.7",
+  "version": "1.0",
   "description": "Front-end for rosie web module",
   "main": "src/js/main.js",
   "scripts": {
