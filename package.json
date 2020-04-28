@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "autoprefixer": "^7.1.4",
-    "axios": "^0.16.2",
+    "axios": "^0.18.1",
     "babel-core": "^6.9.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
