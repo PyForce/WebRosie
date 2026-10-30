@@ -28,5 +28,5 @@ export function Joystick() {
     return () => manager.destroy();
   }, [dispatch]);
 
-  return <div className="joystick" ref={zone} />;
+  return <div className="joystick-zone" ref={zone} />;
 }
