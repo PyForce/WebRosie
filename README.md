@@ -18,25 +18,15 @@ This application represents the visual interaction with the [rosie](https://gith
 
     <img src="./capture_mobile.png" width="80%"/>
 
-- Single packaged binary
-
-    The server of the application is implemented in [Go](https://golang.org), so you just need to run a single binary file.
-
 ## Build
-
-This application uses go to serve the static files and also to autodiscover [rosie](https://github.com/PyForce/rosie). All the files needed can be packaged into a single binary file. In order to build the server run:
 
 ```
 $ npm run build
 ```
 
-This runs webpack with the production configuration (`webpack.config.prod.js`), which creates all the static files, and then builds the go application.
-
-Alternatively, you can build a development version, this doesn't package the static files, instead, it loads them from disk:
-
-```
-$ npm run build:dev
-```
+This runs webpack with the production configuration (`webpack.config.prod.js`) and writes the static files to
+`public/`, ready to be served by any web server. Robots are added by hand (menu → Add robot: host and port of
+their rosie).
 
 ## Running tests
 
