@@ -74,8 +74,5 @@ jspm_packages
 
 
 # build files
-public/
-build/
-bindata.go
-webrosie
+dist/
 

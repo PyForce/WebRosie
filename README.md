@@ -8,7 +8,7 @@ This application represents the visual interaction with the [rosie](https://gith
 
 - Simple user interface
 
-    The user interface is designed to be simple, full featured and easily extensible, it uses [React](https://facebook.github.io/react/), [Material-UI](http://www.material-ui.com/) and [Redux](https://github.com/reactjs/redux.git) to achieve this funtionality.
+    The user interface is designed to be simple, full featured and easily extensible, it uses [React](https://react.dev), [MUI](https://mui.com) and [Redux Toolkit](https://redux-toolkit.js.org) to achieve this functionality.
 
     <img src="./capture.png" width="100%"/>
 
@@ -20,31 +20,21 @@ This application represents the visual interaction with the [rosie](https://gith
 
 ## Build
 
+With Node 24 LTS:
+
 ```
+$ npm ci
 $ npm run build
 ```
 
-This runs webpack with the production configuration (`webpack.config.prod.js`) and writes the static files to
-`public/`, ready to be served by any web server. Robots are added by hand (menu → Add robot: host and port of
-their rosie).
+The static files land in `dist/`, ready to be served by any web server (rosie serves them next to its API).
+Robots are added by hand: menu → Add robot, with the host and port of their rosie.
 
-## Running tests
+While working on it, `npm run dev` serves the app with live reload.
 
-To run the tests, use the following command. It runs the Mocha
-test-suite for the JavaScript app.
+## Checks
 
 ```
-$ npm run test
+$ npm run lint    # ESLint
+$ npm test        # Vitest
 ```
-
-You can also run the JavaScript tests in watch mode by passing an additional
-flag into the npm `run-script` command.
-
-```
-$ npm run test -- -w
-```
-
-This enables that TDD sweetness, allowing you to focus on feeding the
-red-to-green beast.
-
-
