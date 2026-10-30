@@ -118,6 +118,15 @@ export function RobotMap({ onReady }: Props) {
     }
   }, [robots, selected, dispatch]);
 
+  // a robot selected out of view comes into view
+  useEffect(() => {
+    const leaflet = map.current;
+    const marker = selected ? markers.current.get(selected) : undefined;
+    if (leaflet && marker?.placed && !leaflet.getBounds().contains(marker.latlng)) {
+      leaflet.panTo(marker.latlng);
+    }
+  }, [selected]);
+
   // the path being drawn starts at the selected robot
   useEffect(() => {
     if (!layers.current) {
