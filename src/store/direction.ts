@@ -9,8 +9,8 @@ export const KEYS: Record<string, Direction> = {
   KeyS: [0, -1, 0], // throttle backward
   KeyD: [1, 0, 0], // steer right
   KeyA: [-1, 0, 0], // steer left
-  KeyE: [0, 0, 1], // turn left on the spot
-  KeyQ: [0, 0, -1], // turn right on the spot
+  KeyE: [0, 0, 1], // turn right on the spot
+  KeyQ: [0, 0, -1], // turn left on the spot
 };
 
 const STOP: Direction = [0, 0, 0];
