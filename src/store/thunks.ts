@@ -36,6 +36,23 @@ export function addRobot(host: string, port: number): AppThunk<Promise<void>> {
   };
 }
 
+// A page served by a rosie (its Docker image) starts with that robot.
+export function addServingRobot(): AppThunk<Promise<void>> {
+  return async (dispatch, getState) => {
+    const { hostname, port, protocol } = window.location;
+    const id = `${hostname}:${Number(port) || 80}`;
+    if (protocol !== "http:" || getState().robots.list.some((robot) => robot.id === id)) {
+      return;
+    }
+    const response = await fetch("/metadata").catch(() => null);
+    // a page served by anything else answers 404, or index.html
+    if (!response?.ok || !response.headers.get("content-type")?.includes("application/json")) {
+      return;
+    }
+    await dispatch(addRobot(hostname, Number(port) || 80));
+  };
+}
+
 export function robotGoto(x: number, y: number): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
     const { time, planner } = getState().settings.single;

@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../store";
 import { selectRobot } from "../store/robots";
-import { addRobot, keyDown, keyUp, loadMap } from "../store/thunks";
+import { addRobot, addServingRobot, keyDown, keyUp, loadMap } from "../store/thunks";
 import { Camera } from "./Camera";
 import { Joystick } from "./Joystick";
 import { MapDialog } from "./MapDialog";
@@ -41,6 +41,10 @@ export function App() {
   const [zoom, setZoom] = useState({ in: true, out: true });
 
   const showJoystick = joystickSetting !== "none" && (TOUCH || joystickSetting === "always");
+
+  useEffect(() => {
+    void dispatch(addServingRobot());
+  }, [dispatch]);
 
   // the keyboard drives in user mode, unless the joystick does
   useEffect(() => {
