@@ -21,6 +21,7 @@ export function addRobot(host: string, port: number): AppThunk<Promise<void>> {
           host,
           port,
           video: videoUrl(host, info.video),
+          thumbnail: rosie.url(info.thumbnail),
           vector: rosie.url(info.vector),
           size: info.size,
           position: null,

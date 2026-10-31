@@ -8,7 +8,8 @@ export interface RobotInfo {
   host: string;
   port: number;
   video: string | null; // full URL of the robot's video stream, if any
-  vector: string; // URL of the robot's icon
+  thumbnail: string; // URL of the robot's picture
+  vector: string; // URL of the robot's icon, drawn on the map
   size: [number, number, number]; // length, width, height (m)
   position: Position | null;
 }

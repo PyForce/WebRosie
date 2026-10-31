@@ -5,7 +5,17 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import { Divider, Drawer, Fab, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Avatar,
+  Divider,
+  Drawer,
+  Fab,
+  List,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import type L from "leaflet";
 import { useCallback, useEffect, useState } from "react";
 
@@ -108,6 +118,15 @@ export function App() {
                 setDrawer(false);
               }}
             >
+              <ListItemAvatar>
+                <Avatar
+                  variant="rounded"
+                  src={robot.thumbnail}
+                  alt=""
+                  slotProps={{ img: { style: { objectFit: "contain" } } }}
+                  sx={{ bgcolor: "transparent" }}
+                />
+              </ListItemAvatar>
               <ListItemText primary={robot.name} secondary={robot.id} />
             </ListItemButton>
           ))}

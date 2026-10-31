@@ -8,6 +8,7 @@ const simubot: RobotInfo = {
   host: "localhost",
   port: 5000,
   video: null,
+  thumbnail: "http://localhost:5000/thumbnail",
   vector: "http://localhost:5000/vector",
   size: [0.2, 0.42, 0],
   position: null,
