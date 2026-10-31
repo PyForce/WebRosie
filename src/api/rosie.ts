@@ -15,12 +15,17 @@ export interface Metadata {
   profile: string;
 }
 
-export interface WorldMap {
-  name: string;
-  rooms: Record<string, Record<string, GeoJSON.GeoJsonObject | Record<string, GeoJSON.GeoJsonObject>>>;
+// one feature per room, wall, door and obstacle, told apart by their kind
+export interface MapFeatureProperties {
+  kind: "room" | "wall" | "door" | "obstacle";
+  name?: string;
+  room?: string;
 }
 
-// steer, throttle, rotation: each in [-1, 1]
+// a rosie map: a GeoJSON FeatureCollection with a name
+export type WorldMap = GeoJSON.FeatureCollection<GeoJSON.Geometry, MapFeatureProperties> & { name: string };
+
+// steering, throttle, spin: each in [-1, 1]
 export type Direction = [number, number, number];
 
 export class RosieError extends Error {}

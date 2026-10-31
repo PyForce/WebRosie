@@ -1,32 +1,30 @@
 import L from "leaflet";
 
-import type { WorldMap } from "../api/rosie";
+import type { MapFeatureProperties, WorldMap } from "../api/rosie";
 import { colors } from "../theme";
 
-const STYLES: Record<string, L.PathOptions> = {
-  walls: { color: colors.text, weight: 5, opacity: 0.8 },
-  doors: { color: colors.primary, weight: 10, opacity: 0.75 },
-  items: { color: colors.accent, weight: 1, opacity: 0.75 },
+const STYLES: Record<Exclude<MapFeatureProperties["kind"], "room">, L.PathOptions> = {
+  wall: { color: colors.text, weight: 5, opacity: 0.8 },
+  door: { color: colors.primary, weight: 10, opacity: 0.75 },
+  obstacle: { color: colors.accent, weight: 1, opacity: 0.75 },
 };
 
-// draws the rooms (shaded in turn), their walls, doors and items; returns the drawing
+// the rooms take these shades in turn, so neighbours stand apart
+const SHADES = [0.25, 0.5, 0.75];
+
+// draws the rooms, their walls, doors and obstacles; returns the drawing
 export function drawMap(world: WorldMap): L.LayerGroup {
+  const rooms = world.features.filter((feature) => feature.properties.kind === "room");
   const layers = L.layerGroup();
-  let shade = 0.25;
-  for (const room of Object.values(world.rooms)) {
-    for (const [element, value] of Object.entries(room)) {
-      if (element === "borders") {
-        const style = { color: colors.disabled, fillOpacity: shade, weight: 0 };
-        L.geoJSON(value as GeoJSON.GeoJsonObject, { style }).addTo(layers);
-        shade = shade + 0.25 > 0.8 ? 0.25 : shade + 0.25;
-      } else if (element === "items") {
-        for (const item of Object.values(value as Record<string, GeoJSON.GeoJsonObject>)) {
-          L.geoJSON(item, { style: STYLES.items }).addTo(layers);
-        }
-      } else {
-        L.geoJSON(value as GeoJSON.GeoJsonObject, { style: STYLES[element] }).addTo(layers);
+  L.geoJSON(world, {
+    style: (feature) => {
+      const properties = feature?.properties as MapFeatureProperties;
+      if (properties.kind === "room") {
+        const shade = SHADES[rooms.indexOf(feature as (typeof rooms)[number]) % SHADES.length];
+        return { color: colors.disabled, fillOpacity: shade, weight: 0 };
       }
-    }
-  }
+      return STYLES[properties.kind];
+    },
+  }).addTo(layers);
   return layers;
 }
