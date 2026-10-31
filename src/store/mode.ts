@@ -2,10 +2,10 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import { selectRobot } from "./robots";
 
-export type ModeName = "single" | "path" | "user" | "order";
+export type ModeName = "single" | "path" | "manual" | "order";
 export type ModeState = Record<ModeName, boolean>;
 
-const NONE: ModeState = { single: false, path: false, user: false, order: false };
+const NONE: ModeState = { single: false, path: false, manual: false, order: false };
 
 // one mode at a time: turning one on turns the others off
 export const modeSlice = createSlice({

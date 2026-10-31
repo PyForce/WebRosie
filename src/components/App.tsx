@@ -32,7 +32,7 @@ export function App() {
   const robots = useAppSelector((state) => state.robots.list);
   const selected = useAppSelector((state) => state.robots.list.find((robot) => robot.id === state.robots.selected));
   const mode = useAppSelector((state) => state.mode);
-  const joystickSetting = useAppSelector((state) => state.settings.user.joystick);
+  const joystickSetting = useAppSelector((state) => state.settings.manual.joystick);
 
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<Dialog>(null);
@@ -46,9 +46,9 @@ export function App() {
     void dispatch(addServingRobot());
   }, [dispatch]);
 
-  // the keyboard drives in user mode, unless the joystick does
+  // the keyboard drives in manual mode, unless the joystick does
   useEffect(() => {
-    if (TOUCH || joystickSetting === "always" || !mode.user) {
+    if (TOUCH || joystickSetting === "always" || !mode.manual) {
       return;
     }
     const down = (event: KeyboardEvent) => !event.repeat && dispatch(keyDown(event.code));
@@ -59,7 +59,7 @@ export function App() {
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
-  }, [dispatch, joystickSetting, mode.user]);
+  }, [dispatch, joystickSetting, mode.manual]);
 
   const onMapReady = useCallback((leaflet: L.Map) => {
     const update = () => setZoom({ in: leaflet.getZoom() < leaflet.getMaxZoom(), out: leaflet.getZoom() > leaflet.getMinZoom() });
@@ -132,7 +132,7 @@ export function App() {
       <TopBar onMenu={() => setDrawer(!drawer)} />
       <RobotMap onReady={onMapReady} />
 
-      {mode.user && showJoystick && <Joystick />}
+      {mode.manual && showJoystick && <Joystick />}
       {mode.path && <PathActions />}
       {camera && selected?.video && <Camera url={selected.video} />}
 

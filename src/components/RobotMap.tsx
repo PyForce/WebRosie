@@ -52,8 +52,8 @@ export function RobotMap({ onReady }: Props) {
       } else if (current.path) {
         dispatch(addPathPoint([x, y]));
       } else {
-        // back to automatic, and deselect
-        dispatch(changeMode("user", false));
+        // back to planned movements, and deselect
+        dispatch(changeMode("manual", false));
         dispatch(selectRobot(null));
       }
     });

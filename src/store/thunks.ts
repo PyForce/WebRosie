@@ -67,11 +67,11 @@ export function robotFollow(): AppThunk<Promise<void>> {
   };
 }
 
-// user mode puts rosie under manual control; every other mode (on or off) back to automatic
+// manual mode puts rosie under manual control; every other mode (on or off) back to planned movements
 export function changeMode(mode: ModeName, value: boolean): AppThunk<Promise<void>> {
   return (dispatch, getState) =>
     withSelected(dispatch, getState, async (rosie) => {
-      await (mode === "user" && value ? rosie.manual() : rosie.auto());
+      await (mode === "manual" && value ? rosie.manual() : rosie.planned());
       dispatch(setMode({ mode, value }));
       dispatch(clearPath());
     });

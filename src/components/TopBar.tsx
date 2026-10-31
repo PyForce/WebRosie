@@ -14,7 +14,7 @@ import { colors } from "../theme";
 const MODES: [ModeName, string, ReactNode][] = [
   ["single", "Single Point Mode", <AdjustIcon key="single" />],
   ["path", "Path Mode", <SwapCallsIcon key="path" />],
-  ["user", "User Mode", <OpenWithIcon key="user" />],
+  ["manual", "Manual Mode", <OpenWithIcon key="manual" />],
   ["order", "Command Mode", <SendIcon key="order" />],
 ];
 

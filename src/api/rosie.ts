@@ -89,11 +89,11 @@ export class Rosie {
   }
 
   manual(): Promise<void> {
-    return this.post("/manual_mode", null);
+    return this.post("/manual", null);
   }
 
-  auto(): Promise<void> {
-    return this.post("/auto_mode", null);
+  planned(): Promise<void> {
+    return this.post("/planned", null);
   }
 
   private async get<T>(path: string): Promise<T> {

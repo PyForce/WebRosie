@@ -10,9 +10,9 @@ describe("store", () => {
     );
   });
 
-  it("turns user mode on", () => {
+  it("turns manual mode on", () => {
     const store = makeStore();
-    store.dispatch(setMode({ mode: "user", value: true }));
-    expect(store.getState().mode.user).toBe(true);
+    store.dispatch(setMode({ mode: "manual", value: true }));
+    expect(store.getState().mode.manual).toBe(true);
   });
 });

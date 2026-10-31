@@ -6,7 +6,7 @@ describe("settings", () => {
   const initial = settingsSlice.reducer(undefined, { type: "init" });
 
   it("starts with 5 s gotos, 2 s per path point and the joystick on touch screens", () => {
-    expect(initial).toEqual({ single: { time: 5, planner: false }, path: { delay: 2 }, user: { joystick: "touch" } });
+    expect(initial).toEqual({ single: { time: 5, planner: false }, path: { delay: 2 }, manual: { joystick: "touch" } });
   });
 
   it("changes only the given groups", () => {

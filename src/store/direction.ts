@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Direction } from "../api/rosie";
 import { setMode } from "./mode";
 
-// keys of user mode, by KeyboardEvent.code (the physical key, whatever the layout)
+// keys of manual mode, by KeyboardEvent.code (the physical key, whatever the layout)
 export const KEYS: Record<string, Direction> = {
   KeyW: [0, 1, 0], // throttle forward
   KeyS: [0, -1, 0], // throttle backward

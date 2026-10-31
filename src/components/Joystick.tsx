@@ -5,7 +5,7 @@ import { useAppDispatch } from "../store";
 import { joystick } from "../store/thunks";
 import { colors } from "../theme";
 
-// on-screen joystick for user mode on touch screens
+// on-screen joystick for manual mode on touch screens
 export function Joystick() {
   const dispatch = useAppDispatch();
   const zone = useRef<HTMLDivElement>(null);

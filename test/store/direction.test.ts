@@ -44,6 +44,6 @@ describe("direction", () => {
   });
 
   it("stops when the mode changes", () => {
-    expect(reduce([1, 1, 0], setMode({ mode: "user", value: false }))).toEqual([0, 0, 0]);
+    expect(reduce([1, 1, 0], setMode({ mode: "manual", value: false }))).toEqual([0, 0, 0]);
   });
 });

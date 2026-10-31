@@ -42,7 +42,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
   const [time, setTime] = useState(String(settings.single.time));
   const [planner, setPlanner] = useState(settings.single.planner);
   const [delay, setDelay] = useState(String(settings.path.delay));
-  const [joystick, setJoystick] = useState(settings.user.joystick);
+  const [joystick, setJoystick] = useState(settings.manual.joystick);
 
   const timeError = positiveError(time);
   const delayError = positiveError(delay);
@@ -52,7 +52,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
       configOption({
         single: { time: Number(time), planner },
         path: { delay: Number(delay) },
-        user: { joystick },
+        manual: { joystick },
       }),
     );
     onClose();
@@ -72,7 +72,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
         >
           <Tab icon={<AdjustIcon />} label="single" />
           <Tab icon={<SwapCallsIcon />} label="path" />
-          <Tab icon={<OpenWithIcon />} label="user" />
+          <Tab icon={<OpenWithIcon />} label="manual" />
           <Tab icon={<SendIcon />} label="command" />
         </Tabs>
         {tab === 0 && (
@@ -115,7 +115,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
             <Select
               labelId="joystick-label"
               value={joystick}
-              onChange={(event) => setJoystick(event.target.value as Settings["user"]["joystick"])}
+              onChange={(event) => setJoystick(event.target.value as Settings["manual"]["joystick"])}
             >
               <MenuItem value="always">Always</MenuItem>
               <MenuItem value="touch">Touch Device</MenuItem>
