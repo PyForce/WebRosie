@@ -39,19 +39,19 @@ export function SettingsDialog({ open, onClose }: Props) {
 function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () => void }) {
   const dispatch = useAppDispatch();
   const [tab, setTab] = useState(0);
-  const [time, setTime] = useState(String(settings.single.time));
+  const [singleSpeed, setSingleSpeed] = useState(String(settings.single.speed));
   const [planner, setPlanner] = useState(settings.single.planner);
-  const [delay, setDelay] = useState(String(settings.path.delay));
+  const [pathSpeed, setPathSpeed] = useState(String(settings.path.speed));
   const [joystick, setJoystick] = useState(settings.manual.joystick);
 
-  const timeError = positiveError(time);
-  const delayError = positiveError(delay);
+  const singleSpeedError = positiveError(singleSpeed);
+  const pathSpeedError = positiveError(pathSpeed);
 
   const accept = () => {
     dispatch(
       configOption({
-        single: { time: Number(time), planner },
-        path: { delay: Number(delay) },
+        single: { speed: Number(singleSpeed), planner },
+        path: { speed: Number(pathSpeed) },
         manual: { joystick },
       }),
     );
@@ -78,15 +78,15 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
         {tab === 0 && (
           <>
             <TextField
-              label="Time to reach the destination"
-              placeholder="amount of seconds"
+              label="Speed to the destination"
+              placeholder="metres per second"
               variant="standard"
               margin="normal"
               fullWidth
-              value={time}
-              error={Boolean(timeError)}
-              helperText={timeError}
-              onChange={(event) => setTime(event.target.value)}
+              value={singleSpeed}
+              error={Boolean(singleSpeedError)}
+              helperText={singleSpeedError}
+              onChange={(event) => setSingleSpeed(event.target.value)}
             />
             <FormControlLabel
               control={<Switch checked={planner} onChange={(event) => setPlanner(event.target.checked)} />}
@@ -98,15 +98,15 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
         )}
         {tab === 1 && (
           <TextField
-            label="Time interval between path points"
-            placeholder="amount of seconds"
+            label="Speed along the path"
+            placeholder="metres per second"
             variant="standard"
             margin="normal"
             fullWidth
-            value={delay}
-            error={Boolean(delayError)}
-            helperText={delayError}
-            onChange={(event) => setDelay(event.target.value)}
+            value={pathSpeed}
+            error={Boolean(pathSpeedError)}
+            helperText={pathSpeedError}
+            onChange={(event) => setPathSpeed(event.target.value)}
           />
         )}
         {tab === 2 && (
@@ -126,7 +126,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button disabled={Boolean(timeError || delayError)} onClick={accept}>
+        <Button disabled={Boolean(singleSpeedError || pathSpeedError)} onClick={accept}>
           Accept
         </Button>
       </DialogActions>

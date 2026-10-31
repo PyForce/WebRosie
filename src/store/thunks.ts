@@ -55,15 +55,15 @@ export function addServingRobot(): AppThunk<Promise<void>> {
 
 export function robotGoto(x: number, y: number): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
-    const { time, planner } = getState().settings.single;
-    return withSelected(dispatch, getState, (rosie) => rosie.goto([x, y, time], planner));
+    const { speed, planner } = getState().settings.single;
+    return withSelected(dispatch, getState, (rosie) => rosie.goto([x, y], speed, planner));
   };
 }
 
 export function robotFollow(): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
     const { path, settings } = getState();
-    return withSelected(dispatch, getState, (rosie) => rosie.follow(path, settings.path.delay));
+    return withSelected(dispatch, getState, (rosie) => rosie.follow(path, settings.path.speed));
   };
 }
 

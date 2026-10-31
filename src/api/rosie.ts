@@ -85,12 +85,12 @@ export class Rosie {
     return this.post(`/map/${encodeURIComponent(name)}`, null);
   }
 
-  goto(target: [number, number, number], planner: boolean): Promise<void> {
-    return this.post("/goto", { target, planner });
+  goto(target: [number, number], speed: number, planner: boolean): Promise<void> {
+    return this.post("/goto", { target, speed, planner });
   }
 
-  follow(path: [number, number][], time: number): Promise<void> {
-    return this.post("/follow", { path, time });
+  follow(path: [number, number][], speed: number): Promise<void> {
+    return this.post("/follow", { path, speed });
   }
 
   manual(): Promise<void> {

@@ -6,12 +6,12 @@ describe("settings", () => {
   const initial = settingsSlice.reducer(undefined, { type: "init" });
 
   it("starts with 5 s gotos, 2 s per path point and the joystick on touch screens", () => {
-    expect(initial).toEqual({ single: { time: 5, planner: false }, path: { delay: 2 }, manual: { joystick: "touch" } });
+    expect(initial).toEqual({ single: { speed: 0.2, planner: false }, path: { speed: 0.2 }, manual: { joystick: "touch" } });
   });
 
   it("changes only the given groups", () => {
-    const changed = settingsSlice.reducer(initial, configOption({ single: { time: 3, planner: true } }));
-    expect(changed).toEqual({ ...initial, single: { time: 3, planner: true } });
+    const changed = settingsSlice.reducer(initial, configOption({ single: { speed: 0.5, planner: true } }));
+    expect(changed).toEqual({ ...initial, single: { speed: 0.5, planner: true } });
   });
 });
 

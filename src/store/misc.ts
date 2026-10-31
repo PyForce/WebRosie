@@ -40,16 +40,16 @@ export const reportSlice = createSlice({
 });
 
 export interface Settings {
-  single: { time: number; planner: boolean }; // s to reach the target; go around obstacles
-  path: { delay: number }; // s from one path point to the next
+  single: { speed: number; planner: boolean }; // m/s to the target; go around obstacles
+  path: { speed: number }; // m/s along the path
   manual: { joystick: "always" | "touch" | "none" }; // when to show the on-screen joystick
 }
 
 export const settingsSlice = createSlice({
   name: "settings",
   initialState: {
-    single: { time: 5, planner: false },
-    path: { delay: 2 },
+    single: { speed: 0.2, planner: false },
+    path: { speed: 0.2 },
     manual: { joystick: "touch" },
   } as Settings,
   reducers: {
