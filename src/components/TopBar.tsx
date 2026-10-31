@@ -1,7 +1,6 @@
 import AdjustIcon from "@mui/icons-material/Adjust";
 import MenuIcon from "@mui/icons-material/Menu";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
-import SendIcon from "@mui/icons-material/Send";
 import SwapCallsIcon from "@mui/icons-material/SwapCalls";
 import { AppBar, IconButton, Toolbar, Tooltip } from "@mui/material";
 import type { ReactNode } from "react";
@@ -15,7 +14,6 @@ const MODES: [ModeName, string, ReactNode][] = [
   ["single", "Single Point Mode", <AdjustIcon key="single" />],
   ["path", "Path Mode", <SwapCallsIcon key="path" />],
   ["manual", "Manual Mode", <OpenWithIcon key="manual" />],
-  ["order", "Command Mode", <SendIcon key="order" />],
 ];
 
 export function TopBar({ onMenu }: { onMenu: () => void }) {

@@ -8,7 +8,7 @@ import { setMode, type ModeName } from "./mode";
 import { addRobot as robotAdded, moveRobot, removeRobot } from "./robots";
 
 export function addRobot(host: string, port: number): AppThunk<Promise<void>> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const id = `${host}:${port}`;
     const rosie = new Rosie(host, port, (position) => dispatch(moveRobot({ id, position })));
     try {
@@ -27,6 +27,11 @@ export function addRobot(host: string, port: number): AppThunk<Promise<void>> {
         }),
       );
       dispatch(moveRobot({ id, position: await rosie.odometry() }));
+      // with no map on screen yet, show the one this robot plans on
+      const map = getState().map ? null : await rosie.currentMap().catch(() => null);
+      if (map) {
+        dispatch(updateMap(map));
+      }
     } catch {
       rosie.close();
       forget(id);
@@ -63,7 +68,8 @@ export function robotGoto(x: number, y: number): AppThunk<Promise<void>> {
 export function robotFollow(): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
     const { path, settings } = getState();
-    return withSelected(dispatch, getState, (rosie) => rosie.follow(path, settings.path.speed));
+    const { speed, planner } = settings.path;
+    return withSelected(dispatch, getState, (rosie) => rosie.follow(path, speed, planner));
   };
 }
 
@@ -113,6 +119,11 @@ export function loadMap(robotId: string, name: string): AppThunk<Promise<void>> 
       report(dispatch, error);
     }
   };
+}
+
+// plan the selected robot's next movements with this trajectory planner
+export function chooseTrajectoryPlanner(name: string): AppThunk<Promise<void>> {
+  return (dispatch, getState) => withSelected(dispatch, getState, (rosie) => rosie.useTrajectoryPlanner(name));
 }
 
 function sendDirection(getState: () => { robots: { selected: string | null }; direction: [number, number, number] }) {

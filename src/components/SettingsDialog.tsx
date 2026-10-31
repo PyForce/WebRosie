@@ -1,12 +1,13 @@
 import AdjustIcon from "@mui/icons-material/Adjust";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
-import SendIcon from "@mui/icons-material/Send";
 import SwapCallsIcon from "@mui/icons-material/SwapCalls";
+import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControl,
   FormControlLabel,
@@ -18,10 +19,12 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { connection } from "../robots";
 import { useAppDispatch, useAppSelector } from "../store";
 import { configOption, type Settings } from "../store/misc";
+import { chooseTrajectoryPlanner } from "../store/thunks";
 import { colors } from "../theme";
 import { DIALOG } from "./dialogs";
 
@@ -42,7 +45,34 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
   const [singleSpeed, setSingleSpeed] = useState(String(settings.single.speed));
   const [planner, setPlanner] = useState(settings.single.planner);
   const [pathSpeed, setPathSpeed] = useState(String(settings.path.speed));
+  const [pathPlanner, setPathPlanner] = useState(settings.path.planner);
   const [joystick, setJoystick] = useState(settings.manual.joystick);
+  // the selected robot's trajectory planners, and the one it uses: a setting of the robot, not of WebRosie
+  const selected = useAppSelector((state) => state.robots.selected);
+  const [planners, setPlanners] = useState<string[]>([]);
+  const [inUse, setInUse] = useState("");
+  const [trajectoryPlanner, setTrajectoryPlanner] = useState("");
+
+  useEffect(() => {
+    const rosie = selected ? connection(selected) : undefined;
+    if (!rosie) {
+      return;
+    }
+    let current = true;
+    void rosie
+      .trajectoryPlanners()
+      .then((response) => {
+        if (current) {
+          setPlanners(response.planners);
+          setInUse(response.in_use);
+          setTrajectoryPlanner(response.in_use);
+        }
+      })
+      .catch(() => null);
+    return () => {
+      current = false;
+    };
+  }, [selected]);
 
   const singleSpeedError = positiveError(singleSpeed);
   const pathSpeedError = positiveError(pathSpeed);
@@ -51,10 +81,13 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
     dispatch(
       configOption({
         single: { speed: Number(singleSpeed), planner },
-        path: { speed: Number(pathSpeed) },
+        path: { speed: Number(pathSpeed), planner: pathPlanner },
         manual: { joystick },
       }),
     );
+    if (trajectoryPlanner !== inUse) {
+      void dispatch(chooseTrajectoryPlanner(trajectoryPlanner));
+    }
     onClose();
   };
 
@@ -73,7 +106,7 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
           <Tab icon={<AdjustIcon />} label="single" />
           <Tab icon={<SwapCallsIcon />} label="path" />
           <Tab icon={<OpenWithIcon />} label="manual" />
-          <Tab icon={<SendIcon />} label="command" />
+          <Tab icon={<TimelineIcon />} label="trajectory" />
         </Tabs>
         {tab === 0 && (
           <>
@@ -97,17 +130,25 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
           </>
         )}
         {tab === 1 && (
-          <TextField
-            label="Speed along the path"
-            placeholder="metres per second"
-            variant="standard"
-            margin="normal"
-            fullWidth
-            value={pathSpeed}
-            error={Boolean(pathSpeedError)}
-            helperText={pathSpeedError}
-            onChange={(event) => setPathSpeed(event.target.value)}
-          />
+          <>
+            <TextField
+              label="Speed along the path"
+              placeholder="metres per second"
+              variant="standard"
+              margin="normal"
+              fullWidth
+              value={pathSpeed}
+              error={Boolean(pathSpeedError)}
+              helperText={pathSpeedError}
+              onChange={(event) => setPathSpeed(event.target.value)}
+            />
+            <FormControlLabel
+              control={<Switch checked={pathPlanner} onChange={(event) => setPathPlanner(event.target.checked)} />}
+              label="Use planner between path points"
+              labelPlacement="start"
+              sx={{ ml: 0, width: "100%", justifyContent: "space-between" }}
+            />
+          </>
         )}
         {tab === 2 && (
           <FormControl variant="standard" margin="normal" fullWidth>
@@ -123,6 +164,25 @@ function SettingsForm({ settings, onClose }: { settings: Settings; onClose: () =
             </Select>
           </FormControl>
         )}
+        {tab === 3 &&
+          (planners.length ? (
+            <FormControl variant="standard" margin="normal" fullWidth>
+              <InputLabel id="trajectory-label">Trajectory planner of the selected robot</InputLabel>
+              <Select
+                labelId="trajectory-label"
+                value={trajectoryPlanner}
+                onChange={(event) => setTrajectoryPlanner(event.target.value)}
+              >
+                {planners.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ) : (
+            <DialogContentText sx={{ mt: 2 }}>Select a robot to choose its trajectory planner</DialogContentText>
+          ))}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

@@ -4,7 +4,7 @@ import { modeSlice, setMode } from "../../src/store/mode";
 import { selectRobot } from "../../src/store/robots";
 
 const reduce = modeSlice.reducer;
-const NONE = { single: false, path: false, manual: false, order: false };
+const NONE = { single: false, path: false, manual: false };
 
 describe("mode", () => {
   it("starts with no mode", () => {
@@ -16,7 +16,7 @@ describe("mode", () => {
   });
 
   it("keeps one mode at a time", () => {
-    expect(reduce({ ...NONE, order: true }, setMode({ mode: "path", value: true }))).toEqual({ ...NONE, path: true });
+    expect(reduce({ ...NONE, manual: true }, setMode({ mode: "path", value: true }))).toEqual({ ...NONE, path: true });
   });
 
   it("turns a mode off", () => {

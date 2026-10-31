@@ -77,6 +77,10 @@ export class Rosie {
     return this.get("/maps");
   }
 
+  currentMap(): Promise<WorldMap> {
+    return this.get("/map");
+  }
+
   map(name: string): Promise<WorldMap> {
     return this.get(`/map/${encodeURIComponent(name)}`);
   }
@@ -89,8 +93,16 @@ export class Rosie {
     return this.post("/goto", { target, speed, planner });
   }
 
-  follow(path: [number, number][], speed: number): Promise<void> {
-    return this.post("/follow", { path, speed });
+  follow(path: [number, number][], speed: number, planner: boolean): Promise<void> {
+    return this.post("/follow", { path, speed, planner });
+  }
+
+  trajectoryPlanners(): Promise<{ planners: string[]; in_use: string }> {
+    return this.get("/trajectory-planners");
+  }
+
+  useTrajectoryPlanner(name: string): Promise<void> {
+    return this.post(`/trajectory-planner/${encodeURIComponent(name)}`, null);
   }
 
   manual(): Promise<void> {
