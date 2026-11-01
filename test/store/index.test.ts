@@ -6,7 +6,7 @@ import { setMode } from "../../src/store/mode";
 describe("store", () => {
   it("starts with every piece of state", () => {
     expect(Object.keys(makeStore().getState()).sort()).toEqual(
-      ["direction", "map", "mode", "path", "report", "robots", "settings"],
+      ["direction", "map", "mode", "path", "report", "robots", "settings", "trajectory"],
     );
   });
 

@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import type { WorldMap } from "../api/rosie";
+import type { Trajectory, WorldMap } from "../api/rosie";
+import { selectRobot } from "./robots";
 
 // the map on screen
 export const mapSlice = createSlice({
@@ -20,6 +21,18 @@ export const pathSlice = createSlice({
       state.push(action.payload);
     },
     clearPath: () => [],
+  },
+});
+
+// the trajectory the selected robot planned for its last order; it goes with the path and the robot
+export const trajectorySlice = createSlice({
+  name: "trajectory",
+  initialState: [] as Trajectory,
+  reducers: {
+    setTrajectory: (_state, action: PayloadAction<Trajectory>) => action.payload,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(pathSlice.actions.clearPath, () => []).addCase(selectRobot, () => []);
   },
 });
 
@@ -59,5 +72,6 @@ export const settingsSlice = createSlice({
 
 export const { updateMap } = mapSlice.actions;
 export const { addPathPoint, clearPath } = pathSlice.actions;
+export const { setTrajectory } = trajectorySlice.actions;
 export const { notifyReport, clearReport } = reportSlice.actions;
 export const { configOption } = settingsSlice.actions;

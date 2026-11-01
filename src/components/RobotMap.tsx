@@ -17,7 +17,14 @@ export function RobotMap({ onReady }: Props) {
   const dispatch = useAppDispatch();
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
-  const layers = useRef<{ drawing: L.LayerGroup | null; target: L.CircleMarker; path: L.Polyline; trail: L.Polyline } | null>(null);
+  // the house; the clicked target or path; the planned trajectory; where the robot actually went
+  const layers = useRef<{
+    drawing: L.LayerGroup | null;
+    target: L.CircleMarker;
+    path: L.Polyline;
+    planned: L.Polyline;
+    trail: L.Polyline;
+  } | null>(null);
   const markers = useRef(new Map<string, RobotMarker>());
 
   const robots = useAppSelector((state) => state.robots.list);
@@ -25,6 +32,7 @@ export function RobotMap({ onReady }: Props) {
   const mode = useAppSelector((state) => state.mode);
   const world = useAppSelector((state) => state.map);
   const path = useAppSelector((state) => state.path);
+  const trajectory = useAppSelector((state) => state.trajectory);
 
   // the latest state, for Leaflet's event handlers
   const latest = useRef({ mode, selected });
@@ -41,6 +49,7 @@ export function RobotMap({ onReady }: Props) {
       drawing: null,
       target: L.circleMarker([0, 0], { color: colors.accent }),
       path: L.polyline([], { color: colors.accent }).addTo(leaflet),
+      planned: L.polyline([], { color: colors.primary, dashArray: "6 6" }).addTo(leaflet),
       trail: L.polyline([], { color: colors.trail }).addTo(leaflet),
     };
     leaflet.on("click", (event: L.LeafletMouseEvent) => {
@@ -111,8 +120,9 @@ export function RobotMap({ onReady }: Props) {
         if (!leaflet.getBounds().contains(marker.latlng)) {
           leaflet.panTo(marker.latlng);
         }
-        if (latest.current.mode.path) {
-          layers.current?.trail.addLatLng(marker.latlng);
+        // the actual path is drawn alongside a planned trajectory
+        if (layers.current?.planned.getLatLngs().length) {
+          layers.current.trail.addLatLng(marker.latlng);
         }
       }
     }
@@ -135,7 +145,6 @@ export function RobotMap({ onReady }: Props) {
     const robot = robots.find((candidate) => candidate.id === selected);
     if (path.length === 0 || !robot?.position) {
       layers.current.path.setLatLngs([]);
-      layers.current.trail.setLatLngs([]);
       return;
     }
     const start: L.LatLngTuple = [robot.position.y, robot.position.x];
@@ -143,6 +152,19 @@ export function RobotMap({ onReady }: Props) {
     // only when the path changes, not when the robot moves
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, selected]);
+
+  // a new planned trajectory, and the actual path starting over beside it
+  useEffect(() => {
+    if (!layers.current) {
+      return;
+    }
+    layers.current.planned.setLatLngs(trajectory.map(([x, y]): L.LatLngTuple => [y, x]));
+    const robot = robots.find((candidate) => candidate.id === selected);
+    const start: L.LatLngTuple[] = trajectory.length > 0 && robot?.position ? [[robot.position.y, robot.position.x]] : [];
+    layers.current.trail.setLatLngs(start);
+    // only when the trajectory changes, not when the robot moves
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trajectory]);
 
   // the target marker only shows in single point mode
   useEffect(() => {

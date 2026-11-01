@@ -25,6 +25,9 @@ export interface MapFeatureProperties {
 // a rosie map: a GeoJSON FeatureCollection with a name
 export type WorldMap = GeoJSON.FeatureCollection<GeoJSON.Geometry, MapFeatureProperties> & { name: string };
 
+// where the robot should be at each control step of a movement, as [x, y] (m)
+export type Trajectory = [number, number][];
+
 // steering, throttle, spin: each in [-1, 1]
 export type Direction = [number, number, number];
 
@@ -85,40 +88,43 @@ export class Rosie {
     return this.get(`/map/${encodeURIComponent(name)}`);
   }
 
-  useMap(name: string): Promise<void> {
-    return this.post(`/map/${encodeURIComponent(name)}`, null);
+  async useMap(name: string): Promise<void> {
+    await this.post(`/map/${encodeURIComponent(name)}`, null);
   }
 
-  goto(target: [number, number], speed: number, planner: boolean): Promise<void> {
-    return this.post("/goto", { target, speed, planner });
+  // orders answer with the planned trajectory
+  async goto(target: [number, number], speed: number, planner: boolean): Promise<Trajectory> {
+    const answer = (await (await this.post("/goto", { target, speed, planner })).json()) as { trajectory: Trajectory };
+    return answer.trajectory;
   }
 
-  follow(path: [number, number][], speed: number, planner: boolean): Promise<void> {
-    return this.post("/follow", { path, speed, planner });
+  async follow(path: [number, number][], speed: number, planner: boolean): Promise<Trajectory> {
+    const answer = (await (await this.post("/follow", { path, speed, planner })).json()) as { trajectory: Trajectory };
+    return answer.trajectory;
   }
 
   trajectoryPlanners(): Promise<{ planners: string[]; in_use: string }> {
     return this.get("/trajectory-planners");
   }
 
-  useTrajectoryPlanner(name: string): Promise<void> {
-    return this.post(`/trajectory-planner/${encodeURIComponent(name)}`, null);
+  async useTrajectoryPlanner(name: string): Promise<void> {
+    await this.post(`/trajectory-planner/${encodeURIComponent(name)}`, null);
   }
 
-  manual(): Promise<void> {
-    return this.post("/manual", null);
+  async manual(): Promise<void> {
+    await this.post("/manual", null);
   }
 
-  planned(): Promise<void> {
-    return this.post("/planned", null);
+  async planned(): Promise<void> {
+    await this.post("/planned", null);
   }
 
   private async get<T>(path: string): Promise<T> {
     return (await this.request(path, { method: "GET" })).json() as Promise<T>;
   }
 
-  private async post(path: string, body: unknown): Promise<void> {
-    await this.request(path, {
+  private post(path: string, body: unknown): Promise<Response> {
+    return this.request(path, {
       method: "POST",
       headers: body === null ? {} : { "Content-Type": "application/json" },
       body: body === null ? null : JSON.stringify(body),

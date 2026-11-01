@@ -2,7 +2,7 @@ import { combineSlices, configureStore, type ThunkAction, type UnknownAction } f
 import { useDispatch, useSelector } from "react-redux";
 
 import { directionSlice } from "./direction";
-import { mapSlice, pathSlice, reportSlice, settingsSlice } from "./misc";
+import { mapSlice, pathSlice, reportSlice, settingsSlice, trajectorySlice } from "./misc";
 import { modeSlice } from "./mode";
 import { robotsSlice } from "./robots";
 
@@ -12,6 +12,7 @@ export const reducer = combineSlices(
   directionSlice,
   mapSlice,
   pathSlice,
+  trajectorySlice,
   reportSlice,
   settingsSlice,
 );

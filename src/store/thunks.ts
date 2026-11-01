@@ -3,7 +3,7 @@ import { Rosie, RosieError, type Metadata } from "../api/rosie";
 import { connection, forget, remember } from "../robots";
 import { moveJoystick, pressKey, releaseKey } from "./direction";
 import type { AppThunk } from "./index";
-import { clearPath, notifyReport, updateMap } from "./misc";
+import { clearPath, notifyReport, setTrajectory, updateMap } from "./misc";
 import { setMode, type ModeName } from "./mode";
 import { addRobot as robotAdded, moveRobot, removeRobot } from "./robots";
 
@@ -62,7 +62,9 @@ export function addServingRobot(): AppThunk<Promise<void>> {
 export function robotGoto(x: number, y: number): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
     const { speed, planner } = getState().settings.single;
-    return withSelected(dispatch, getState, (rosie) => rosie.goto([x, y], speed, planner));
+    return withSelected(dispatch, getState, async (rosie) => {
+      dispatch(setTrajectory(await rosie.goto([x, y], speed, planner)));
+    });
   };
 }
 
@@ -70,7 +72,9 @@ export function robotFollow(): AppThunk<Promise<void>> {
   return (dispatch, getState) => {
     const { path, settings } = getState();
     const { speed, planner } = settings.path;
-    return withSelected(dispatch, getState, (rosie) => rosie.follow(path, speed, planner));
+    return withSelected(dispatch, getState, async (rosie) => {
+      dispatch(setTrajectory(await rosie.follow(path, speed, planner)));
+    });
   };
 }
 
