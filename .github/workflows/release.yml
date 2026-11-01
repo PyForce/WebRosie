@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    defaults:
+      run:
+        # -eo pipefail: a failing command in a pipe fails the step
+        shell: bash
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,16 +54,23 @@ jobs:
       - if: steps.version.outputs.new == 'true'
         run: npm run build
 
-      # Same files, same zip: fixed timestamps, sorted names, no extra attributes or directory entries.
+      # Same files, same zip: sorted names, fixed dates and permissions.
       - name: Zip
         if: steps.version.outputs.new == 'true'
         env:
           ZIP: webrosie-${{ steps.version.outputs.version }}.zip
         run: |
-          cd dist
-          find . -exec touch -h -d '1980-01-01T00:00:00Z' {} +
-          find . -type f | LC_ALL=C sort | zip -X -D -q "../$ZIP" -@
-          cd ..
+          python3 - "$ZIP" <<'PY'
+          import pathlib, sys, zipfile
+          root = pathlib.Path("dist")
+          with zipfile.ZipFile(sys.argv[1], "w") as archive:
+              for path in sorted(p for p in root.rglob("*") if p.is_file()):
+                  entry = zipfile.ZipInfo(path.relative_to(root).as_posix(), (1980, 1, 1, 0, 0, 0))
+                  entry.external_attr = 0o644 << 16
+                  entry.compress_type = zipfile.ZIP_DEFLATED
+                  archive.writestr(entry, path.read_bytes())
+          PY
+          unzip -l "$ZIP"
           sha256sum "$ZIP" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - if: steps.version.outputs.new == 'true'
