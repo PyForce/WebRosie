@@ -1,6 +1,6 @@
 {
   "name": "webrosie",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Front-end for rosie: drive robots from the browser",
   "license": "MIT",
   "author": "Rolando Urquiza <rolurquiza@gmail.com>",

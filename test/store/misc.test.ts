@@ -1,6 +1,18 @@
 import { describe, expect, it } from "vitest";
 
-import { addPathPoint, clearPath, clearReport, configOption, notifyReport, pathSlice, reportSlice, settingsSlice } from "../../src/store/misc";
+import {
+  addPathPoint,
+  clearPath,
+  clearReport,
+  configOption,
+  notifyReport,
+  pathSlice,
+  reportSlice,
+  setTrajectory,
+  settingsSlice,
+  trajectorySlice,
+} from "../../src/store/misc";
+import { selectRobot } from "../../src/store/robots";
 
 describe("settings", () => {
   const initial = settingsSlice.reducer(undefined, { type: "init" });
@@ -25,6 +37,19 @@ describe("path", () => {
     path = pathSlice.reducer(path, addPathPoint([1, 1]));
     expect(path).toEqual([[1, 0], [1, 1]]);
     expect(pathSlice.reducer(path, clearPath())).toEqual([]);
+  });
+});
+
+describe("trajectory", () => {
+  const planned = trajectorySlice.reducer(undefined, setTrajectory([[0, 0], [0.5, 0], [1, 0]]));
+
+  it("keeps the last planned trajectory", () => {
+    expect(planned).toEqual([[0, 0], [0.5, 0], [1, 0]]);
+  });
+
+  it("goes away with the path, and when another robot is selected", () => {
+    expect(trajectorySlice.reducer(planned, clearPath())).toEqual([]);
+    expect(trajectorySlice.reducer(planned, selectRobot("kevin:5000"))).toEqual([]);
   });
 });
 
