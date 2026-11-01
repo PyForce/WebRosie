@@ -1,0 +1,71 @@
+name: Release
+
+# After QA passes on main: if package.json holds a version with no release yet, build WebRosie and
+# attach webrosie-<version>.zip (dist/'s contents at the zip's root) to a new GitHub Release.
+# The zip goes straight from this job to the release: no Actions artifact storage.
+# rosie's Dockerfile downloads it (WEBROSIE_VERSION + WEBROSIE_SHA256).
+
+on:
+  workflow_run:
+    workflows: ["QA"]
+    branches: [main]
+    types: [completed]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Version
+        id: version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$version" > /dev/null; then
+            echo "v$version is already released: nothing to do"
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.version.outputs.new == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - if: steps.version.outputs.new == 'true'
+        run: npm ci
+
+      - if: steps.version.outputs.new == 'true'
+        run: npm run build
+
+      # Same files, same zip: fixed timestamps, sorted names, no extra attributes or directory entries.
+      - name: Zip
+        if: steps.version.outputs.new == 'true'
+        env:
+          ZIP: webrosie-${{ steps.version.outputs.version }}.zip
+        run: |
+          cd dist
+          find . -exec touch -h -d '1980-01-01T00:00:00Z' {} +
+          find . -type f | LC_ALL=C sort | zip -X -D -q "../$ZIP" -@
+          cd ..
+          sha256sum "$ZIP" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - if: steps.version.outputs.new == 'true'
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.event.workflow_run.head_sha }}
+          files: webrosie-${{ steps.version.outputs.version }}.zip
+          fail_on_unmatched_files: true
